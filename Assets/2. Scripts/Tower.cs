@@ -1,88 +1,137 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class Tower : MonoBehaviour
 {
-    public TowerTargetDetector targetDetector; // 적 탐지
-    public TowerShooter shooter;               // 공격
-    public Transform baseCamp;                 // 기준 BaseCamp
+    // 외부 연결
+    public TowerTargetDetector targetDetector;
+    public TowerShooter shooter;
+    public Transform baseCamp;
+    public Tilemap tilemap;
 
-    private enum TowerState { Idle, Searching, Attacking }
-    private TowerState currentState = TowerState.Idle;
+    // 타워 상태 FSM
+    private enum State
+    {
+        Idle,
+        Searching,
+        Attacking
+    }
 
+    private State currentState = State.Idle;
+
+    // 현재 타겟
     private Enemy currentTarget;
 
-    public float detectionInterval = 0.1f; // 탐지 간격
+    // 탐지 타이머
+    public float detectionInterval = 0.1f;
     private float detectionTimer = 0f;
 
-    public float attackPower = 10f;   // 공격력 (현재 사용 X)
-    public float attackSpeed = 1f;    // 초당 공격 횟수
-    public float attackRange = 5f;    // BaseCamp 기준 공격 범위
-    public int attackHitCount = 1;    // 한 번에 타격 가능한 적 수
+    // 공격 설정
+    public float attackSpeed = 1f;   // 초당 공격 횟수
+    public int attackRange = 5;      // 타일 기준 공격 범위
+    public int attackHitCount = 1;
     private float attackCooldown = 0f;
 
     void Update()
     {
-        // 상태 처리
         switch (currentState)
         {
-            case TowerState.Idle:
-                currentState = TowerState.Searching; // Idle → Searching
+            case State.Idle:
+                currentState = State.Searching;
                 break;
-            case TowerState.Searching:
+
+            case State.Searching:
                 HandleSearching();
                 break;
-            case TowerState.Attacking:
+
+            case State.Attacking:
                 HandleAttacking();
                 break;
         }
 
-        // 쿨타임 감소
+        // 공격 쿨타임 감소
         if (attackCooldown > 0f)
+        {
             attackCooldown -= Time.deltaTime;
+        }
     }
 
-    // 탐지 처리
+    // 적 탐색 단계
     void HandleSearching()
     {
         detectionTimer -= Time.deltaTime;
-        if (detectionTimer <= 0f)
-        {
-            // BaseCamp 기준 가장 가까운 적 선택
-            currentTarget = targetDetector.FindNearestEnemy(baseCamp.position);
-            detectionTimer = detectionInterval;
+        if (detectionTimer > 0f) return;
 
-            if (currentTarget != null)
+        // BaseCamp 위치를 타일 좌표로 변환
+        Vector3Int baseCampTile =
+            tilemap.WorldToCell(baseCamp.position);
+
+        // BaseCamp 기준 가장 가까운 적 탐색
+        currentTarget =
+            targetDetector.FindNearestEnemy(baseCampTile);
+
+        detectionTimer = detectionInterval;
+
+        // 적이 존재하면 공격 상태로 전환
+        if (currentTarget != null)
+        {
+            Vector3Int enemyTile =
+                tilemap.WorldToCell(currentTarget.transform.position);
+
+            int tileDistance =
+                Mathf.Abs(baseCampTile.x - enemyTile.x) +
+                Mathf.Abs(baseCampTile.z - enemyTile.z);
+
+            if (tileDistance <= attackRange)
             {
-                float distanceToBase = Vector3.Distance(baseCamp.position, currentTarget.transform.position);
-                if (distanceToBase <= attackRange)
-                    currentState = TowerState.Attacking; // 공격 상태 전환
+                currentState = State.Attacking;
             }
         }
     }
 
-    // 공격 처리
+    // 공격 단계
     void HandleAttacking()
     {
+        // BaseCamp 타일 좌표
+        Vector3Int baseCampTile =
+            tilemap.WorldToCell(baseCamp.position);
+
+        // 현재 가장 가까운 적을 다시 계산
+        Enemy nearest =
+            targetDetector.FindNearestEnemy(baseCampTile);
+
+        // 더 가까운 적이 있다면 타겟 교체
+        if (nearest != null && nearest != currentTarget)
+        {
+            currentTarget = nearest;
+        }
+
         if (currentTarget == null)
         {
-            currentState = TowerState.Searching; // 타겟 없으면 탐색
+            currentState = State.Searching;
             return;
         }
 
-        // BaseCamp 기준 범위 체크
-        float distanceToBase = Vector3.Distance(baseCamp.position, currentTarget.transform.position);
-        if (distanceToBase > attackRange)
+        // 타일 거리 계산
+        Vector3Int enemyTile =
+            tilemap.WorldToCell(currentTarget.transform.position);
+
+        int tileDistance =
+            Mathf.Abs(baseCampTile.x - enemyTile.x) +
+            Mathf.Abs(baseCampTile.z - enemyTile.z);
+
+        // 공격 범위 벗어나면 탐색으로 복귀
+        if (tileDistance > attackRange)
         {
             currentTarget = null;
-            currentState = TowerState.Searching;
+            currentState = State.Searching;
             return;
         }
 
-        // 공격 쿨타임 체크
+        // 발사
         if (attackCooldown <= 0f)
         {
-            Debug.Log("Shooting at: " + currentTarget.name);
-            shooter.Shoot(currentTarget, attackPower, attackHitCount);
+            shooter.Shoot(currentTarget, 0f, attackHitCount);
             attackCooldown = 1f / attackSpeed;
         }
     }

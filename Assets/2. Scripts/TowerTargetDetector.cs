@@ -1,31 +1,42 @@
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class TowerTargetDetector : MonoBehaviour
 {
-    private Enemy[] allEnemies; // 씬에 있는 모든 Enemy
+    public Tilemap tilemap; // 기준이 되는 타일맵
 
-    void Start()
+    // BaseCamp 타일 좌표를 기준으로 가장 가까운 적 반환
+    public Enemy FindNearestEnemy(Vector3Int baseCampTile)
     {
-        // 씬의 모든 Enemy 자동 수집
-        allEnemies = FindObjectsOfType<Enemy>();
-        Debug.Log("Enemies found: " + allEnemies.Length);
-    }
+        // 현재 씬에 존재하는 모든 Enemy를 다시 수집
+        Enemy[] enemies = FindObjectsOfType<Enemy>();
 
-    // 기준 위치(referencePoint, BaseCamp)에서 가장 가까운 적 반환
-    public Enemy FindNearestEnemy(Vector3 referencePoint)
-    {
+        if (tilemap == null)
+        {
+            Debug.LogError("Tilemap is not assigned");
+            return null;
+        }
+
         Enemy nearest = null;
-        float minDist = Mathf.Infinity;
+        int shortestDistance = int.MaxValue;
 
-        foreach (Enemy enemy in allEnemies)
+        foreach (Enemy enemy in enemies)
         {
             if (enemy == null) continue;
 
-            float dist = Vector3.Distance(referencePoint, enemy.transform.position);
+            // 적 위치를 타일 좌표로 변환
+            Vector3Int enemyTile =
+                tilemap.WorldToCell(enemy.transform.position);
 
-            if (dist < minDist)
+            // 3D 타일맵이므로 x z 방향 거리만 사용
+            int tileDistance =
+                Mathf.Abs(baseCampTile.x - enemyTile.x) +
+                Mathf.Abs(baseCampTile.z - enemyTile.z);
+
+            // BaseCamp에 가장 가까운 적 선택
+            if (tileDistance < shortestDistance)
             {
-                minDist = dist;
+                shortestDistance = tileDistance;
                 nearest = enemy;
             }
         }
