@@ -9,16 +9,15 @@ public class GeneratorMap : MonoBehaviour
 
     public const int CELL_SIZE = 2;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void Generator()
     {
         for (int i = 0; i < TileManager.MAP_SIZE_X; i++)
         {
             for (int j = 0; j < TileManager.MAP_SIZE_Y; j++)
             {
                 TileData tile = TileManager.Instance.GetTileData(i, j);
-                int x = tile.X * CELL_SIZE;
-                int y = tile.Y * CELL_SIZE;
+                int x = i * CELL_SIZE;
+                int y = j * CELL_SIZE;
 
                 GameObject tilePrefab = null;
                 switch (tile.Type)
@@ -44,6 +43,10 @@ public class GeneratorMap : MonoBehaviour
                 {
                     GameObject tileObject = Instantiate(tilePrefab, worldPosition, Quaternion.identity);
                     tileObject.transform.SetParent(transform);
+
+                    //todo : 에디터에서 직접 넣어줄지말지
+                    TileInteractor interactor = tileObject.AddComponent<TileInteractor>();
+                    interactor.Setup(i, j, tile.Type);
                 }
 
             }
