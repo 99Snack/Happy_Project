@@ -25,6 +25,8 @@ public class TileManager : MonoBehaviour
     public const int MAP_SIZE_X = 14;
     public const int MAP_SIZE_Y = 8;
 
+    public const int CELL_SIZE = 2;
+
     //캠프 좌표 관리 y 1~6 랜덤 좌표
     const int enemyBaseCoordX = 0;
     const int allyBaseCoordX = 13;
@@ -39,7 +41,6 @@ public class TileManager : MonoBehaviour
 
     void Initialize()
     {
-
         // 맵 초기화
         allTiles = new TileData[MAP_SIZE_Y, MAP_SIZE_X];
 
@@ -47,12 +48,19 @@ public class TileManager : MonoBehaviour
         {
             for (int j = 0; j < MAP_SIZE_X; j++)
             {
-                allTiles[i, j] = new TileData(j, i, TileData.TYPE.None);
+                allTiles[i, j] = new TileData(j,i,TileData.TYPE.None);
             }
         }
 
         //베이스 랜덤 
         RandomBaseCamp();
+
+        //타일 맵 생성
+        GeneratorMap map = FindAnyObjectByType<GeneratorMap>();
+        if (map != null)
+        {
+            map.Generator();
+        }
     }
 
     void RandomBaseCamp()
@@ -80,7 +88,7 @@ public class TileManager : MonoBehaviour
 
         if (IsValidCoordinate(x, y))
         {
-            allTiles[y, x] = new TileData(x, y, type);
+            allTiles[y, x] = new TileData(x,y,type);
         }
     }
 
