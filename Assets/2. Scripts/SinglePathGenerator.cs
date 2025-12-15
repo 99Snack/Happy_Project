@@ -61,6 +61,7 @@ public class SinglePathGenerator : MonoBehaviour
     //▼ 14 X 8 길이의 타일
     [SerializeField] const int tileXLength = 14;
     [SerializeField] const int tileYLength = 8;
+    [SerializeField] GameObject gameObject;
      
     //▼ 계산된 단일 경로
     Vector2Int[] singlePath;
@@ -102,7 +103,8 @@ public class SinglePathGenerator : MonoBehaviour
 
         for(int i = 0; i < singlePath.Length; i++)
         {
-            testSB.Append((singlePath[i].x, singlePath[i].y) );
+            Vector3 temp = new Vector3(singlePath[i].x * 2, singlePath[i].y * 2, 0);
+            Instantiate(gameObject,temp,Quaternion.identity);
         }
         Debug.Log(testSB.ToString()); 
     }
