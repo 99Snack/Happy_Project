@@ -4,19 +4,30 @@ using System.Collections;
 using System.Text;
 using UnityEngine;
 
+
 //반대 방향은 양수 음수가 반대 
 enum Direction
 {
    West = -2, South = 1, None = 0, North = -1, East = 2 
 }
 
-readonly struct Step
+struct Step
 {
     public readonly int curveCount;
     public readonly int currentX;
     public readonly int currentY; 
     public readonly int continuousYStep;
     public readonly Direction direction;
+    public List<Direction> banDirections;
+
+    public void AddBanDirectionList(List<Direction> directionList)
+    {
+        banDirections.AddRange(directionList);
+    }
+    public void AddBanDirection(Direction direction)
+    {
+        banDirections.Add(direction);
+    }
     
     /// <summary>
     /// Step 생성자
@@ -34,6 +45,7 @@ readonly struct Step
         currentY = CurrentY;
         continuousYStep = ContinuousYStep;
         direction = SelectDirection;
+        banDirections = new();
     }
 }
 
@@ -47,8 +59,8 @@ readonly struct Step
 public class SinglePathGenerator : MonoBehaviour
 {
     //▼ 14 X 8 길이의 타일
-    [SerializeField] int tileXLength = 14;
-    [SerializeField] int tileYLength = 8;
+    [SerializeField] const int tileXLength = 14;
+    [SerializeField] const int tileYLength = 8;
      
     //▼ 계산된 단일 경로
     Vector2Int[] singlePath;
@@ -61,7 +73,7 @@ public class SinglePathGenerator : MonoBehaviour
     int maxCurveCount = 8; //최대 꺾임 수
 
     StringBuilder testSB; //테스트 용 스트링빌더 
-    Coroutine pathCoroutine; //
+    Coroutine pathCoroutine; //길 저장용 코루틴 
 
     public void buttonPressed()
     {
@@ -144,13 +156,13 @@ public class SinglePathGenerator : MonoBehaviour
         switch(dir)
         {
             case Direction.North:
-                currentY -= 1;
+                currentY += 1;
                 break;
             case Direction.West:
                 currentX -= 1;
                 break;
             case Direction.South:
-                currentY += 1;
+                currentY -= 1;
                 break;
             case Direction.East:
                 currentX += 1;
@@ -172,13 +184,13 @@ public class SinglePathGenerator : MonoBehaviour
         switch(dir)
         {
             case Direction.North:
-                currentY -= 1;
+                currentY += 1;
                 break;
             case Direction.West:
                 currentX -= 1;
                 break;
             case Direction.South:
-                currentY += 1;
+                currentY -= 1;
                 break;
             case Direction.East:
                 currentX += 1;
@@ -198,7 +210,7 @@ public class SinglePathGenerator : MonoBehaviour
     /// <param name="currentY">현재 진행된 Y좌표</param>
     /// <param name="currentPathLength">현재까지 진행된 경로의 길이 </param>
     /// <returns></returns>
-    private Direction SelectDirection(Direction lastDirection, Direction banDirection, int continuousYStep, int currentX, int currentY, int currentPathLength)
+    private Direction SelectDirection(Direction lastDirection, List<Direction> banDirection, int continuousYStep, int currentX, int currentY, int currentPathLength)
     {
         //▼ 가능한 방향 리스트 
         List<Direction> valiableDirList = new() {Direction.East, Direction.West, Direction.North, Direction.South};
@@ -207,10 +219,14 @@ public class SinglePathGenerator : MonoBehaviour
         Vector2 nextPosition;
         
         //▼ 금지된 방향은 제거 
-        if(banDirection != Direction.None)
+        if(banDirection.Count > 0)
         {
-            valiableDirList.Remove(banDirection);
+            foreach(var dir in banDirection) 
+            {
+                valiableDirList.Remove(dir);
+            }
         }
+    
         //▼ curveCount에 여유가 없거나 연속된 Y방향이 3번이라면 Y방향은 제외 
         if(curveCount == maxCurveCount || continuousYStep == 3)
             {
@@ -269,13 +285,10 @@ public class SinglePathGenerator : MonoBehaviour
     private IEnumerator FindPath()
     {
         //▼ 이전 방향 
-        Direction lastDirection = new Direction();
+        Direction lastDirection = Direction.None;
         
         //▼ 선택된 방향
-        Direction selectedDirection = new Direction();
-
-        //▼ 금지된 방향
-        Direction banDirection = new Direction();
+        Direction selectedDirection;
         
         //▼ 경로 추가용 벡터
         Vector2Int pathVector = new Vector2Int(startPos.x, startPos.y);
@@ -286,6 +299,9 @@ public class SinglePathGenerator : MonoBehaviour
         
         //▼ 연속된 Y 수
         int continuousYStep = 0;  
+
+        //▼ 금지된 방향
+        List<Direction> banDirection = new();
         
         //▼ 어느 방향으로 추가할지를 미리 정의 해둔 리스트
         List<Direction> AddDirection = new(); 
@@ -315,6 +331,7 @@ public class SinglePathGenerator : MonoBehaviour
     
             else
             {
+
                 //첫 방향은 East로 고정 
                 if(AddDirection.Count <= 0)
                 {
@@ -331,22 +348,48 @@ public class SinglePathGenerator : MonoBehaviour
                 //▼ 가능한 경로가 없을경우 재탐색 
                 if (selectedDirection == Direction.None)
                 {
-                    banDirection = lastDirection;
+                    if(steps.Count <= 0)
+                    {
+                        Debug.Log("무한루프");
+                        break;
+                    }
+                    
                     AddDirection.RemoveAt(AddDirection.Count - 1);
 
                     Step lastStep = steps.Pop();
 
+                    if(banDirection.Count > 0)
+                    {
+                        banDirection.Clear();
+                        
+                    }
                     currentX = lastStep.currentX;
                     currentY = lastStep.currentY;
                     continuousYStep = lastStep.continuousYStep;
-                    curveCount = lastStep.curveCount;
-
+                    curveCount = lastStep.curveCount;                    
+                    lastStep.AddBanDirection(lastStep.direction);
+                    banDirection.AddRange(lastStep.banDirections);
                     continue;
                 }
-
+                
                 AddDirection.Add(selectedDirection);
-                banDirection = Direction.None;
-
+               
+                //▼ 이전 방향과 다르다면 
+                if (Math.Abs((int)lastDirection) != Math.Abs((int)selectedDirection))
+                {
+                    curveCount++;
+                }
+                
+                Step curStep = new Step(curveCount, currentX, currentY, continuousYStep, selectedDirection);
+                
+                if(banDirection.Count > 0)
+                {
+                    curStep.AddBanDirectionList(banDirection);
+                    banDirection.Clear();
+                }
+            
+                steps.Push(curStep);
+                
                 //▼ 좌표 값 바꾸기
                 switch (selectedDirection)
                 {
@@ -355,27 +398,20 @@ public class SinglePathGenerator : MonoBehaviour
                         continuousYStep = 0;
                         break;
                     case Direction.North:
-                        currentY -= 1;
+                        currentY += 1;
                         continuousYStep++;
                         break;
                     case Direction.South:
-                        currentY += 1;
-                        continuousYStep++;
+                        currentY -= 1;
+                        continuousYStep += 1;
                         break;
                     case Direction.East:
                         currentX += 1;
                         continuousYStep = 0;
                         break;
                 }
-                //▼ 이전 방향과 다르다면 
-                if (Math.Abs((int)lastDirection) != Math.Abs((int)selectedDirection))
-                {
-                    curveCount++;
-                }
-
-                steps.Push(new Step(curveCount, currentX, currentY, continuousYStep, selectedDirection));
-
                 lastDirection = selectedDirection;
+                
             }
         } 
         //종료 시 방향 East로 고정
@@ -390,10 +426,10 @@ public class SinglePathGenerator : MonoBehaviour
                     pathVector.x -= 1;
                     break;
                 case Direction.North:
-                    pathVector.y -= 1;
+                    pathVector.y += 1;
                     break;
                 case Direction.South:
-                    pathVector.y += 1;
+                    pathVector.y -= 1;
                     break;
                 case Direction.East:
                     pathVector.x += 1;
