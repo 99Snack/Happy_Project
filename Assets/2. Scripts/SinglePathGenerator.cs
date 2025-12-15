@@ -4,6 +4,7 @@ using System.Collections;
 using System.Text;
 using UnityEngine;
 
+<<<<<<< Updated upstream
 //반대 방향은 양수 음수가 반대 
 enum Direction
 {
@@ -36,6 +37,8 @@ readonly struct Step
     }
 }
 
+=======
+>>>>>>> Stashed changes
 /// <summary>
 /// 게임 시작시 단일경로 생성하는 컴포넌트 
 /// 제약조건:  Path의 Length: 16이상 ~ 24이하
@@ -48,6 +51,7 @@ public class SinglePathGenerator : MonoBehaviour
     //▼ 14 X 8 길이의 타일
     [SerializeField] int tileXLength = 14;
     [SerializeField] int tileYLength = 8;
+<<<<<<< Updated upstream
      
     //▼ 계산된 단일 경로
     Vector2Int[] singlePath;
@@ -55,6 +59,20 @@ public class SinglePathGenerator : MonoBehaviour
     Vector2Int startPos;
     //▼ 아군 베이스 캠프 중앙 위치
     Vector2Int destinationPos; 
+=======
+    
+    //▼ 왼쪽 위 타일의 좌표
+    [SerializeField] Vector3 leftHighCoor = new Vector3(31, 0 , -21); 
+    //▼ 오른쪽 아래 타일의 좌표
+    [SerializeField] Vector3 RightLowCoor= new Vector3(5, 0, -7); 
+
+    //▼ 계산된 단일 경로
+    Vector2Int[] singlePath;
+    //▼ 적 베이스 캠프 위치 
+    Vector2Int startVec2Pos;
+    //▼ 아군 베이스 캠프 위치
+    Vector2Int destinationVec2Pos; 
+>>>>>>> Stashed changes
 
     int curveCount; //꺾임 수 
     int maxCurveCount = 8; //최대 꺾임 수
@@ -138,6 +156,7 @@ public class SinglePathGenerator : MonoBehaviour
      
     private int CalculateBasePath(Direction dir, int currentX, int currentY)
     {
+<<<<<<< Updated upstream
         int result = 0;
 
         switch(dir)
@@ -156,6 +175,84 @@ public class SinglePathGenerator : MonoBehaviour
                 break;
         }
         result = Math.Abs(destinationPos.x - currentX) + Math.Abs(destinationPos.y - currentY);
+=======
+
+        //▼ X방향으로 증가 일지 Y방향으로 증가일지를 나타내는 bool 상수;
+        const bool X = true; 
+        const bool Y = false;
+        
+        //▼ 경로 추가용 벡터
+        Vector2Int pathVector = new Vector2Int(startVec2Pos.x, startVec2Pos.y);
+        
+        //▼ 조건 확인용 좌표
+        int curx = startVec2Pos.x;
+        int cury = startVec2Pos.y;
+        
+        //▼ 연속된 Y 수
+        int consecutiveYCount = 0;  
+        
+        //▼ 어느 방향으로 추가할지를 미리 정의 해둔 리스트
+        List<bool> AddDirection = new(); 
+        
+        //▼ 실제 경로를 저장해놓은 리스트  
+        List<Vector2Int> path = new();  
+        
+        while(curx == destinationVec2Pos.x && cury == destinationVec2Pos.y)
+        {
+            if(AddDirection.Count > 2 && consecutiveYCount == 3 )// 계산된 경로가 2보다 크고 y가 3회 연속되었을때 X로 설정후 카운트 초기화 
+            {
+                AddDirection.Add(X);
+                curx++;
+                consecutiveYCount = 0;
+                continue;
+            }
+            bool temp = RandomBool();
+            if(temp)
+            {
+                if(AddDirection[AddDirection.Count - 1] == Y)
+                {
+                    curveCount++;
+                }
+                AddDirection.Add(X);
+                curx++;
+                consecutiveYCount = 0;
+            }
+            else
+            {
+                if(AddDirection[AddDirection.Count - 1] == X)
+                {
+                    curveCount ++;
+                }
+                AddDirection.Add(Y);
+                cury++;
+                consecutiveYCount++;     
+            }
+
+            //todo: 만약 꺾임 수가 8회 이상이라면 Random을 하지 않고 그 상태에서 직진하는데 만약 x랑 y좌표 둘 다 조건을 만족하지 않으면 
+            //      yCount를 해치지 않고 둘 중 하나는 도달할 수 있도록 기존의 리스트를 수정한다. 
+
+        }
+
+        foreach (bool dirX in AddDirection)
+        {
+            if(dirX)
+            {
+                pathVector.x++;
+            }
+            else
+            {
+                pathVector.y++;
+            }
+
+            path.Add(pathVector);
+        }
+
+    }
+
+    private bool RandomBool()
+    {
+        bool result = Random.Range(0,2) == 1;
+>>>>>>> Stashed changes
         return result;
     }
 
