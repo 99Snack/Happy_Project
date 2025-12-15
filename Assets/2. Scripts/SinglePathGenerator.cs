@@ -17,6 +17,7 @@ readonly struct Step
     public readonly int currentY; 
     public readonly int continuousYStep;
     public readonly Direction direction;
+    
     /// <summary>
     /// Step 생성자
     /// </summary>
