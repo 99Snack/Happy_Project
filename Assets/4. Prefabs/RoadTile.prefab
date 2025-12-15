@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3373267581964443089}
   - component: {fileID: 7828958599900106997}
   m_Layer: 0
-  m_Name: Road
+  m_Name: RoadTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

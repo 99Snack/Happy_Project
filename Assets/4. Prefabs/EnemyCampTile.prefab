@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7474982604430480884}
   - component: {fileID: 4863721534439439774}
   m_Layer: 0
-  m_Name: EnemyCamp
+  m_Name: EnemyCampTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
