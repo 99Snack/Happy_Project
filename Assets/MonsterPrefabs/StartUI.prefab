@@ -224,7 +224,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8937493138708381832, guid: 8652fcb5c4cd8a84c9a7f1ca5e48110f, type: 3}
         m_TargetAssemblyTypeName: WaveManager, Assembly-CSharp
         m_MethodName: OnStartButtonClick
         m_Mode: 1
