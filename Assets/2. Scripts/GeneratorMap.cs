@@ -1,7 +1,3 @@
-using TMPro;
-using Unity.Mathematics;
-using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
 
 public class GeneratorMap : MonoBehaviour
@@ -20,7 +16,7 @@ public class GeneratorMap : MonoBehaviour
         {
             for (int j = 0; j < TileManager.MAP_SIZE_Y; j++)
             {
-                TileData tile =  TileManager.Instance.GetTileData(i, j);
+                TileData tile = TileManager.Instance.GetTileData(i, j);
                 int x = tile.X * CELL_SIZE;
                 int y = tile.Y * CELL_SIZE;
 
@@ -30,8 +26,8 @@ public class GeneratorMap : MonoBehaviour
                     case TileData.TYPE.None:
                     case TileData.TYPE.Base:
                     case TileData.TYPE.Wall:
-                        tilePrefab = wallPrefab;   
-                    break;
+                        tilePrefab = wallPrefab;
+                        break;
                     case TileData.TYPE.Road:
                         tilePrefab = roadPrefab;
                         break;
@@ -44,8 +40,10 @@ public class GeneratorMap : MonoBehaviour
                 }
 
                 Vector3 worldPosition = new Vector3(x, 0, y);
-                if (tilePrefab != null){
-                    Instantiate(tilePrefab, worldPosition, Quaternion.identity);
+                if (tilePrefab != null)
+                {
+                    GameObject tileObject = Instantiate(tilePrefab, worldPosition, Quaternion.identity);
+                    tileObject.transform.SetParent(transform);
                 }
 
             }
