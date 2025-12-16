@@ -31,8 +31,8 @@ public class TileManager : MonoBehaviour
     const int enemyBaseCoordX = 0;
     const int allyBaseCoordX = 13;
 
-    public (int x, int y) enemyBasePosition { get; private set; }
-    public (int x, int y) allyBasePosition { get; private set; }
+    public Vector2Int enemyBasePosition { get; private set; }
+    public Vector2Int allyBasePosition { get; private set; }
 
     private void Start()
     {
@@ -69,8 +69,8 @@ public class TileManager : MonoBehaviour
         int randomEnemyBaseCoordY = Random.Range(1, MAP_SIZE_Y - 1);
         int randomAllyBaseCoordY = Random.Range(1, MAP_SIZE_Y - 1);
 
-        enemyBasePosition = (enemyBaseCoordX, randomEnemyBaseCoordY);
-        allyBasePosition = (allyBaseCoordX, randomAllyBaseCoordY);
+        enemyBasePosition = new Vector2Int(enemyBaseCoordX, randomEnemyBaseCoordY);
+        allyBasePosition = new Vector2Int(allyBaseCoordX, randomAllyBaseCoordY);
 
         //정해진 좌표에 베이스 설정
         allTiles[enemyBasePosition.y - 1, enemyBasePosition.x].Type = TileData.TYPE.EnemyBase;

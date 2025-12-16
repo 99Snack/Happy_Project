@@ -8,7 +8,7 @@ public class Tower : MonoBehaviour
     public Transform baseCamp;
     public Tilemap tilemap;
 
-    // Å¸¿ö Å¸ÀÏ ÁÂÇ¥
+    // íƒ€ì›Œ íƒ€ì¼ ì¢Œí‘œ
     private Vector3Int towerTile;
 
     // FSM
@@ -22,11 +22,11 @@ public class Tower : MonoBehaviour
     private State currentState = State.Idle;
     private Enemy currentTarget;
 
-    // Å½Áö
+    // íƒì§€
     public float detectionInterval = 0.1f;
     private float detectionTimer = 0f;
 
-    // °ø°İ
+    // ê³µê²©
     public float attackSpeed = 1f;
     public int attackRange = 1;
     public int attackHitCount = 1;
@@ -35,7 +35,7 @@ public class Tower : MonoBehaviour
     void Start()
     {
         towerTile = tilemap.WorldToCell(transform.position);
-        Debug.Log($"[Å¸¿ö] Å¸¿ö Å¸ÀÏ ÁÂÇ¥: ({towerTile.x},{towerTile.y})");
+        Debug.Log($"[íƒ€ì›Œ] íƒ€ì›Œ íƒ€ì¼ ì¢Œí‘œ: ({towerTile.x},{towerTile.y})");
     }
 
     void Update()
@@ -59,7 +59,7 @@ public class Tower : MonoBehaviour
             attackCooldown -= Time.deltaTime;
     }
 
-    // Å½»ö ´Ü°è 
+    // íƒìƒ‰ ë‹¨ê³„ 
     void HandleSearching()
     {
         detectionTimer -= Time.deltaTime;
@@ -76,27 +76,27 @@ public class Tower : MonoBehaviour
         detectionTimer = detectionInterval;
 
         Debug.Log(
-            $"[Å¸¿ö] Å½»ö °á°ú: {(currentTarget != null ? "Å¸°Ù ¼±Á¤ ¿Ï·á" : "»ç°Å¸® ³» Àû ¾øÀ½")}"
+            $"[íƒ€ì›Œ] íƒìƒ‰ ê²°ê³¼: {(currentTarget != null ? "íƒ€ê²Ÿ ì„ ì • ì™„ë£Œ" : "ì‚¬ê±°ë¦¬ ë‚´ ì  ì—†ìŒ")}"
         );
 
         if (currentTarget != null)
         {
-            Debug.Log("[Å¸¿ö] °ø°İ »óÅÂ·Î ÀüÈ¯ (Å¸°Ù °íÁ¤)");
+            Debug.Log("[íƒ€ì›Œ] ê³µê²© ìƒíƒœë¡œ ì „í™˜ (íƒ€ê²Ÿ ê³ ì •)");
             currentState = State.Attacking;
         }
     }
 
-    // °ø°İ ´Ü°è
+    // ê³µê²© ë‹¨ê³„
     void HandleAttacking()
     {
         if (currentTarget == null)
         {
-            Debug.Log("[Å¸¿ö] Å¸°Ù ¼Ò½Ç ¡æ Å½»ö º¹±Í");
+            Debug.Log("[íƒ€ì›Œ] íƒ€ê²Ÿ ì†Œì‹¤ â†’ íƒìƒ‰ ë³µê·€");
             currentState = State.Searching;
             return;
         }
 
-        // »ç°Å¸® À¯Áö Ã¼Å©
+        // ì‚¬ê±°ë¦¬ ìœ ì§€ ì²´í¬
         Vector3Int enemyTile = tilemap.WorldToCell(currentTarget.transform.position);
 
         int dx = Mathf.Abs(towerTile.x - enemyTile.x);
@@ -104,22 +104,22 @@ public class Tower : MonoBehaviour
         int distance = Mathf.Max(dx, dy);
 
         Debug.Log(
-            $"[Å¸¿ö] °ø°İ À¯Áö °Ë»ç | Å¸¿ö({towerTile.x},{towerTile.y}) " +
-            $"Àû({enemyTile.x},{enemyTile.y}) °Å¸®={distance} / »ç°Å¸®={attackRange}"
+            $"[íƒ€ì›Œ] ê³µê²© ìœ ì§€ ê²€ì‚¬ | íƒ€ì›Œ({towerTile.x},{towerTile.y}) " +
+            $"ì ({enemyTile.x},{enemyTile.y}) ê±°ë¦¬={distance} / ì‚¬ê±°ë¦¬={attackRange}"
         );
 
         if (distance > attackRange)
         {
-            Debug.Log("[Å¸¿ö] »ç°Å¸® ÀÌÅ» ¡æ Å¸°Ù ÇØÁ¦");
+            Debug.Log("[íƒ€ì›Œ] ì‚¬ê±°ë¦¬ ì´íƒˆ â†’ íƒ€ê²Ÿ í•´ì œ");
             currentTarget = null;
             currentState = State.Searching;
             return;
         }
 
-        // °ø°İ
+        // ê³µê²©
         if (attackCooldown <= 0f)
         {
-            Debug.Log("[Å¸¿ö] ÃÑ¾Ë ¹ß»ç!");
+            Debug.Log("[íƒ€ì›Œ] ì´ì•Œ ë°œì‚¬!");
             shooter.Shoot(currentTarget, 0f, attackHitCount);
             attackCooldown = 1f / attackSpeed;
         }
