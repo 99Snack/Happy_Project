@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+
 
 //▼ 방향을 나타내는 enum
 enum Direction
@@ -52,7 +52,6 @@ struct Step
         selectDirection = SelectDirection;
         banDirections = new();
         lastDirection = LastDirection;
-
     }
 }
 
@@ -64,6 +63,10 @@ struct Step
 /// </summary>
 public class SinglePathGenerator : MonoBehaviour
 {
+    //▼ 싱글톤을 위한 변수 
+    private static SinglePathGenerator instance;
+    public static SinglePathGenerator Instance => instance;
+
     //▼ 14 X 8 길이의 타일
     [SerializeField] const int tileXLength = 14;
     [SerializeField] const int tileYLength = 8;
@@ -77,15 +80,28 @@ public class SinglePathGenerator : MonoBehaviour
 
     private const int maxCurveCount = 8; //최대 꺾임 수
     private int curveCount; //꺾임 수 
+    
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
     /// <summary>
-    /// 경로가 저장된 배열에 따라 타일을 길로 변경해주는 메서드  
+    /// 경로가 저장된 배열을 따라 타일을 길로 변경해주는 메서드  
     /// </summary>
     /// <returns></returns>
     public void GetPath()
     {
         ActiveFindPath();
-        
+
         foreach(var path in singlePath)
         {
             TileManager.Instance.SetTileData(path.x, path.y, TileData.TYPE.Road);
@@ -93,7 +109,7 @@ public class SinglePathGenerator : MonoBehaviour
     }
 
     /// <summary>
-    ///  길찾기 코루틴 함수를 실행하는 메서드 
+    /// 길찾기를 실행하는 메서드 
     /// </summary>
     private void ActiveFindPath()
     {
