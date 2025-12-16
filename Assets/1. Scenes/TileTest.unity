@@ -7761,7 +7761,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 15, y: 3, z: -13}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -9832,10 +9832,14 @@ MonoBehaviour:
   shooter: {fileID: 1425142497}
   baseCamp: {fileID: 1670192457}
   tilemap: {fileID: 867814982}
+  towerTile: {x: 0, y: 0, z: 0}
+  currentTarget: {fileID: 0}
   detectionInterval: 0.1
+  detectionTimer: 0
   attackSpeed: 1
   attackRange: 10
   attackHitCount: 1
+  attackCooldown: 0
 --- !u!1001 &1442620481
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14802,7 +14806,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 11, y: 3, z: -15.61}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
