@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GeneratorMap : MonoBehaviour
@@ -7,17 +8,17 @@ public class GeneratorMap : MonoBehaviour
     public GameObject enemyBasePrefab;
     public GameObject allyBasePrefab;
 
-    public const int CELL_SIZE = 2;
+    public Dictionary<Vector2Int, GameObject> tiles = new Dictionary<Vector2Int, GameObject>();
 
     public void Generator()
     {
-        for (int i = 0; i < TileManager.MAP_SIZE_X; i++)
+        for (int i = 0; i < TileManager.MAP_SIZE_Y; i++)
         {
-            for (int j = 0; j < TileManager.MAP_SIZE_Y; j++)
+            for (int j = 0; j < TileManager.MAP_SIZE_X; j++)
             {
-                TileData tile = TileManager.Instance.GetTileData(i, j);
-                int x = i * CELL_SIZE;
-                int y = j * CELL_SIZE;
+                TileData tile = TileManager.Instance.GetTileData(j,i);
+                int x = j * TileManager.CELL_SIZE;
+                int y = i * TileManager.CELL_SIZE;
 
                 GameObject tilePrefab = null;
                 switch (tile.Type)
@@ -43,6 +44,7 @@ public class GeneratorMap : MonoBehaviour
                 {
                     GameObject tileObject = Instantiate(tilePrefab, worldPosition, Quaternion.identity);
                     tileObject.transform.SetParent(transform);
+                    tiles.Add(new Vector2Int(j,i), tileObject);
 
                     //todo : 에디터에서 직접 넣어줄지말지
                     //TileInteractor interactor = tileObject.AddComponent<TileInteractor>();

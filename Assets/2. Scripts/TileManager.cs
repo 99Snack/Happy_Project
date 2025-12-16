@@ -25,7 +25,7 @@ public class TileManager : MonoBehaviour
     public const int MAP_SIZE_X = 14;
     public const int MAP_SIZE_Y = 8;
 
-    public const int CELL_SIZE = 2;
+    public const int CELL_SIZE = 1;
 
     //캠프 좌표 관리 y 1~6 랜덤 좌표
     const int enemyBaseCoordX = 0;
@@ -33,6 +33,8 @@ public class TileManager : MonoBehaviour
 
     public Vector2Int enemyBasePosition { get; private set; }
     public Vector2Int allyBasePosition { get; private set; }
+
+    public GameObject enemy;
 
     private void Start()
     {
@@ -48,12 +50,15 @@ public class TileManager : MonoBehaviour
         {
             for (int j = 0; j < MAP_SIZE_X; j++)
             {
-                allTiles[i, j] = new TileData(j,i,TileData.TYPE.None);
+                allTiles[i, j] = new TileData(j, i, TileData.TYPE.None);
             }
         }
 
         //베이스 랜덤 
         RandomBaseCamp();
+
+        //단일 경로 생성
+        SinglePathGenerator.Instance.GeneratePath();
 
         //타일 맵 생성
         GeneratorMap map = FindAnyObjectByType<GeneratorMap>();
@@ -61,6 +66,9 @@ public class TileManager : MonoBehaviour
         {
             map.Generator();
         }
+
+        Vector3 enemyStartPos = GetWorldPosition(enemyBasePosition);
+        Instantiate(enemy,enemyStartPos,Quaternion.identity);
     }
 
     void RandomBaseCamp()
@@ -69,17 +77,25 @@ public class TileManager : MonoBehaviour
         int randomEnemyBaseCoordY = Random.Range(1, MAP_SIZE_Y - 1);
         int randomAllyBaseCoordY = Random.Range(1, MAP_SIZE_Y - 1);
 
+        Debug.Log(randomAllyBaseCoordY);
+
         enemyBasePosition = new Vector2Int(enemyBaseCoordX, randomEnemyBaseCoordY);
         allyBasePosition = new Vector2Int(allyBaseCoordX, randomAllyBaseCoordY);
 
-        //정해진 좌표에 베이스 설정
-        allTiles[enemyBasePosition.y - 1, enemyBasePosition.x].Type = TileData.TYPE.EnemyBase;
-        allTiles[enemyBasePosition.y, enemyBasePosition.x].Type = TileData.TYPE.EnemyBase;
-        allTiles[enemyBasePosition.y + 1, enemyBasePosition.x].Type = TileData.TYPE.EnemyBase;
+        //베이스 크기 1x3
+        int[] enemyBaseYCoords = { randomEnemyBaseCoordY - 1, randomEnemyBaseCoordY, randomEnemyBaseCoordY + 1 };
+        int[] allyBaseYCoords = { randomAllyBaseCoordY - 1, randomAllyBaseCoordY, randomAllyBaseCoordY + 1 };
 
-        allTiles[allyBasePosition.y - 1, allyBasePosition.x].Type = TileData.TYPE.AllyBase;
-        allTiles[allyBasePosition.y, allyBasePosition.x].Type = TileData.TYPE.AllyBase;
-        allTiles[allyBasePosition.y + 1, allyBasePosition.x].Type = TileData.TYPE.AllyBase;
+        //정해진 좌표에 베이스 설정
+        foreach (var y in enemyBaseYCoords)
+        {
+            allTiles[y, enemyBaseCoordX].Type = TileData.TYPE.EnemyBase;
+        }
+
+        foreach (var y in allyBaseYCoords)
+        {
+            allTiles[y, allyBaseCoordX].Type = TileData.TYPE.AllyBase;
+        }
     }
 
     public void SetTileData(int x, int y, TileData.TYPE type)
@@ -88,7 +104,7 @@ public class TileManager : MonoBehaviour
 
         if (IsValidCoordinate(x, y))
         {
-            allTiles[y, x] = new TileData(x,y,type);
+            allTiles[y, x] = new TileData(x, y, type);
         }
     }
 
@@ -128,6 +144,19 @@ public class TileManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    public Vector3 GetWorldPosition(int gridX, int gridY)
+    {
+        int worldX = gridX * CELL_SIZE;
+        int worldZ = gridY * CELL_SIZE;
+
+        return new Vector3(worldX, 1f, worldZ);
+    }
+
+    public Vector3 GetWorldPosition(Vector2Int gridPosition)
+    {
+        return GetWorldPosition(gridPosition.x, gridPosition.y);
     }
 }
 
