@@ -1,9 +1,9 @@
-using UnityEngine;
+ï»¿    using UnityEngine;
 
 [System.Serializable]
 public class StageData
 {
-    [Header("½ºÆù ¼ø¼­ (0:²É, 1:¹ÚÁã, 2:¹ú)")]
+    [Header("ìŠ¤í° ìˆœì„œ (0:ê½ƒ, 1:ë°•ì¥, 2:ë²Œ)")]
     public int[] SpawnOrder;
 
     public int[] GetSpawnOrder()

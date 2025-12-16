@@ -1,7 +1,7 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI; 
 
-public class WaveManager : MonoBehaviour
+public class SpawnManager : MonoBehaviour
 {
    public enum STATE { Idle, Wave, Maintenance }
 
@@ -10,6 +10,8 @@ public class WaveManager : MonoBehaviour
 
     [Header("스폰 위치")]
     public Transform SpawnPoint; // 빈 오브젝트로 몬스터 스폰 위치 지정
+    [Header("타겟 위치")]
+    public Transform TargetPoint; // 베이스캠프 오브젝트 연결 
 
     [Header("UI")]
     public Text StageText;
@@ -20,6 +22,7 @@ public class WaveManager : MonoBehaviour
 
     [Header("스테이지 데이터")]
     public StageData[] Stages;
+
 
     // 현재 상태
     private STATE _currentState = STATE.Idle;
@@ -33,21 +36,16 @@ public class WaveManager : MonoBehaviour
 
     private void Start()
     {
-        UpdateStageUI();
         _currentState = STATE.Idle;
-        Debug.Log(_currentState);
+        UpdateStageUI(); 
     }
-
 
     // UI 버튼에서 호출할 메서드 
     public void OnStartButtonClick()
-    {
-        //_currentState = STATE.Idle;
-        Debug.Log(_currentState);
+    {  
         if (_currentState == STATE.Idle || _currentState == STATE.Maintenance)
         {
             StartWave();  // Idle 또는 Maintenance 상태에서만 시작 가능
-            Debug.Log(123);
         }
     }
 
@@ -93,11 +91,15 @@ public class WaveManager : MonoBehaviour
         GameObject prefab = MonsterPrefabs[monsterType]; // 몬스터 프리팹 선택
 
         // 스폰 위치 결정
-        Vector3 spawnPos = (SpawnPoint != null) ? SpawnPoint.position : transform.position;
+        Vector3 spawnPos = (SpawnPoint != null) ? SpawnPoint.position : transform.position; // 스폰 포인트 위치 사용, 없으면 매니저 위치 사용
         GameObject monster = Instantiate(prefab, spawnPos, Quaternion.identity); // 몬스터 생성
 
         Monster monsterScript = monster.GetComponent<Monster>();
         monsterScript.SetSpawnNumber(_spawnCount); // 스폰 번호 설정
+
+        // 타겟 위치 설정
+        MonsterMove moveScript = monster.GetComponent<MonsterMove>();
+        moveScript.SetTarget(TargetPoint); // 타겟 위치 설정
 
         Debug.Log("스폰 : " + prefab.name + "(번호 : " + _spawnCount + ")");
 

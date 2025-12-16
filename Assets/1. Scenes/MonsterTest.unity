@@ -219,11 +219,20 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: OnStartButtonClick
       objectReference: {fileID: 0}
+    - target: {fileID: 1310812309509638137, guid: d55a2734316c16a49b62d0061912c896, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: SpawnManager, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d55a2734316c16a49b62d0061912c896, type: 3}
+--- !u!4 &325080143 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 345538900917144561, guid: e88b2e6337406084588d5009f7f0e97b, type: 3}
+  m_PrefabInstance: {fileID: 1606820776}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1144816687
 GameObject:
   m_ObjectHideFlags: 0
@@ -630,6 +639,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BaseCamp
       objectReference: {fileID: 0}
+    - target: {fileID: 410299323886859387, guid: e88b2e6337406084588d5009f7f0e97b, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -863,6 +876,10 @@ PrefabInstance:
       propertyPath: StageText
       value: 
       objectReference: {fileID: 2105506522}
+    - target: {fileID: 8937493138708381832, guid: 8652fcb5c4cd8a84c9a7f1ca5e48110f, type: 3}
+      propertyPath: TargetPoint
+      value: 
+      objectReference: {fileID: 325080143}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -114,8 +114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9f271160ca26143bf6eff10078616a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
-  MoveSpeed: 3
+  TargetAnchor: {fileID: 0}
   AttackRange: 1
+  TurnAngleThreshold: 45
 --- !u!54 &-1391688179031543280
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -155,6 +156,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91287f335ef877146a3d0c46ca614b8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Monster
+  Data:
+    MonsterID: 0
+    MonsterType: 0
+    MonsterRank: 0
+    AttackType: 0
+    Hp: 0
+    Defense: 0
+    Atk: 0
+    AtkIntervalMs: 0
+    AtkSpeed: 0
+    MoveSpeed: 1
+    RewardGroup: 
+    MonsterResource: 
+  currentHp: 0
 --- !u!1 &251952552649943111
 GameObject:
   m_ObjectHideFlags: 0
