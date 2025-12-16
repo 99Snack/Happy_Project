@@ -66,43 +66,46 @@ public class SinglePathGenerator : MonoBehaviour
     //▼ 14 X 8 길이의 타일
     [SerializeField] const int tileXLength = 14;
     [SerializeField] const int tileYLength = 8;
-    [SerializeField] GameObject test;
      
     //▼ 계산된 단일 경로
-    Vector2Int[] singlePath;
+    private Vector2Int[] singlePath;
     //▼ 적 베이스 캠프 중앙 위치 
-    Vector2Int startPos;
+    private Vector2Int startPos;
     //▼ 아군 베이스 캠프 중앙 위치
-    Vector2Int destinationPos; 
+    private Vector2Int destinationPos; 
 
-    
-    int curveCount; //꺾임 수 
-    int maxCurveCount = 8; //최대 꺾임 수
+    private const int maxCurveCount = 8; //최대 꺾임 수
+    private int curveCount; //꺾임 수 
 
-    Coroutine pathCoroutine; //길 저장용 코루틴 
+    /// <summary>
+    /// 경로가 저장된 Vetor2Int배열을 반환하는 메서드  
+    /// </summary>
+    /// <returns></returns>
+    public Vector2Int[] GetPath()
+    {
+        ActiveFindPath();
+        return singlePath;
+    }
 
     /// <summary>
     ///  길찾기 코루틴 함수를 실행하는 메서드 
     /// </summary>
-    public void ActiveFindPath() 
+    private void ActiveFindPath() 
     {
-        if(pathCoroutine == null)
-        {
-            Init();
-            StartCoroutine(FindPath());
-        }
-    } 
+        Init();
+        FindPath(); 
+    }
+
     /// <summary>
     /// 초기화 메서드 
     /// </summary>
     private void Init()
     {
         curveCount = 0;
-        startPos = new Vector2Int(0,3);
-        destinationPos = new Vector2Int(13,6);
+        //startPos = TileManager.Instance.enemyBasePosition;
+        //destinationPos = TileManager.Instance.allyBasePosition;
     }
     
-
     /// <summary>
     /// 반대 방향을 반환하는 메서드  
     /// </summary>
@@ -294,10 +297,11 @@ public class SinglePathGenerator : MonoBehaviour
             return valiableDirList[0];   
         }
     }
+
     /// <summary>
     /// 단일 경로를 찾는 메서드
     /// </summary>
-    private IEnumerator FindPath()
+    private void FindPath()
     {
         //▼ 이전 방향 
         Direction lastDirection = Direction.None;
@@ -449,7 +453,8 @@ public class SinglePathGenerator : MonoBehaviour
         } 
         //▼ 종료 시 방향 East로 고정
         AddDirection.Add(Direction.East);
-
+        //▼ 시작 위치 추가 
+        path.Add(pathVector);
         //▼ 실제로 path에 벡터를 추가 
         foreach (var dir in AddDirection)
         {
@@ -471,10 +476,7 @@ public class SinglePathGenerator : MonoBehaviour
             path.Add(pathVector);
         }  
         
-        CopyPathListToArray(path);
-        yield return null;
-        //▼ pathCoroutine 비우기 
-        pathCoroutine = null;
+        CopyPathListToArray(path); 
     } 
 }
 
