@@ -4,6 +4,7 @@ using System.Collections;
 using UnityEngine;
 
 
+
 //▼ 방향을 나타내는 enum
 enum Direction
 {
@@ -95,18 +96,31 @@ public class SinglePathGenerator : MonoBehaviour
     }
 
     /// <summary>
-    /// 경로가 저장된 배열을 따라 타일을 길로 변경해주는 메서드  
+    /// (첫 경로 생성용) 경로가 저장된 배열을 따라 타일을 길로 변경해주는 메서드  
     /// </summary>
-    /// <returns></returns>
-    public void GetPath()
+    public void GeneratePath()
     {
         ActiveFindPath();
 
         foreach(var path in singlePath)
-        {
+        {   
+            TileData.TYPE type = TileManager.Instance.GetTileType(path.x, path.y);
+            if (type == TileData.TYPE.AllyBase || type == TileData.TYPE.EnemyBase) 
+                continue;
+            
             TileManager.Instance.SetTileData(path.x, path.y, TileData.TYPE.Road);
         }
     }
+
+    /// <summary>
+    /// 현재 생성되어 있는 경로를 반환해주는 메서드 
+    /// </summary>
+    /// <returns>//현재 생성되어 있는 경로 </returns>
+    public Vector2Int[] GetCurrentPath()
+    {
+        return singlePath;
+    }
+
 
     /// <summary>
     /// 길찾기를 실행하는 메서드 
