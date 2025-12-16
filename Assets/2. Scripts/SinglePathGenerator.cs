@@ -69,8 +69,8 @@ public class SinglePathGenerator : MonoBehaviour
     public static SinglePathGenerator Instance => instance;
 
     //▼ 14 X 8 길이의 타일
-    [SerializeField] const int tileXLength = 14;
-    [SerializeField] const int tileYLength = 8;
+    [SerializeField] const int TILE_X_LENGTH = 14;
+    [SerializeField] const int TILE_Y_LENGTH = 8;
 
     //▼ 계산된 단일 경로
     private Vector2Int[] singlePath;
@@ -79,7 +79,7 @@ public class SinglePathGenerator : MonoBehaviour
     //▼ 아군 베이스 캠프 중앙 위치
     private Vector2Int destinationPos;
 
-    private const int maxCurveCount = 8; //최대 꺾임 수
+    private const int MAX_CURVE_COUNT = 8; //최대 꺾임 수
     private int curveCount; //꺾임 수 
     
     private void Awake()
@@ -270,7 +270,7 @@ public class SinglePathGenerator : MonoBehaviour
         }
 
         //▼ curveCount에 여유가 없거나 연속된 Y방향이 3번이라면 Y방향은 제외 
-        if (curveCount == maxCurveCount || continuousYStep == 3)
+        if (curveCount == MAX_CURVE_COUNT || continuousYStep == 3)
         {
             valiableDirList.Remove(Direction.North);
             valiableDirList.Remove(Direction.South);
@@ -287,7 +287,7 @@ public class SinglePathGenerator : MonoBehaviour
             }
 
             //▼ 방향을 적용한 다음 위치가 범위를 벗어나면 
-            if (nextPosition.x > tileXLength - 1 || nextPosition.y > tileYLength - 1 || nextPosition.x < 0 || nextPosition.y < 0)
+            if (nextPosition.x > TILE_X_LENGTH - 1 || nextPosition.y > TILE_Y_LENGTH - 1 || nextPosition.x < 0 || nextPosition.y < 0)
             {
                 valiableDirList.Remove(valiableDirList[i]);
                 continue;
@@ -299,7 +299,7 @@ public class SinglePathGenerator : MonoBehaviour
                 continue;
             }
             //▼ 꺾임 수 제한 확인  
-            else if (curveCount >= maxCurveCount && Math.Abs((int)valiableDirList[i]) != Math.Abs((int)lastDirection))
+            else if (curveCount >= MAX_CURVE_COUNT && Math.Abs((int)valiableDirList[i]) != Math.Abs((int)lastDirection))
             {
                 valiableDirList.Remove(valiableDirList[i]);
                 continue;
