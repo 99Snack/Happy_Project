@@ -2,26 +2,26 @@ using UnityEngine;
 
 public class Monster : MonoBehaviour
 {
-    // ½ºÆù ¹øÈ£(¼ø¼­) ±æÃ£±â¿¡¼­ »ç¿ë¿ë
+    // ìŠ¤í° ë²ˆí˜¸(ìˆœì„œ) ê¸¸ì°¾ê¸°ì—ì„œ ì‚¬ìš©ìš©
     public int SpawnNumber { get; private set; }
 
-    // ½ºÆ÷³Ê¿¡¼­ È£ÃâÇØ¼­ ¹øÈ£ ¼³Á¤
+    // ìŠ¤í¬ë„ˆì—ì„œ í˜¸ì¶œí•´ì„œ ë²ˆí˜¸ ì„¤ì •
     public void SetSpawnNumber(int number)
     {
         SpawnNumber = number;
     }
 
-    // ¸ó½ºÅÍ Á×À» ¶§ È£Ãâ 
+    // ëª¬ìŠ¤í„° ì£½ì„ ë•Œ í˜¸ì¶œ 
     public void Die()
     {
-        // ¿şÀÌºê ¸Å´ÏÀú¿¡ ¾Ë¸®±â
+        // ì›¨ì´ë¸Œ ë§¤ë‹ˆì €ì— ì•Œë¦¬ê¸°
         WaveManager waveManager = FindObjectOfType<WaveManager>();
         waveManager.OnMonsterDie();
 
         Destroy(gameObject);
     }
 
-    // Å×½ºÆ®¿ë: ¸¶¿ì½º Å¬¸¯ÇÏ¸é Á×À½
+    // í…ŒìŠ¤íŠ¸ìš©: ë§ˆìš°ìŠ¤ í´ë¦­í•˜ë©´ ì£½ìŒ
     private void OnMouseDown()
     {
         Die();

@@ -5,43 +5,49 @@ public class WaveManager : MonoBehaviour
 {
    public enum STATE { Idle, Wave, Maintenance }
 
-    [Header("¸ó½ºÅÍ ÇÁ¸®ÆÕ (0:²É, 1:¹ÚÁã, 2:¹ú")]
-    public GameObject[] MonsterPrefabs; // »ı¼ºÇÒ ¸ó½ºÅÍ ÇÁ¸®ÆÕ
+    [Header("ëª¬ìŠ¤í„° í”„ë¦¬íŒ¹ (0:ê½ƒ, 1:ë°•ì¥, 2:ë²Œ")]
+    public GameObject[] MonsterPrefabs; // ìƒì„±í•  ëª¬ìŠ¤í„° í”„ë¦¬íŒ¹
 
-    [Header("½ºÆù À§Ä¡")]
-    public Transform SpawnPoint; // ºó ¿ÀºêÁ§Æ®·Î ¸ó½ºÅÍ ½ºÆù À§Ä¡ ÁöÁ¤
+    [Header("ìŠ¤í° ìœ„ì¹˜")]
+    public Transform SpawnPoint; // ë¹ˆ ì˜¤ë¸Œì íŠ¸ë¡œ ëª¬ìŠ¤í„° ìŠ¤í° ìœ„ì¹˜ ì§€ì •
 
     [Header("UI")]
     public Text StageText;
 
-    [Header("½ºÆù ¼³Á¤")]
-    public float StartDelay = 2f; // ¿şÀÌºê ½ÃÀÛ ´ë±â ½Ã°£, ½ºÆù ½ÃÀÛ Áö¿¬ 
-    public float SpawnInterval = 1f; // ¸ó½ºÅÍ ½ºÆù °£°İ
+    [Header("ìŠ¤í° ì„¤ì •")]
+    public float StartDelay = 2f; // ì›¨ì´ë¸Œ ì‹œì‘ ëŒ€ê¸° ì‹œê°„, ìŠ¤í° ì‹œì‘ ì§€ì—° 
+    public float SpawnInterval = 1f; // ëª¬ìŠ¤í„° ìŠ¤í° ê°„ê²©
 
-    [Header("½ºÅ×ÀÌÁö µ¥ÀÌÅÍ")]
+    [Header("ìŠ¤í…Œì´ì§€ ë°ì´í„°")]
     public StageData[] Stages;
 
-    // ÇöÀç »óÅÂ
+    // í˜„ì¬ ìƒíƒœ
     private STATE _currentState = STATE.Idle;
-    private int _currentStage = 0; // ÇöÀç ½ºÅ×ÀÌÁö ¹øÈ£(0ºÎÅÍ ½ÃÀÛ, ½ºÅ×ÀÌÁö 1 = ÀÎµ¦½º0) 
+    private int _currentStage = 0; // í˜„ì¬ ìŠ¤í…Œì´ì§€ ë²ˆí˜¸(0ë¶€í„° ì‹œì‘, ìŠ¤í…Œì´ì§€ 1 = ì¸ë±ìŠ¤0) 
  
-    // ½ºÆù °ü·Ã 
-    private int _spawnCount = 0; // ÇöÀç ½ºÆùµÈ ¸ó½ºÅÍ ¼ö
-    private int _orderIndex = 0; // ½ºÆù ¼ø¼­ ÀÎµ¦½º 
-    private int[] _currentSpawnOrder; // ÇöÀç ¿şÀÌºêÀÇ ½ºÆù ¼ø¼­ ¹è¿­
-    private int _aliveMonsterCount = 0; // ÇöÀç »ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¼ö
+    // ìŠ¤í° ê´€ë ¨ 
+    private int _spawnCount = 0; // í˜„ì¬ ìŠ¤í°ëœ ëª¬ìŠ¤í„° ìˆ˜
+    private int _orderIndex = 0; // ìŠ¤í° ìˆœì„œ ì¸ë±ìŠ¤ 
+    private int[] _currentSpawnOrder; // í˜„ì¬ ì›¨ì´ë¸Œì˜ ìŠ¤í° ìˆœì„œ ë°°ì—´
+    private int _aliveMonsterCount = 0; // í˜„ì¬ ì‚´ì•„ìˆëŠ” ëª¬ìŠ¤í„° ìˆ˜
 
     private void Start()
     {
-        UpdateStageUI(); 
+        UpdateStageUI();
+        _currentState = STATE.Idle;
+        Debug.Log(_currentState);
     }
 
-    // UI ¹öÆ°¿¡¼­ È£ÃâÇÒ ¸Ş¼­µå 
+
+    // UI ë²„íŠ¼ì—ì„œ í˜¸ì¶œí•  ë©”ì„œë“œ 
     public void OnStartButtonClick()
-    {  
+    {
+        //_currentState = STATE.Idle;
+        Debug.Log(_currentState);
         if (_currentState == STATE.Idle || _currentState == STATE.Maintenance)
         {
-            StartWave();  // Idle ¶Ç´Â Maintenance »óÅÂ¿¡¼­¸¸ ½ÃÀÛ °¡´É
+            StartWave();  // Idle ë˜ëŠ” Maintenance ìƒíƒœì—ì„œë§Œ ì‹œì‘ ê°€ëŠ¥
+            Debug.Log(123);
         }
     }
 
@@ -49,67 +55,67 @@ public class WaveManager : MonoBehaviour
     {
         if(_currentStage >= Stages.Length)
         {
-            Debug.Log("¸ğµç ½ºÅ×ÀÌÁö ¿Ï·á");
+            Debug.Log("ëª¨ë“  ìŠ¤í…Œì´ì§€ ì™„ë£Œ");
             return; 
         }
 
-        _currentState = STATE.Wave; // ¿şÀÌºê ´Ü°è·Î ÀüÈ¯   
+        _currentState = STATE.Wave; // ì›¨ì´ë¸Œ ë‹¨ê³„ë¡œ ì „í™˜   
         
-        // ½ºÆù ÃÊ±âÈ­
+        // ìŠ¤í° ì´ˆê¸°í™”
         _spawnCount = 0;
         _orderIndex = 0;
 
 
-        // ÇöÀç ½ºÅ×ÀÌÁö µ¥ÀÌÅÍ·Î ½ºÆù ¼ø¼­ °¡Á®¿Í¼­ ¼³Á¤
-        StageData currentData = Stages[_currentStage]; // ÇöÀç ½ºÅ×ÀÌÁö µ¥ÀÌÅÍ °¡Á®¿À±â
-        _currentSpawnOrder = currentData.GetSpawnOrder(); // ½ºÆù ¼ø¼­ ¹è¿­ »ı¼º
-        _aliveMonsterCount = _currentSpawnOrder.Length; // »ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¼ö ¼³Á¤
+        // í˜„ì¬ ìŠ¤í…Œì´ì§€ ë°ì´í„°ë¡œ ìŠ¤í° ìˆœì„œ ê°€ì ¸ì™€ì„œ ì„¤ì •
+        StageData currentData = Stages[_currentStage]; // í˜„ì¬ ìŠ¤í…Œì´ì§€ ë°ì´í„° ê°€ì ¸ì˜¤ê¸°
+        _currentSpawnOrder = currentData.GetSpawnOrder(); // ìŠ¤í° ìˆœì„œ ë°°ì—´ ìƒì„±
+        _aliveMonsterCount = _currentSpawnOrder.Length; // ì‚´ì•„ìˆëŠ” ëª¬ìŠ¤í„° ìˆ˜ ì„¤ì •
 
         UpdateStageUI();
-        Debug.Log("½ºÅ×ÀÌÁö " + (_currentStage + 1) + " ½ÃÀÛ, ÃÑ ¸ó½ºÅÍ ¼ö: " + _aliveMonsterCount);
+        Debug.Log("ìŠ¤í…Œì´ì§€ " + (_currentStage + 1) + " ì‹œì‘, ì´ ëª¬ìŠ¤í„° ìˆ˜: " + _aliveMonsterCount);
 
-        // Start Delay ÈÄ¿¡ Ã¹ ½ºÆù ½ÃÀÛ 
-        InvokeRepeating("SpawnOne", StartDelay, SpawnInterval); // ¿şÀÌºê ½ÃÀÛ Áö¿¬ ÈÄ ½ºÆù ¹İº¹ ½ÃÀÛ
+        // Start Delay í›„ì— ì²« ìŠ¤í° ì‹œì‘ 
+        InvokeRepeating("SpawnOne", StartDelay, SpawnInterval); // ì›¨ì´ë¸Œ ì‹œì‘ ì§€ì—° í›„ ìŠ¤í° ë°˜ë³µ ì‹œì‘
     }
 
     private void SpawnOne()
     {
         if (_orderIndex >= _currentSpawnOrder.Length)
         {
-            CancelInvoke("SpawnOne"); // ½ºÆù ¹İº¹ Ãë¼Ò
-            Debug.Log("¸ğµç ¸ó½ºÅÍ ½ºÆù ¿Ï·á, ¸ó½ºÅÍ Ã³Ä¡ ´ë±âÁß");
-            return; // ½ºÆù ¼ø¼­ ³¡³µÀ¸¸é Á¾·á
+            CancelInvoke("SpawnOne"); // ìŠ¤í° ë°˜ë³µ ì·¨ì†Œ
+            Debug.Log("ëª¨ë“  ëª¬ìŠ¤í„° ìŠ¤í° ì™„ë£Œ, ëª¬ìŠ¤í„° ì²˜ì¹˜ ëŒ€ê¸°ì¤‘");
+            return; // ìŠ¤í° ìˆœì„œ ëë‚¬ìœ¼ë©´ ì¢…ë£Œ
         }
 
-        _spawnCount++; // ½ºÆù µÈ ¸ó½ºÅÍ ¹øÈ£ Áõ°¡ 
+        _spawnCount++; // ìŠ¤í° ëœ ëª¬ìŠ¤í„° ë²ˆí˜¸ ì¦ê°€ 
 
-        int monsterType = _currentSpawnOrder[_orderIndex]; // ÇöÀç ½ºÆùÇÒ ¸ó½ºÅÍ Å¸ÀÔ °¡Á®¿À±â
-        GameObject prefab = MonsterPrefabs[monsterType]; // ¸ó½ºÅÍ ÇÁ¸®ÆÕ ¼±ÅÃ
+        int monsterType = _currentSpawnOrder[_orderIndex]; // í˜„ì¬ ìŠ¤í°í•  ëª¬ìŠ¤í„° íƒ€ì… ê°€ì ¸ì˜¤ê¸°
+        GameObject prefab = MonsterPrefabs[monsterType]; // ëª¬ìŠ¤í„° í”„ë¦¬íŒ¹ ì„ íƒ
 
-        // ½ºÆù À§Ä¡ °áÁ¤
+        // ìŠ¤í° ìœ„ì¹˜ ê²°ì •
         Vector3 spawnPos = (SpawnPoint != null) ? SpawnPoint.position : transform.position;
-        GameObject monster = Instantiate(prefab, spawnPos, Quaternion.identity); // ¸ó½ºÅÍ »ı¼º
+        GameObject monster = Instantiate(prefab, spawnPos, Quaternion.identity); // ëª¬ìŠ¤í„° ìƒì„±
 
         Monster monsterScript = monster.GetComponent<Monster>();
-        monsterScript.SetSpawnNumber(_spawnCount); // ½ºÆù ¹øÈ£ ¼³Á¤
+        monsterScript.SetSpawnNumber(_spawnCount); // ìŠ¤í° ë²ˆí˜¸ ì„¤ì •
 
-        Debug.Log("½ºÆù : " + prefab.name + "(¹øÈ£ : " + _spawnCount + ")");
+        Debug.Log("ìŠ¤í° : " + prefab.name + "(ë²ˆí˜¸ : " + _spawnCount + ")");
 
         _orderIndex++;
     }
 
-    // ½ºÅ×ÀÌÁö UI ¾÷µ¥ÀÌÆ®, Monster.Die()¿¡¼­ È£Ãâ
+    // ìŠ¤í…Œì´ì§€ UI ì—…ë°ì´íŠ¸, Monster.Die()ì—ì„œ í˜¸ì¶œ
     public void OnMonsterDie()
     {
-        _aliveMonsterCount--; // »ì¾ÆÀÖ´Â ¸ó½ºÅÍ ¼ö °¨¼Ò
-        Debug.Log("³²Àº ¸ó½ºÅÍ ¼ö: " + _aliveMonsterCount);
+        _aliveMonsterCount--; // ì‚´ì•„ìˆëŠ” ëª¬ìŠ¤í„° ìˆ˜ ê°ì†Œ
+        Debug.Log("ë‚¨ì€ ëª¬ìŠ¤í„° ìˆ˜: " + _aliveMonsterCount);
 
-        // ¸ó½ºÅÍ Àü¸êÇÏ¸é Á¤ºñ ´Ü°è·Î ÀüÈ¯
+        // ëª¬ìŠ¤í„° ì „ë©¸í•˜ë©´ ì •ë¹„ ë‹¨ê³„ë¡œ ì „í™˜
         if (_aliveMonsterCount <= 0 && _currentState == STATE.Wave)
         {
-            _currentState = STATE.Maintenance; // À¯Áöº¸¼ö ´Ü°è·Î ÀüÈ¯
-            _currentStage++; // ´ÙÀ½ ½ºÅ×ÀÌÁö ´Ü°è Áõ°¡ 
-            Debug.Log("½ºÅ×ÀÌÁö Å¬¸®¾î! Á¤ºñ ´Ü°è·Î ÀüÈ¯");
+            _currentState = STATE.Maintenance; // ìœ ì§€ë³´ìˆ˜ ë‹¨ê³„ë¡œ ì „í™˜
+            _currentStage++; // ë‹¤ìŒ ìŠ¤í…Œì´ì§€ ë‹¨ê³„ ì¦ê°€ 
+            Debug.Log("ìŠ¤í…Œì´ì§€ í´ë¦¬ì–´! ì •ë¹„ ë‹¨ê³„ë¡œ ì „í™˜");
             UpdateStageUI();
         }
     }
@@ -117,7 +123,7 @@ public class WaveManager : MonoBehaviour
     {
         if (StageText != null) 
         {
-            int displayStage = _currentStage + 1; // »ç¿ëÀÚ¿¡°Ô´Â 1ºÎÅÍ Ç¥½Ã
+            int displayStage = _currentStage + 1; // ì‚¬ìš©ìì—ê²ŒëŠ” 1ë¶€í„° í‘œì‹œ
             StageText.text = "Stage: " + displayStage; 
         }
     }
