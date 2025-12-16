@@ -45,8 +45,8 @@ public class GeneratorMap : MonoBehaviour
                     tileObject.transform.SetParent(transform);
 
                     //todo : 에디터에서 직접 넣어줄지말지
-                    TileInteractor interactor = tileObject.AddComponent<TileInteractor>();
-                    interactor.Setup(i, j, tile.Type);
+                    //TileInteractor interactor = tileObject.AddComponent<TileInteractor>();
+                    //interactor.Setup(i, j, tile.Type);
                 }
 
             }
