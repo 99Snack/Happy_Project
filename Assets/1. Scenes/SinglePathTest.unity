@@ -275,7 +275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5cf7c8426ba4b994782eaf9a53a28610, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SinglePathGenerator
-  test: {fileID: 3604378484501226944, guid: db3841673b165284bb90daa4d6228173, type: 3}
 --- !u!4 &1134215343
 Transform:
   m_ObjectHideFlags: 0
@@ -626,7 +625,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1134215342}
         m_TargetAssemblyTypeName: SinglePathGenerator, Assembly-CSharp
-        m_MethodName: GetPath
+        m_MethodName: GeneratePath
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
