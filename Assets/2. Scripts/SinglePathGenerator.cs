@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
-
 
 
 //▼ 방향을 나타내는 enum
@@ -22,7 +20,7 @@ struct Step
     public readonly Direction selectDirection;
     public readonly Direction lastDirection;
     public List<Direction> banDirections;
-
+    
     public void AddBanDirectionList(List<Direction> directionList)
     {
         banDirections.AddRange(directionList);
@@ -79,6 +77,7 @@ public class SinglePathGenerator : MonoBehaviour
     //▼ 아군 베이스 캠프 중앙 위치
     private Vector2Int destinationPos;
 
+
     private const int MAX_CURVE_COUNT = 8; //최대 꺾임 수
     private int curveCount; //꺾임 수 
     
@@ -101,7 +100,7 @@ public class SinglePathGenerator : MonoBehaviour
     public void GeneratePath()
     {
         ActiveFindPath();
-
+        
         foreach(var path in singlePath)
         {   
             TileData.TYPE type = TileManager.Instance.GetTileType(path.x, path.y);
@@ -121,12 +120,11 @@ public class SinglePathGenerator : MonoBehaviour
         return singlePath;
     }
 
-
     /// <summary>
     /// 길찾기를 실행하는 메서드 
     /// </summary>
     private void ActiveFindPath()
-    {
+    {   
         Init();
         FindPath();
     }
@@ -371,6 +369,7 @@ public class SinglePathGenerator : MonoBehaviour
 
         //▼ 스텝을 저장해놓은 스택
         Stack<Step> steps = new();
+      
 
         //▼ 적군 베이스 캠프 경로에서 제외
         takenPath.Add(new Vector2Int(currentX, currentY));
@@ -409,9 +408,14 @@ public class SinglePathGenerator : MonoBehaviour
                         Debug.LogError("InfiniteLoop");
                         break;
                     }
+                    if(AddDirection.Count - 1 < 0)
+                    {
+                        Debug.LogError("Too Low Count");
+                        break;
+                    }
 
                     AddDirection.RemoveAt(AddDirection.Count - 1);
-
+                    
                     Step lastStep = steps.Pop();
 
                     if (banDirection.Count > 0)
@@ -419,10 +423,10 @@ public class SinglePathGenerator : MonoBehaviour
                         banDirection.Clear();
                     }
 
+                    takenPath.Remove(new Vector2Int(currentX, currentY));
+                    
                     currentX = lastStep.currentX;
                     currentY = lastStep.currentY;
-
-                    takenPath.Remove(new Vector2Int(currentX, currentY));
 
                     continuousYStep = lastStep.continuousYStep;
                     continuousCurve = lastStep.continuousCurve;
@@ -460,7 +464,7 @@ public class SinglePathGenerator : MonoBehaviour
 
                 steps.Push(curStep);
 
-                //▼ 좌표 값 바꾸기
+                //▼ 좌표 값 바꾸기                            
                 switch (selectedDirection)
                 {
                     case Direction.West:
