@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 7709111553989611384}
   - component: {fileID: -8825961418626133447}
   - component: {fileID: 6186278875173558699}
+  - component: {fileID: 6048483309059347916}
   m_Layer: 0
   m_Name: Mob_Bee
   m_TagString: Enemy
@@ -84,7 +85,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
   TargetAnchor: {fileID: 0}
   AttackRange: 1
-  TurnAngleThreshold: 45
 --- !u!54 &-8825961418626133447
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -107,8 +107,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
+  m_UseGravity: 1
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -138,6 +138,29 @@ MonoBehaviour:
     RewardGroup: 
     MonsterResource: 
   currentHp: 0
+--- !u!136 &6048483309059347916
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 384057192121953837}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &840899002436641058
 GameObject:
   m_ObjectHideFlags: 0

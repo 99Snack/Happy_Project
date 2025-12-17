@@ -809,6 +809,7 @@ GameObject:
   - component: {fileID: 7360501657385327265}
   - component: {fileID: 6479465188132997268}
   - component: {fileID: 7369931887619519006}
+  - component: {fileID: 6640036855295240280}
   m_Layer: 0
   m_Name: Mob_Bat
   m_TagString: Enemy
@@ -882,7 +883,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
   TargetAnchor: {fileID: 0}
   AttackRange: 1
-  TurnAngleThreshold: 45
 --- !u!54 &6479465188132997268
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -905,8 +905,8 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 0
+  m_UseGravity: 1
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -936,6 +936,29 @@ MonoBehaviour:
     RewardGroup: 
     MonsterResource: 
   currentHp: 0
+--- !u!136 &6640036855295240280
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8703846863824313490}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8810073858278490265
 GameObject:
   m_ObjectHideFlags: 0
