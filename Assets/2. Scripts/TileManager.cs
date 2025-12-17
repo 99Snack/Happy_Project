@@ -77,7 +77,7 @@ public class TileManager : MonoBehaviour
         int randomEnemyBaseCoordY = Random.Range(1, MAP_SIZE_Y - 1);
         int randomAllyBaseCoordY = Random.Range(1, MAP_SIZE_Y - 1);
 
-        Debug.Log(randomAllyBaseCoordY);
+        //Debug.Log(randomAllyBaseCoordY);
 
         enemyBasePosition = new Vector2Int(enemyBaseCoordX, randomEnemyBaseCoordY);
         allyBasePosition = new Vector2Int(allyBaseCoordX, randomAllyBaseCoordY);
