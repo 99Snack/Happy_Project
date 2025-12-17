@@ -1,28 +1,28 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class TowerTargetDetector : MonoBehaviour
 {
-    public Tilemap tilemap;   // Inspector ¿¬°á
+    public Tilemap tilemap;   // Inspector ì—°ê²°
 
     private List<Enemy> enemies = new List<Enemy>();
 
-    // Àû µî·Ï
+    // ì  ë“±ë¡
     public void RegisterEnemy(Enemy enemy)
     {
         if (!enemies.Contains(enemy))
         {
             enemies.Add(enemy);
-            //Debug.Log($"[°¨Áö±â] Àû µî·ÏµÊ | ÇöÀç Àû ¼ö: {enemies.Count}");
+            //Debug.Log($"[ê°ì§€ê¸°] ì  ë“±ë¡ë¨ | í˜„ì¬ ì  ìˆ˜: {enemies.Count}");
         }
     }
 
-    // Àû Á¦°Å
+    // ì  ì œê±°
     public void UnregisterEnemy(Enemy enemy)
     {
         enemies.Remove(enemy);
-        //Debug.Log($"[°¨Áö±â] Àû Á¦°ÅµÊ | ÇöÀç Àû ¼ö: {enemies.Count}");
+        //Debug.Log($"[ê°ì§€ê¸°] ì  ì œê±°ë¨ | í˜„ì¬ ì  ìˆ˜: {enemies.Count}");
     }
 
   
@@ -34,7 +34,7 @@ public class TowerTargetDetector : MonoBehaviour
         Enemy bestTarget = null;
         int minBaseDistance = int.MaxValue;
 
-        //Debug.Log($"[°¨Áö±â] »ç°Å¸® ³» Àû Å½»ö ½ÃÀÛ | ÀüÃ¼ Àû ¼ö: {enemies.Count}");
+        //Debug.Log($"[ê°ì§€ê¸°] ì‚¬ê±°ë¦¬ ë‚´ ì  íƒìƒ‰ ì‹œì‘ | ì „ì²´ ì  ìˆ˜: {enemies.Count}");
 
         foreach (Enemy enemy in enemies)
         {
@@ -42,28 +42,28 @@ public class TowerTargetDetector : MonoBehaviour
 
             Vector3Int enemyTile = tilemap.WorldToCell(enemy.transform.position);
 
-            // Å¸¿ö ±âÁØ »ç°Å¸® °Ë»ç (Chebyshev)
+            // íƒ€ì›Œ ê¸°ì¤€ ì‚¬ê±°ë¦¬ ê²€ì‚¬ (Chebyshev)
             int dx = Mathf.Abs(enemyTile.x - towerTile.x);
             int dy = Mathf.Abs(enemyTile.y - towerTile.y);
             int towerDistance = Mathf.Max(dx, dy);
 
             if (towerDistance > range)
             {
-                //Debug.Log($"[°¨Áö±â] »ç°Å¸® OUT | Àû({enemyTile.x},{enemyTile.y})");
+                //Debug.Log($"[ê°ì§€ê¸°] ì‚¬ê±°ë¦¬ OUT | ì ({enemyTile.x},{enemyTile.y})");
                 continue;
             }
 
-            // BaseCamp ±âÁØ °Å¸®
+            // BaseCamp ê¸°ì¤€ ê±°ë¦¬
             int baseDistance =
                 Mathf.Abs(enemyTile.x - baseCampTile.x) +
                 Mathf.Abs(enemyTile.y - baseCampTile.y);
 
             //Debug.Log(
-            //    $"[°¨Áö±â] »ç°Å¸® IN | Àû({enemyTile.x},{enemyTile.y}) " +
-            //    $"BaseCamp °Å¸®={baseDistance}"
+            //    $"[ê°ì§€ê¸°] ì‚¬ê±°ë¦¬ IN | ì ({enemyTile.x},{enemyTile.y}) " +
+            //    $"BaseCamp ê±°ë¦¬={baseDistance}"
             //);
 
-            // ¿ì¼±¼øÀ§ ºñ±³
+            // ìš°ì„ ìˆœìœ„ ë¹„êµ
             if (baseDistance < minBaseDistance)
             {
                 minBaseDistance = baseDistance;
