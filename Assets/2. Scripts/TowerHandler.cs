@@ -53,13 +53,17 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             {
                 if (interactor.type == TileData.TYPE.Wall || interactor.type == TileData.TYPE.None)
                 {
-
+                    //타일 중앙 탑에 위치
                     Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.x, interactor.y);
-
-                    //centerPos.y = initPosition.y;
-
+                    centerPos.y = hit.point.y;
                     transform.position = centerPos;
+                    
+                    //초기 위치 변경
                     initPosition = transform.position;
+
+                    //부모 계층 변경
+                    transform.SetParent(hit.transform);
+
                     return;
                 }
                 else{
