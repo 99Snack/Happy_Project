@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3331395606329860252}
   - component: {fileID: 5275023040262397809}
   - component: {fileID: 3885708773507079147}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: lootblock_block_2_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 5188445028137219752}
   - component: {fileID: 4073572179116727520}
   - component: {fileID: 3391770519996299757}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: lootblock_block_2_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -188,7 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3683781460193359554}
   - component: {fileID: 2062220973929307818}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: AllyBaseTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 1225192534670344538}
   - component: {fileID: 1074852333905996401}
   - component: {fileID: 3166135901056171430}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: lootblock_block_2_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

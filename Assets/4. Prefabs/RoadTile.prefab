@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1418057897641890621}
   - component: {fileID: 7933801915233987625}
   - component: {fileID: 8585318474737803336}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground1_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 6873893790028237229}
   - component: {fileID: 7835831902142611375}
   - component: {fileID: 3328652334468133667}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground1_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 8328761337299662709}
   - component: {fileID: 79906116431857144}
   - component: {fileID: 6603595172156047756}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground1_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -277,7 +277,8 @@ GameObject:
   m_Component:
   - component: {fileID: 3778784391064037075}
   - component: {fileID: 1486194249520908053}
-  m_Layer: 0
+  - component: {fileID: 3544473364948973761}
+  m_Layer: 6
   m_Name: RoadTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -329,3 +330,24 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8585318474737803336}
   m_Enabled: 1
+--- !u!65 &3544473364948973761
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8479194133003556263}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}

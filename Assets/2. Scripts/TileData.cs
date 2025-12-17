@@ -9,7 +9,6 @@ public class TileData
         Wall, Road, AllyBase, EnemyBase
     }
 
-    //실제 포지션 값
     public int X;
     public int Y;
 

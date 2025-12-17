@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 896034209319157712}
   - component: {fileID: 4929445276197772730}
   - component: {fileID: 8481899030864809251}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground1_grass_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,7 +99,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4499653418530085717}
   - component: {fileID: 5893634457943632850}
-  m_Layer: 0
+  - component: {fileID: 8655218057874291666}
+  m_Layer: 6
   m_Name: WallTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -151,6 +152,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 194465445186224293}
   m_Enabled: 1
+--- !u!65 &8655218057874291666
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3623310771190233554}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4630957273443922341
 GameObject:
   m_ObjectHideFlags: 0
@@ -162,7 +184,7 @@ GameObject:
   - component: {fileID: 7952601823468068228}
   - component: {fileID: 2661432521511840806}
   - component: {fileID: 194465445186224293}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground1_grass_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -251,7 +273,7 @@ GameObject:
   - component: {fileID: 411109985675088069}
   - component: {fileID: 740173486281466675}
   - component: {fileID: 1774343521683199590}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ground1_grass_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}

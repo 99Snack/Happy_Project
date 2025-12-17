@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4989583140185198726}
   - component: {fileID: 1049880449775603935}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: EnemyBaseTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -73,7 +73,7 @@ GameObject:
   - component: {fileID: 3742955058576538118}
   - component: {fileID: 1224763102486367935}
   - component: {fileID: 5140194592978650585}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: block_wood2_light_LOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -162,7 +162,7 @@ GameObject:
   - component: {fileID: 7762914067887954679}
   - component: {fileID: 9182305848307237779}
   - component: {fileID: 6024263920353233720}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: block_wood2_light_LOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -251,7 +251,7 @@ GameObject:
   - component: {fileID: 5193943762653331971}
   - component: {fileID: 8247395687510819504}
   - component: {fileID: 617318948574440859}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: block_wood2_light_LOD2
   m_TagString: Untagged
   m_Icon: {fileID: 0}

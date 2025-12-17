@@ -151,7 +151,7 @@ public class TileManager : MonoBehaviour
         int worldX = gridX * CELL_SIZE;
         int worldZ = gridY * CELL_SIZE;
 
-        return new Vector3(worldX, 1f, worldZ);
+        return new Vector3(worldX, 0.5f, worldZ);
     }
 
     public Vector3 GetWorldPosition(Vector2Int gridPosition)
