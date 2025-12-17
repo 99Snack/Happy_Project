@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8938900811528121233}
   - component: {fileID: 115623862006848656}
+  - component: {fileID: 3642866684607365722}
   m_Layer: 0
   m_Name: TowerStayTile
   m_TagString: Untagged
@@ -62,6 +63,21 @@ LODGroup:
     renderers:
     - renderer: {fileID: 8621824038881266157}
   m_Enabled: 0
+--- !u!114 &3642866684607365722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2095198133862806645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 733febaa36afb8d42814441d8605df77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TileInteractor
+  x: 0
+  y: 0
+  type: 2
 --- !u!1 &2357338086751542308
 GameObject:
   m_ObjectHideFlags: 0
