@@ -14,7 +14,7 @@ public class MonsterMove : MonoBehaviour
     {
         monster = GetComponent<Monster>();    // 몬스터 스크립트 가져오기
         animator = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
-
+                                              // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
         Spawn();  // 스폰 될때 스폰 애니 재생 
     }
 
