@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SearchingState : ITowerState
@@ -12,36 +12,34 @@ public class SearchingState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[Å¸¿ö] Searching »óÅÂ ÁøÀÔ");
+        Debug.Log("[íƒ€ì›Œ] AttackReady ìƒíƒœ ì§„ì…");
+        tower.animator.SetBool("isAttackReady", true);
+        tower.animator.SetBool("isAttacking", false);
     }
 
     public void Update()
     {
-        tower.detectionTimer -= Time.deltaTime;
-        if (tower.detectionTimer > 0f) return;
-
-        Vector3Int baseCampTile =
-            tower.tilemap.WorldToCell(tower.baseCamp.position);
-
-        tower.currentTarget =
-            tower.targetDetector.FindNearestEnemyInRange(
-                tower.towerTile,
-                tower.attackRange,
-                baseCampTile
-            );
-
-        tower.detectionTimer = tower.detectionInterval;
-
-        Debug.Log(
-            $"[Å¸¿ö] Å½»ö °á°ú: {(tower.currentTarget != null ? "Å¸°Ù ¼±Á¤ ¿Ï·á" : "»ç°Å¸® ³» Àû ¾øÀ½")}"
-        );
-
-        if (tower.currentTarget != null)
+        if (tower.currentTarget == null)
         {
-            Debug.Log("[Å¸¿ö] °ø°İ »óÅÂ·Î ÀüÈ¯");
+            tower.ChangeState(new IdleState(tower));
+            return;
+        }
+
+        // ì‚¬ê±°ë¦¬ ì²´í¬
+        Vector3Int enemyTile = tower.tilemap.WorldToCell(tower.currentTarget.transform.position);
+        int dx = Mathf.Abs(tower.towerTile.x - enemyTile.x);
+        int dy = Mathf.Abs(tower.towerTile.y - enemyTile.y);
+        int distance = Mathf.Max(dx, dy);
+
+        if (distance <= tower.attackRange)
+        {
+            tower.animator.SetTrigger("AttackTrigger");
             tower.ChangeState(new AttackingState(tower));
         }
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        tower.animator.SetBool("isAttackReady", false);
+    }
 }

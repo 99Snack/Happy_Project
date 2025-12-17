@@ -1,4 +1,4 @@
-using Unity.IO.LowLevel.Unsafe;
+ï»¿using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -8,30 +8,31 @@ public class Tower : MonoBehaviour
     public TowerShooter shooter;
     public Transform baseCamp;
     public Tilemap tilemap;
+    public Animator animator;
 
-    // Å¸¿ö Å¸ÀÏ ÁÂÇ¥
+    // íƒ€ì›Œ íƒ€ì¼ ì¢Œí‘œ
     [HideInInspector] public Vector3Int towerTile;
 
-    // ÇöÀç Å¸°Ù
+    // í˜„ì¬ íƒ€ê²Ÿ
     [HideInInspector] public Enemy currentTarget;
 
-    // Å½Áö
+    // íƒì§€
     public float detectionInterval = 0.1f;
     [HideInInspector] public float detectionTimer = 0f;
 
-    // °ø°İ
+    // ê³µê²©
     public float attackSpeed = 1f;
     public int attackRange = 1;
     public int attackHitCount = 1;
     [HideInInspector] public float attackCooldown = 0f;
 
-    // »óÅÂ ÆĞÅÏ FSM
+    // ìƒíƒœ íŒ¨í„´ FSM
     private ITowerState currentState;
 
     void Start()
     {
         towerTile = tilemap.WorldToCell(transform.position);
-        Debug.Log($"[Å¸¿ö] Å¸¿ö Å¸ÀÏ ÁÂÇ¥: ({towerTile.x},{towerTile.y})");
+        Debug.Log($"[íƒ€ì›Œ] íƒ€ì›Œ íƒ€ì¼ ì¢Œí‘œ: ({towerTile.x},{towerTile.y})");
 
         ChangeState(new IdleState(this));
     }
@@ -50,4 +51,21 @@ public class Tower : MonoBehaviour
         currentState = newState;
         currentState.Enter();
     }
+
+
+    public void OnAttackStopEnd()
+    {
+        if (currentTarget != null)
+        {
+            ChangeState(new SearchingState(this)); // AttackReady ì—­í• 
+        }
+        else
+        {
+            ChangeState(new IdleState(this));
+        }
+    }
+
+
 }
+
+

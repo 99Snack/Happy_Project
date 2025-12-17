@@ -1,4 +1,5 @@
-using UnityEngine;
+Ôªøusing UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class AttackingState : ITowerState
 {
@@ -11,50 +12,40 @@ public class AttackingState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[≈∏øˆ] Attacking ªÛ≈¬ ¡¯¿‘");
+        Debug.Log("[ÌÉÄÏõå] Attack ÏÉÅÌÉú ÏßÑÏûÖ");
+        tower.animator.SetBool("isAttacking", true);
+        tower.animator.SetTrigger("AttackTrigger");
     }
 
     public void Update()
     {
         if (tower.currentTarget == null)
         {
-            Debug.Log("[≈∏øˆ] ≈∏∞Ÿ º“Ω« °Ê ≈Ωªˆ ∫π±Õ");
-            tower.ChangeState(new SearchingState(tower));
+            tower.ChangeState(new AttackStopState(tower));
             return;
         }
 
-        Vector3Int enemyTile =
-            tower.tilemap.WorldToCell(tower.currentTarget.transform.position);
-
+        Vector3Int enemyTile = tower.tilemap.WorldToCell(tower.currentTarget.transform.position);
         int dx = Mathf.Abs(tower.towerTile.x - enemyTile.x);
         int dy = Mathf.Abs(tower.towerTile.y - enemyTile.y);
         int distance = Mathf.Max(dx, dy);
 
-        Debug.Log(
-            $"[≈∏øˆ] ∞¯∞› ¿Ø¡ˆ ∞ÀªÁ | ≈∏øˆ({tower.towerTile.x},{tower.towerTile.y}) " +
-            $"¿˚({enemyTile.x},{enemyTile.y}) ∞≈∏Æ={distance} / ªÁ∞≈∏Æ={tower.attackRange}"
-        );
-
         if (distance > tower.attackRange)
         {
-            Debug.Log("[≈∏øˆ] ªÁ∞≈∏Æ ¿Ã≈ª °Ê ≈∏∞Ÿ «ÿ¡¶");
             tower.currentTarget = null;
-            tower.ChangeState(new SearchingState(tower));
+            tower.ChangeState(new AttackStopState(tower));
             return;
         }
 
         if (tower.attackCooldown <= 0f)
         {
-            Debug.Log("[≈∏øˆ] √—æÀ πﬂªÁ!");
-            tower.shooter.Shoot(
-                tower.currentTarget,
-                0f,
-                tower.attackHitCount
-            );
-
+            tower.shooter.Shoot(tower.currentTarget, 0f, tower.attackHitCount);
             tower.attackCooldown = 1f / tower.attackSpeed;
         }
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        tower.animator.SetBool("isAttacking", false);
+    }
 }

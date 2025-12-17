@@ -1,4 +1,6 @@
-using UnityEngine;
+ï»¿using UnityEngine;
+using UnityEngine.Tilemaps;
+
 public class IdleState : ITowerState
 {
     private Tower tower;
@@ -10,11 +12,28 @@ public class IdleState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[Å¸¿ö] Idle »óÅÂ ÁøÀÔ");
-        tower.ChangeState(new SearchingState(tower));
+        Debug.Log("[íƒ€ì›Œ] Idle ìƒíƒœ ì§„ì…");
+
+        tower.animator.SetBool("isAttacking", false);
+        tower.animator.SetBool("isAttackReady", false);
+        tower.currentTarget = null;
     }
 
-    public void Update() { }
+    public void Update()
+    {
+        Vector3Int baseCampTile = tower.tilemap.WorldToCell(tower.baseCamp.position);
+        Enemy nearest = tower.targetDetector.FindNearestEnemyInRange(
+            tower.towerTile,
+            tower.attackRange, // ì‚¬ê±°ë¦¬ ê·¸ëŒ€ë¡œ
+            baseCampTile
+        );
+
+        if (nearest != null)
+        {
+            tower.currentTarget = nearest;
+            tower.ChangeState(new SearchingState(tower));
+        }
+    }
 
     public void Exit() { }
 }

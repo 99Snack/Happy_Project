@@ -1,4 +1,4 @@
-public interface ITowerState
+﻿public interface ITowerState
 {
     void Enter();
     void Update();
