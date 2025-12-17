@@ -16,7 +16,7 @@ public class GeneratorMap : MonoBehaviour
         {
             for (int j = 0; j < TileManager.MAP_SIZE_X; j++)
             {
-                TileData tile = TileManager.Instance.GetTileData(j,i);
+                TileData tile = TileManager.Instance.GetTileData(j, i);
                 int x = j * TileManager.CELL_SIZE;
                 int y = i * TileManager.CELL_SIZE;
 
@@ -44,11 +44,11 @@ public class GeneratorMap : MonoBehaviour
                 {
                     GameObject tileObject = Instantiate(tilePrefab, worldPosition, Quaternion.identity);
                     tileObject.transform.SetParent(transform);
-                    tiles.Add(new Vector2Int(j,i), tileObject);
+                    tiles.Add(new Vector2Int(j, i), tileObject);
 
                     //todo : 에디터에서 직접 넣어줄지말지
-                    //TileInteractor interactor = tileObject.AddComponent<TileInteractor>();
-                    //interactor.Setup(i, j, tile.Type);
+                    TileInteractor interactor = tileObject.AddComponent<TileInteractor>();
+                    interactor.Setup(j, i, tile.Type);
                 }
 
             }
