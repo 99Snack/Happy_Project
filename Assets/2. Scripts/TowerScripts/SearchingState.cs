@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SearchingState : ITowerState
@@ -27,6 +27,8 @@ public class SearchingState : ITowerState
 
         // 사거리 체크
         Vector3Int enemyTile = tower.tilemap.WorldToCell(tower.currentTarget.transform.position);
+      
+
         int dx = Mathf.Abs(tower.towerTile.x - enemyTile.x);
         int dy = Mathf.Abs(tower.towerTile.y - enemyTile.y);
         int distance = Mathf.Max(dx, dy);

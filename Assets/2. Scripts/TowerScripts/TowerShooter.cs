@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class TowerShooter : MonoBehaviour
 {
-    public GameObject projectilePrefab; // ÃÑ¾Ë Prefab
-    public Transform firePoint;         // ¹ß»ç À§Ä¡
+    public GameObject projectilePrefab; // ì´ì•Œ Prefab
+    public Transform firePoint;         // ë°œì‚¬ ìœ„ì¹˜
 
-    // ÃÑ¾Ë ¹ß»ç
+    // ì´ì•Œ ë°œì‚¬
     public void Shoot(Enemy target, float attackPower, int hitCount)
     {
         if (target == null) return;
@@ -14,9 +14,23 @@ public class TowerShooter : MonoBehaviour
         Projectile projectile = proj.GetComponent<Projectile>();
         if (projectile != null)
         {
-            projectile.SetTarget(target); // Å¸°Ù ¼³Á¤
+            projectile.SetTarget(target.transform); // íƒ€ê²Ÿ ì„¤ì •
         }
 
-        // hitCount > 1ÀÌ¸é ¹üÀ§ °ø°İ È®Àå °¡´É
+        // hitCount > 1ì´ë©´ ë²”ìœ„ ê³µê²© í™•ì¥ ê°€ëŠ¥
+    }
+
+    public void Shoot(MoveTest target, float attackPower, int hitCount)
+    {
+        if (target == null) return;
+
+        GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        Projectile projectile = proj.GetComponent<Projectile>();
+        if (projectile != null)
+        {
+            projectile.SetTarget(target.transform); // íƒ€ê²Ÿ ì„¤ì •
+        }
+
+        // hitCount > 1ì´ë©´ ë²”ìœ„ ê³µê²© í™•ì¥ ê°€ëŠ¥
     }
 }

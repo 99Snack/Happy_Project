@@ -7,6 +7,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private Camera mainCam;
 
     public LayerMask tileLayer;
+    private TowerTestCode tower;
 
     private void Awake()
     {
@@ -20,6 +21,8 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private void Start()
     {
         initPosition = transform.position;
+
+        tower = GetComponent<TowerTestCode>();
     }
 
     //드래그 시작
@@ -57,7 +60,10 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.x, interactor.y);
                     centerPos.y = hit.point.y;
                     transform.position = centerPos;
-                    
+
+                    //타워 좌표 설정
+                    tower.Setup(interactor.x, interactor.y);
+
                     //초기 위치 변경
                     initPosition = transform.position;
 

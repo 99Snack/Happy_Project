@@ -16,6 +16,20 @@ public class MoveTest : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        TowerTargetDetector detector = FindFirstObjectByType<TowerTargetDetector>();
+
+        //Debug.Log("[적] 생성됨");
+
+        if (detector != null)
+        {
+            detector.RegisterEnemy(this);
+            //Debug.Log("[적] 타워 타겟 감지기에 등록됨");
+        }
+        else
+        {
+            //Debug.LogError("[적] 타워 타겟 감지기를 찾을 수 없음!");
+        }
+
         int x = TileManager.Instance.enemyBasePosition.x;
         int y = TileManager.Instance.enemyBasePosition.y;
 

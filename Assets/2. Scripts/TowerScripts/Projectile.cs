@@ -2,11 +2,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-    private Enemy target;        // ¹ß»ç ´ë»ó
-    public float speed = 10f;    // ÀÌµ¿ ¼Óµµ
+    private Transform target;        // ë°œì‚¬ ëŒ€ìƒ
+    public float speed = 10f;    // ì´ë™ ì†ë„
 
-    // Å¸°Ù ¼³Á¤
-    public void SetTarget(Enemy target)
+    // íƒ€ê²Ÿ ì„¤ì •
+    public void SetTarget(Transform target)
     {
         this.target = target;
     }
@@ -15,15 +15,15 @@ public class Projectile : MonoBehaviour
     {
         if (target == null)
         {
-            Destroy(gameObject); // Å¸°Ù ¾øÀ¸¸é Á¦°Å
+            Destroy(gameObject); // íƒ€ê²Ÿ ì—†ìœ¼ë©´ ì œê±°
             return;
         }
 
-        // Å¸°Ù ¹æÇâÀ¸·Î ÀÌµ¿
+        // íƒ€ê²Ÿ ë°©í–¥ìœ¼ë¡œ ì´ë™
         Vector3 dir = (target.transform.position - transform.position).normalized;
         transform.position += dir * speed * Time.deltaTime;
 
-        // Å¸°Ù ±ÙÁ¢ ½Ã Á¦°Å (Ã¼·Â ¾øÀ½)
+        // íƒ€ê²Ÿ ê·¼ì ‘ ì‹œ ì œê±° (ì²´ë ¥ ì—†ìŒ)
         if (Vector3.Distance(transform.position, target.transform.position) < 0.2f)
         {
             Destroy(gameObject);
