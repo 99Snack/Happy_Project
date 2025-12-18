@@ -8,6 +8,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
     public LayerMask tileLayer;
     private TowerTestCode tower;
+    private TileInteractor originTile;
 
     private void Awake()
     {
@@ -28,7 +29,12 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     //드래그 시작
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //initPosition = transform.position;
+        Ray ray = new Ray(transform.position + transform.up, Vector3.down);
+        if (Physics.Raycast(ray, out RaycastHit hit, 2f, tileLayer))
+        {
+            originTile = hit.collider.GetComponent<TileInteractor>();
+            if (originTile != null) originTile.isAlreadyTower = false;
+        }
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -41,9 +47,10 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         {
             Vector3 colPos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
             transform.position = colPos;
+
+            //todo : 타워가 있는지 없는지 확인하는 로직
         }
     }
-
     public void OnEndDrag(PointerEventData eventData)
     {
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
@@ -52,17 +59,17 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         {
             TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
 
-            if (interactor != null)
+            if (interactor != null && !interactor.isAlreadyTower)
             {
-                if (interactor.type == TileData.TYPE.Wall || interactor.type == TileData.TYPE.None)
+                if (interactor.Type == TileData.TYPE.Wall || interactor.Type == TileData.TYPE.Stay)
                 {
                     //타일 중앙 탑에 위치
-                    Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.x, interactor.y);
+                    Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.X, interactor.Y);
                     centerPos.y = hit.point.y;
                     transform.position = centerPos;
 
                     //타워 좌표 설정
-                    tower.Setup(interactor.x, interactor.y);
+                    tower.Setup(interactor.X, interactor.Y);
 
                     //초기 위치 변경
                     initPosition = transform.position;
@@ -70,16 +77,24 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     //부모 계층 변경
                     transform.SetParent(hit.transform);
 
+                    //타일에 타워를 건설했다는 표시하기
+                    interactor.isAlreadyTower = true;
+                    originTile = interactor;
+
                     return;
                 }
-                else{
-                    Debug.LogError($"현재 타일의 타입은 {interactor.type}입니다");
+                else
+                {
+                    Debug.LogError($"현재 타일의 타입은 {interactor.Type}입니다");
                 }
             }
         }
 
         transform.position = initPosition;
 
+        if(originTile != null){
+            originTile.isAlreadyTower = true;
+        }
     }
 
 

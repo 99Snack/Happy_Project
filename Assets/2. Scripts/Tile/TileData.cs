@@ -5,8 +5,8 @@ public class TileData
     public enum TYPE
     {
         None, 
-        Base, //단일 경로
-        Wall, Road, AllyBase, EnemyBase
+        Stay, //대기석
+        Wall, Road, AllyBase, EnemyBase,
     }
 
     public int X;
@@ -15,6 +15,7 @@ public class TileData
     public TYPE Type;
     public bool IsBuildable;
     public bool IsWalkable;
+    public bool IsTransition = false;
 
     public TileData(int x, int y, TYPE type)
     {
@@ -22,7 +23,8 @@ public class TileData
         this.Y = y;
         this.Type = type;
 
-        IsBuildable = (type == TYPE.Wall || type == TYPE.None);
-        IsWalkable = (type == TYPE.Road || type == TYPE.AllyBase || type == TYPE.Base);
+        IsBuildable = type == TYPE.Wall;
+        IsWalkable = (type == TYPE.Road || type == TYPE.AllyBase);
+        IsTransition = (type == TYPE.Wall || type == TYPE.Road);
     }
 }

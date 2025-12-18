@@ -1,6 +1,4 @@
-using System.Collections;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class TowerTestCode : MonoBehaviour
 {
@@ -8,6 +6,8 @@ public class TowerTestCode : MonoBehaviour
     public Animator animator;
     int x;
     int y;
+
+    public (int x, int y) Coord => (x, y);
 
     //// 타워 타일 좌표
     //[HideInInspector] public Vector3Int towerTile;

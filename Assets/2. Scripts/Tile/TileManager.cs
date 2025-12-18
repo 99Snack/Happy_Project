@@ -50,7 +50,7 @@ public class TileManager : MonoBehaviour
         {
             for (int j = 0; j < MAP_SIZE_X; j++)
             {
-                allTiles[i, j] = new TileData(j, i, TileData.TYPE.None);
+                allTiles[i, j] = new TileData(j, i, TileData.TYPE.Wall);
             }
         }
 
@@ -68,7 +68,7 @@ public class TileManager : MonoBehaviour
         }
 
         Vector3 enemyStartPos = GetWorldPosition(enemyBasePosition);
-        Instantiate(enemy,enemyStartPos,Quaternion.identity);
+        Instantiate(enemy, enemyStartPos, Quaternion.identity);
     }
 
     void RandomBaseCamp()
@@ -107,6 +107,14 @@ public class TileManager : MonoBehaviour
             allTiles[y, x] = new TileData(x, y, type);
         }
     }
+
+    public void ChangeType(int x,int y, TileData.TYPE type){
+        if (IsValidCoordinate(x, y))
+        {
+            allTiles[y, x].Type = type;
+        }
+    }
+
 
     public TileData.TYPE GetTileType(int x, int y)
     {
