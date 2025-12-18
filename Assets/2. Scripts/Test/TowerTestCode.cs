@@ -9,7 +9,6 @@ public class TowerTestCode : MonoBehaviour
     int x;
     int y;
 
-    public TowerTargetDetector ttd;
     //// 타워 타일 좌표
     //[HideInInspector] public Vector3Int towerTile;
 
@@ -41,11 +40,6 @@ public class TowerTestCode : MonoBehaviour
         {
             TryGetComponent(out animator);
         }
-
-        if (ttd == null)
-        {
-            TryGetComponent(out ttd);
-        }
     }
 
     void Update()
@@ -63,7 +57,7 @@ public class TowerTestCode : MonoBehaviour
 
 
         //2. 가져온 타일 좌표와 타워 좌표 거리 계산하기
-        MoveTestCode enemy = ttd.FindNearestEnemyInRange(towerCoord, 1, allyBaseCoord);
+        MoveTestCode enemy = TowerTargetDetector.Instance.FindNearestEnemyInRange(towerCoord, 1, allyBaseCoord);
 
         //3. 거리가 타워 사거리 내에 있다면 공격
         if (enemy != null)

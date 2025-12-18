@@ -1,4 +1,3 @@
-﻿using Unity.IO.LowLevel.Unsafe;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -55,14 +54,14 @@ public class Tower : MonoBehaviour
 
     public void OnAttackStopEnd()
     {
-        if (currentTarget != null)
-        {
-            ChangeState(new SearchingState(this)); // AttackReady 역할
-        }
-        else
-        {
-            ChangeState(new IdleState(this));
-        }
+        //if (currentTarget != null)
+        //{
+        //    ChangeState(new SearchingState(this)); // AttackReady 역할
+        //}
+        //else
+        //{
+        //    ChangeState(new IdleState(this));
+        //}
     }
 
 

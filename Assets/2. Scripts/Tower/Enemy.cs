@@ -2,46 +2,46 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-    // ÀûÀÇ Ã¼·Â
+    // ì ì˜ ì²´ë ¥
     public float Health = 100f;
 
     private TowerTargetDetector detector;
 
-    void Start()
-    {
-        detector = FindFirstObjectByType<TowerTargetDetector>();
+    //void Start()
+    //{
+    //    detector = FindFirstObjectByType<TowerTargetDetector>();
 
-        //Debug.Log("[Àû] »ı¼ºµÊ");
+    //    //Debug.Log("[ì ] ìƒì„±ë¨");
 
-        if (detector != null)
-        {
-            detector.RegisterEnemy(this);
-            //Debug.Log("[Àû] Å¸¿ö Å¸°Ù °¨Áö±â¿¡ µî·ÏµÊ");
-        }
-        else
-        {
-            //Debug.LogError("[Àû] Å¸¿ö Å¸°Ù °¨Áö±â¸¦ Ã£À» ¼ö ¾øÀ½!");
-        }
-    }
+    //    if (detector != null)
+    //    {
+    //        detector.RegisterEnemy(this);
+    //        //Debug.Log("[ì ] íƒ€ì›Œ íƒ€ê²Ÿ ê°ì§€ê¸°ì— ë“±ë¡ë¨");
+    //    }
+    //    else
+    //    {
+    //        //Debug.LogError("[ì ] íƒ€ì›Œ íƒ€ê²Ÿ ê°ì§€ê¸°ë¥¼ ì°¾ì„ ìˆ˜ ì—†ìŒ!");
+    //    }
+    //}
 
 
-    void OnDestroy()
-    {
-        if (detector != null)
-        {
-            detector.UnregisterEnemy(this);
-            //Debug.Log("[Àû] Á¦°ÅµÊ ¡æ °¨Áö±â¿¡¼­ µî·Ï ÇØÁ¦");
-        }
-    }
+    //void OnDestroy()
+    //{
+    //    if (detector != null)
+    //    {
+    //        detector.UnregisterEnemy(this);
+    //        //Debug.Log("[ì ] ì œê±°ë¨ â†’ ê°ì§€ê¸°ì—ì„œ ë“±ë¡ í•´ì œ");
+    //    }
+    //}
 
-    // Å¸¿ö Åõ»çÃ¼ µîÀ¸·ÎºÎÅÍ µ¥¹ÌÁö¸¦ ¹ŞÀ» ¶§ È£ÃâµÊ
-    public void TakeDamage(float damage)
-    {
-        Health -= damage;
+    //// íƒ€ì›Œ íˆ¬ì‚¬ì²´ ë“±ìœ¼ë¡œë¶€í„° ë°ë¯¸ì§€ë¥¼ ë°›ì„ ë•Œ í˜¸ì¶œë¨
+    //public void TakeDamage(float damage)
+    //{
+    //    Health -= damage;
 
-        if (Health <= 0f)
-        {
-            Destroy(gameObject);
-        }
-    }
+    //    if (Health <= 0f)
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 }
