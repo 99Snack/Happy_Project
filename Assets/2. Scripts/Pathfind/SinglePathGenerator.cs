@@ -2,13 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-//▼ 방향을 나타내는 enum
-public enum DIRECTION
-{
-    West = -2, South = 1, None = 0, North = -1, East = 2
-}
-
 //▼ 이전 스텝의 정보를 저장해두기 위한 구조체
 struct Step
 {
@@ -77,9 +70,10 @@ public class SinglePathGenerator : MonoBehaviour
     //▼ 아군 베이스 캠프 중앙 위치
     private Vector2Int destinationPos;
 
-
     private const int MAX_CURVE_COUNT = 8; //최대 꺾임 수
     private int curveCount; //꺾임 수 
+    
+    private DirectionCalculator directionCalculator;
     
     private void Awake()
     {
@@ -139,32 +133,6 @@ public class SinglePathGenerator : MonoBehaviour
         destinationPos = TileManager.Instance.allyBasePosition;
     }
 
-    /// <summary>
-    /// 반대 방향을 반환하는 메서드  
-    /// </summary>
-    /// <param name="dir">원하는 방향</param>
-    /// <returns></returns>
-    private DIRECTION OppositeDirection(DIRECTION dir)
-    {
-        switch (dir)
-        {
-            case DIRECTION.North:
-                return DIRECTION.South;
-
-            case DIRECTION.West:
-                return DIRECTION.East;
-
-            case DIRECTION.South:
-                return DIRECTION.North;
-
-            case DIRECTION.East:
-                return DIRECTION.West;
-            default:
-                break;
-        }
-        Debug.LogError("Not valiable direction to find opposite direction");
-        return DIRECTION.None;
-    }
 
     /// <summary>
     /// List를 실제 Path Array에 복사 
@@ -291,7 +259,7 @@ public class SinglePathGenerator : MonoBehaviour
                 continue;
             }
             //▼ 반대 방향 제외
-            else if (OppositeDirection(valiableDirList[i]) == lastDirection)
+            else if (directionCalculator.OppositeDirection(valiableDirList[i]) == lastDirection)
             {
                 valiableDirList.Remove(valiableDirList[i]);
                 continue;

@@ -42,10 +42,10 @@ public class TowerTestCode : MonoBehaviour
             TryGetComponent(out animator);
         }
 
-        if (ttd == null)
-        {
-            TryGetComponent(out ttd);
-        }
+        // if (ttd == null)
+        // {
+        //     TryGetComponent(out ttd);
+        // }
     }
 
     void Update()
