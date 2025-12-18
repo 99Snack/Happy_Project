@@ -4,21 +4,27 @@ using UnityEngine.Tilemaps;
 
 public class TowerTargetDetector : MonoBehaviour
 {
-    public Tilemap tilemap;   // Inspector 연결
+    private static TowerTargetDetector instance;
+    public static TowerTargetDetector Instance => instance;
 
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+    private Tilemap tilemap;
     private List<Enemy> enemies = new List<Enemy>();
     private List<MoveTestCode> testEnemies = new List<MoveTestCode>();
 
     // 적 등록
-    public void RegisterEnemy(Enemy enemy)
-    {
-        if (!enemies.Contains(enemy))
-        {
-            enemies.Add(enemy);
-            //Debug.Log($"[감지기] 적 등록됨 | 현재 적 수: {enemies.Count}");
-        }
-    }
-
     public void RegisterEnemy(MoveTestCode enemy)
     {
         if (!testEnemies.Contains(enemy))
@@ -29,17 +35,16 @@ public class TowerTargetDetector : MonoBehaviour
     }
 
     // 적 제거
-    public void UnregisterEnemy(Enemy enemy)
+    public void UnregisterEnemy(MoveTestCode enemy)
     {
-        enemies.Remove(enemy);
+        testEnemies.Remove(enemy);
         //Debug.Log($"[감지기] 적 제거됨 | 현재 적 수: {enemies.Count}");
     }
 
-  
     public Enemy FindNearestEnemyInRange(
-        Vector3Int towerTile,
-        int range,
-        Vector3Int baseCampTile)
+       Vector3Int towerTile,
+       int range,
+       Vector3Int baseCampTile)
     {
         Enemy bestTarget = null;
         int minBaseDistance = int.MaxValue;
