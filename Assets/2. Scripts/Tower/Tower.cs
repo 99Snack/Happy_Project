@@ -8,7 +8,7 @@ public class Tower : MonoBehaviour
     public Transform baseCamp;
     public Tilemap tilemap;
     public Animator animator;
-
+    
     // 타워 타일 좌표
     [HideInInspector] public Vector3Int towerTile;
 
@@ -64,7 +64,7 @@ public class Tower : MonoBehaviour
         //}
     }
 
-
+    
 }
 
 
