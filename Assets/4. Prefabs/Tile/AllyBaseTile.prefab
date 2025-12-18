@@ -188,6 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3683781460193359554}
   - component: {fileID: 2062220973929307818}
+  - component: {fileID: 6169114513714282121}
   m_Layer: 6
   m_Name: AllyBaseTile
   m_TagString: Untagged
@@ -240,6 +241,27 @@ LODGroup:
     renderers:
     - renderer: {fileID: 3885708773507079147}
   m_Enabled: 1
+--- !u!65 &6169114513714282121
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7804908692714277148}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &9214471855269314764
 GameObject:
   m_ObjectHideFlags: 0
