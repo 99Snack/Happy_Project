@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 
-public class Tower : MonoBehaviour
+public abstract class Tower : MonoBehaviour
 {
+    [SerializeField] private Tower_Base data;
+
     public TowerShooter shooter;
+
     public Animator animator;
 
     // 타워 좌표
-    public Vector2Int Coord  { get; set; }
+    public Vector2Int Coord { get; private set; }
+    public Tower_Base Data { get => data; private set => data = value; }
 
     // 현재 타겟
     [HideInInspector] public MonsterMove currentTarget;
@@ -24,21 +28,15 @@ public class Tower : MonoBehaviour
     // 상태 패턴 FSM
     private ITowerState currentState;
 
-    public void Setup(int x ,int y)
+    protected virtual void Start()
     {
-        Coord = new Vector2Int(x, y);
+        Debug.Log("Tower Start");
+        //ChangeState(new IdleState(this));
     }
 
-    void Start()
+    protected virtual void Update()
     {
-        //towerTile = tilemap.WorldToCell(transform.position);
-        //Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
-
-        ChangeState(new IdleState(this));
-    }
-
-    void Update()
-    {
+        Debug.Log("Update");
         currentState?.Update();
 
         if (attackCooldown > 0f)
@@ -51,18 +49,14 @@ public class Tower : MonoBehaviour
         currentState = newState;
         currentState.Enter();
     }
-
-    public void OnAttackStopEnd()
+    public void SetData(Tower_Base data)
     {
-        //if (currentTarget != null)
-        //{
-        //    ChangeState(new SearchingState(this)); // AttackReady 역할
-        //}
-        //else
-        //{
-        //    ChangeState(new IdleState(this));
-        //}
+        //Data = new Tower_Base(data);
     }
+
+    public void Setup(int x, int y)
+    {
+        Coord = new Vector2Int(x, y);
+    }
+    public abstract void Attack();
 }
-
-
