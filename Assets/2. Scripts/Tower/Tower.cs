@@ -1,19 +1,15 @@
-using UnityEngine;
-using UnityEngine.Tilemaps;
+﻿using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    public TowerTargetDetector targetDetector;
     public TowerShooter shooter;
-    public Transform baseCamp;
-    public Tilemap tilemap;
     public Animator animator;
-    
-    // 타워 타일 좌표
-    [HideInInspector] public Vector3Int towerTile;
+
+    // 타워 좌표
+    public Vector2Int Coord  { get; set; }
 
     // 현재 타겟
-    [HideInInspector] public Enemy currentTarget;
+    [HideInInspector] public MonsterMove currentTarget;
 
     // 탐지
     public float detectionInterval = 0.1f;
@@ -28,10 +24,15 @@ public class Tower : MonoBehaviour
     // 상태 패턴 FSM
     private ITowerState currentState;
 
+    public void Setup(int x ,int y)
+    {
+        Coord = new Vector2Int(x, y);
+    }
+
     void Start()
     {
-        towerTile = tilemap.WorldToCell(transform.position);
-        Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
+        //towerTile = tilemap.WorldToCell(transform.position);
+        //Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
 
         ChangeState(new IdleState(this));
     }
@@ -51,7 +52,6 @@ public class Tower : MonoBehaviour
         currentState.Enter();
     }
 
-
     public void OnAttackStopEnd()
     {
         //if (currentTarget != null)
@@ -63,8 +63,6 @@ public class Tower : MonoBehaviour
         //    ChangeState(new IdleState(this));
         //}
     }
-
-    
 }
 
 

@@ -442,6 +442,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 581506549}
     m_Modifications:
+    - target: {fileID: 6084540143328258700, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6084540143328258700, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
+      propertyPath: attackRange
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6894492131907800309, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -480,6 +488,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6894492131907800309, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7936855323495998356, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8192059477374165738, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
@@ -586,7 +598,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6f15e76c620aca9439a86bf3db80e311, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileManager
-  enemy: {fileID: 5222860723321569797, guid: b08e80dd9f374d142928e02e828d1905, type: 3}
+  enemy: {fileID: 2660379142166909589, guid: b08e80dd9f374d142928e02e828d1905, type: 3}
 --- !u!4 &601031882
 Transform:
   m_ObjectHideFlags: 0
@@ -1123,7 +1135,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1073715758519971073, guid: 566c758980a55e54999dfef872f1533f, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: -1.001
       objectReference: {fileID: 0}
     - target: {fileID: 1073715758519971073, guid: 566c758980a55e54999dfef872f1533f, type: 3}
       propertyPath: m_LocalRotation.w

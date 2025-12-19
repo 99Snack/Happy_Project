@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SearchingState : ITowerState
@@ -26,11 +26,15 @@ public class SearchingState : ITowerState
         }
 
         // 사거리 체크
-        Vector3Int enemyTile = tower.tilemap.WorldToCell(tower.currentTarget.transform.position);
-      
+        
+        int enemyX = Mathf.FloorToInt(tower.currentTarget.transform.position.x);
+        int enemyY = Mathf.FloorToInt(tower.currentTarget.transform.position.z);
 
-        int dx = Mathf.Abs(tower.towerTile.x - enemyTile.x);
-        int dy = Mathf.Abs(tower.towerTile.y - enemyTile.y);
+        Vector2Int enemyTile = new Vector2Int(enemyX, enemyY);
+
+
+        int dx = Mathf.Abs(tower.Coord.x - enemyTile.x);
+        int dy = Mathf.Abs(tower.Coord.y - enemyTile.y);
         int distance = Mathf.Max(dx, dy);
 
         if (distance <= tower.attackRange)

@@ -25,23 +25,37 @@ public class AttackingState : ITowerState
             return;
         }
 
-        Vector3Int enemyTile = tower.tilemap.WorldToCell(tower.currentTarget.transform.position);
-        int dx = Mathf.Abs(tower.towerTile.x - enemyTile.x);
-        int dy = Mathf.Abs(tower.towerTile.y - enemyTile.y);
+        int enemyX = Mathf.FloorToInt(tower.currentTarget.transform.position.x);
+        int enemyY = Mathf.FloorToInt(tower.currentTarget.transform.position.z);
+
+        Vector2Int enemyTile = new Vector2Int(enemyX, enemyY);
+
+        int dx = Mathf.Abs(tower.Coord.x - enemyTile.x);
+        int dy = Mathf.Abs(tower.Coord.y - enemyTile.y);
         int distance = Mathf.Max(dx, dy);
 
+        Debug.Log($"{tower.Coord} : {enemyTile}");
+
+        // 사거리 벗어나면
         if (distance > tower.attackRange)
         {
             tower.currentTarget = null;
             tower.ChangeState(new AttackStopState(tower));
             return;
         }
-
-        if (tower.attackCooldown <= 0f)
+        // 사거리 안에 있으면
+        else
         {
-            tower.shooter.Shoot(tower.currentTarget, 0f, tower.attackHitCount);
-            tower.attackCooldown = 1f / tower.attackSpeed;
+            if (tower.attackCooldown <= 0f)
+            {
+                tower.shooter.Shoot(tower.currentTarget, 0f, tower.attackHitCount);
+                tower.attackCooldown = 1f / tower.attackSpeed;
+            }
+            
+
         }
+
+     
     }
 
     public void Exit()

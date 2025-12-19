@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,97 +20,48 @@ public class TowerTargetDetector : MonoBehaviour
         }
     }
 
-    private Tilemap tilemap;
-    private List<Enemy> enemies = new List<Enemy>();
-    private List<MoveTestCode> testEnemies = new List<MoveTestCode>();
+    private List<MonsterMove> enemies = new List<MonsterMove>();
 
-    // 적 등록
-    public void RegisterEnemy(MoveTestCode enemy)
+    public void RegisterEnemy(MonsterMove enemy)
     {
-        if (!testEnemies.Contains(enemy))
+        if (!enemies.Contains(enemy))
         {
-            testEnemies.Add(enemy);
+            enemies.Add(enemy);
             //Debug.Log($"[감지기] 적 등록됨 | 현재 적 수: {enemies.Count}");
         }
     }
 
     // 적 제거
-    public void UnregisterEnemy(MoveTestCode enemy)
+    public void UnregisterEnemy(MonsterMove enemy)
     {
-        testEnemies.Remove(enemy);
+        enemies.Remove(enemy);
         //Debug.Log($"[감지기] 적 제거됨 | 현재 적 수: {enemies.Count}");
     }
 
-    public Enemy FindNearestEnemyInRange(
-       Vector3Int towerTile,
-       int range,
-       Vector3Int baseCampTile)
-    {
-        Enemy bestTarget = null;
-        int minBaseDistance = int.MaxValue;
-
-        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {enemies.Count}");
-
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy == null) continue;
-
-            Vector3Int enemyTile = tilemap.WorldToCell(enemy.transform.position);
-
-            // 타워 기준 사거리 검사 (Chebyshev)
-            int dx = Mathf.Abs(enemyTile.x - towerTile.x);
-            int dy = Mathf.Abs(enemyTile.y - towerTile.y);
-            int towerDistance = Mathf.Max(dx, dy);
-
-            if (towerDistance > range)
-            {
-                //Debug.Log($"[감지기] 사거리 OUT | 적({enemyTile.x},{enemyTile.y})");
-                continue;
-            }
-
-            // BaseCamp 기준 거리
-            int baseDistance =
-                Mathf.Abs(enemyTile.x - baseCampTile.x) +
-                Mathf.Abs(enemyTile.y - baseCampTile.y);
-
-            //Debug.Log(
-            //    $"[감지기] 사거리 IN | 적({enemyTile.x},{enemyTile.y}) " +
-            //    $"BaseCamp 거리={baseDistance}"
-            //);
-
-            // 우선순위 비교
-            if (baseDistance < minBaseDistance)
-            {
-                minBaseDistance = baseDistance;
-                bestTarget = enemy;
-            }
-        }
-
-        return bestTarget;
-    }
-
-    public MoveTestCode FindNearestEnemyInRange(
+    public MonsterMove FindNearestEnemyInRange2(
         Vector2Int towerTile,
         int range,
         Vector2Int baseCampTile)
     {
-        MoveTestCode bestTarget = null;
+        MonsterMove bestTarget = null;
         int minBaseDistance = int.MaxValue;
 
-        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {enemies.Count}");
+        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {MonsterMoves.Count}");
 
-        foreach (MoveTestCode enemy in testEnemies)
+        foreach (MonsterMove enemy in enemies)
         {
             if (enemy == null) continue;
 
             int enemyTileX = Mathf.RoundToInt(enemy.transform.position.x);
             int enemyTileY = Mathf.RoundToInt(enemy.transform.position.z);
 
+            Vector2Int enemyTile = new Vector2Int(enemyTileX, enemyTileY);
+
             // 타워 기준 사거리 검사 (Chebyshev)
             int dx = Mathf.Abs(enemyTileX - towerTile.x);
             int dy = Mathf.Abs(enemyTileY - towerTile.y);
             int towerDistance = Mathf.Max(dx, dy);
-
+            Debug.Log($"({towerTile}:{enemyTile}) | {towerDistance} < {range}");
             if (towerDistance > range)
             {
                 //Debug.Log($"[감지기] 사거리 OUT | 적({enemyTile.x},{enemyTile.y})");
@@ -128,6 +79,7 @@ public class TowerTargetDetector : MonoBehaviour
             //);
 
             // 우선순위 비교
+            Debug.Log($"{baseDistance} < {minBaseDistance}");
             if (baseDistance < minBaseDistance)
             {
                 minBaseDistance = baseDistance;

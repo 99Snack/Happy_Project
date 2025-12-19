@@ -21,9 +21,9 @@ public class IdleState : ITowerState
 
     public void Update()
     {
-        Vector3Int baseCampTile = tower.tilemap.WorldToCell(tower.baseCamp.position);
-        Enemy nearest = tower.targetDetector.FindNearestEnemyInRange(
-            tower.towerTile,
+        Vector2Int baseCampTile = TileManager.Instance.allyBasePosition;
+        MonsterMove nearest = TowerTargetDetector.Instance.FindNearestEnemyInRange2(
+            tower.Coord,
             tower.attackRange, // 사거리 그대로
             baseCampTile
         );

@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
@@ -7,7 +7,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private Camera mainCam;
 
     public LayerMask tileLayer;
-    private TowerTestCode tower;
+    private Tower tower;
     private TileInteractor originTile;
 
     private void Awake()
@@ -23,7 +23,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         initPosition = transform.position;
 
-        tower = GetComponent<TowerTestCode>();
+        tower = GetComponent<Tower>();
     }
 
     //드래그 시작
