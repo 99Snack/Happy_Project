@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class AttackingState : ITowerState
 {
@@ -19,6 +18,8 @@ public class AttackingState : ITowerState
 
     public void Update()
     {
+        tower.Attack();
+
         if (tower.currentTarget == null)
         {
             tower.ChangeState(new AttackStopState(tower));
