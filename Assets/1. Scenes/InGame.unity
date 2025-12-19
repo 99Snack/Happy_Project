@@ -898,6 +898,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: TowerTestPrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 8192059477374165738, guid: 1c55dfc7b26db8c40afe8aaa4e9472a0, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
