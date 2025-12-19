@@ -1308,7 +1308,7 @@ Transform:
   m_GameObject: {fileID: 8842788038183223521}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -4.36, y: 0.0000009536743, z: -32.71}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1367,7 +1367,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
   TargetAnchor: {fileID: 0}
-  AttackRange: 1
+  AttackRange: 0
+  Waypoints:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!54 &2494998787532778414
 Rigidbody:
   m_ObjectHideFlags: 0
