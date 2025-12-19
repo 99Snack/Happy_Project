@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SearchingState : ITowerState
@@ -14,7 +14,7 @@ public class SearchingState : ITowerState
     {
         Debug.Log("[타워] AttackReady 상태 진입");
         tower.animator.SetBool("isAttackReady", true);
-        tower.animator.SetBool("isAttacking", false);
+        //tower.animator.SetBool("isAttacking", false);
     }
 
     public void Update()
@@ -26,7 +26,7 @@ public class SearchingState : ITowerState
         }
 
         // 사거리 체크
-        
+
         int enemyX = Mathf.FloorToInt(tower.currentTarget.transform.position.x);
         int enemyY = Mathf.FloorToInt(tower.currentTarget.transform.position.z);
 
@@ -41,6 +41,10 @@ public class SearchingState : ITowerState
         {
             tower.animator.SetTrigger("AttackTrigger");
             tower.ChangeState(new AttackingState(tower));
+        }
+        else
+        {
+            tower.ChangeState(new IdleState(tower));
         }
     }
 

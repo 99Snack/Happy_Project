@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
@@ -27,7 +27,7 @@ public class Monster : MonoBehaviour
     public void Die()
     {
         // 스폰 매니저에 알리기
-        SpawnManager spawnManager = FindObjectOfType<SpawnManager>();
+        SpawnManager spawnManager = FindAnyObjectByType<SpawnManager>();
         spawnManager.OnMonsterDie();
 
         Destroy(gameObject);

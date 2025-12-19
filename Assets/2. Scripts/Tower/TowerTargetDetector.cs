@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -38,7 +38,7 @@ public class TowerTargetDetector : MonoBehaviour
         //Debug.Log($"[감지기] 적 제거됨 | 현재 적 수: {enemies.Count}");
     }
 
-    public MonsterMove FindNearestEnemyInRange2(
+    public MonsterMove FindNearestEnemyInRange(
         Vector2Int towerTile,
         int range,
         Vector2Int baseCampTile)
@@ -61,7 +61,9 @@ public class TowerTargetDetector : MonoBehaviour
             int dx = Mathf.Abs(enemyTileX - towerTile.x);
             int dy = Mathf.Abs(enemyTileY - towerTile.y);
             int towerDistance = Mathf.Max(dx, dy);
-            Debug.Log($"({towerTile}:{enemyTile}) | {towerDistance} < {range}");
+            
+            //Debug.Log($"({towerTile}:{enemyTile}) | {towerDistance} < {range}");
+
             if (towerDistance > range)
             {
                 //Debug.Log($"[감지기] 사거리 OUT | 적({enemyTile.x},{enemyTile.y})");
@@ -79,7 +81,7 @@ public class TowerTargetDetector : MonoBehaviour
             //);
 
             // 우선순위 비교
-            Debug.Log($"{baseDistance} < {minBaseDistance}");
+            //Debug.Log($"{baseDistance} < {minBaseDistance}");
             if (baseDistance < minBaseDistance)
             {
                 minBaseDistance = baseDistance;

@@ -13,7 +13,7 @@ public class AttackingState : ITowerState
     public void Enter()
     {
         Debug.Log("[타워] Attack 상태 진입");
-        tower.animator.SetBool("isAttacking", true);
+        //tower.animator.SetBool("isAttacking", true);
         tower.animator.SetTrigger("AttackTrigger");
     }
 
@@ -34,16 +34,7 @@ public class AttackingState : ITowerState
         int dy = Mathf.Abs(tower.Coord.y - enemyTile.y);
         int distance = Mathf.Max(dx, dy);
 
-        // 사거리 체크
-        int enemyX = Mathf.FloorToInt(tower.currentTarget.transform.position.x);
-        int enemyY = Mathf.FloorToInt(tower.currentTarget.transform.position.z);
-
-        Vector2Int enemyTile = new Vector2Int(enemyX, enemyY);
-
-        int dx = Mathf.Abs(tower.Coord.x - enemyTile.x);
-        int dy = Mathf.Abs(tower.Coord.y - enemyTile.y);
-        int distance = Mathf.Max(dx, dy);
-
+        Debug.Log($"{distance} : {tower.attackRange}");
         //사거리 벗어나면
         if (distance > tower.attackRange)
         {
@@ -58,12 +49,13 @@ public class AttackingState : ITowerState
             {
                 tower.shooter.Shoot(tower.currentTarget, 0f, tower.attackHitCount);
                 tower.attackCooldown = 1f / tower.attackSpeed;
+                tower.animator.SetTrigger("AttackTrigger");
             }
         }
     }
 
     public void Exit()
     {
-        tower.animator.SetBool("isAttacking", false);
+        //tower.animator.SetBool("isAttacking", false);
     }
 }

@@ -19,17 +19,6 @@ public class MonsterMove : MonoBehaviour
     float turnProgress = 0f; // 회전 진행도 (0~1)
     float turnDuration = 0.5f; // 회전에 걸리는 시간
 
-
-    /// <summary>
-    /// 테스트용 웨이포인트 배열 나중에 주석처리 
-    /// </summary>
-    public Transform[] Waypoints; // 테스트용 웨이포인트 
-    int currentWaypointIndex = 0; // 현재 웨이포인트 인덱스
-    /// <summary>
-    /// 테스트용 웨이포인트 나중에 주석처리
-    /// </summary>
-    /// 
-
     Vector2Int[] path;
     int currentIdx = 1;
 
@@ -49,7 +38,7 @@ public class MonsterMove : MonoBehaviour
         TowerTargetDetector.Instance.RegisterEnemy(this);
 
         path = SinglePathGenerator.Instance.GetCurrentPath();
-        if (path != null && Waypoints.Length > 0)
+        if (path != null && path.Length > 0)
         {
             TargetAnchor = TileManager.Instance.GetWorldPosition(path[0]);
             currentLookDir = (TargetAnchor - transform.position).normalized;

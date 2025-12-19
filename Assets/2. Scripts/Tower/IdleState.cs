@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class IdleState : ITowerState
@@ -14,15 +14,15 @@ public class IdleState : ITowerState
     {
         Debug.Log("[타워] Idle 상태 진입");
 
-        tower.animator.SetBool("isAttacking", false);
-        tower.animator.SetBool("isAttackReady", false);
+        //tower.animator.SetBool("isAttacking", false);
+        //tower.animator.SetBool("isAttackReady", false);
         tower.currentTarget = null;
     }
 
     public void Update()
     {
         Vector2Int baseCampTile = TileManager.Instance.allyBasePosition;
-        MonsterMove nearest = TowerTargetDetector.Instance.FindNearestEnemyInRange2(
+        MonsterMove nearest = TowerTargetDetector.Instance.FindNearestEnemyInRange(
             tower.Coord,
             tower.attackRange, // 사거리 그대로
             baseCampTile
