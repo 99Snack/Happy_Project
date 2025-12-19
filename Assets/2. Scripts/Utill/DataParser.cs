@@ -45,7 +45,6 @@ public static class DataParser
         }
 
         string[] headers = rows[DATA_HEADER_IDX].Split(',');
-        string[] types = rows[DATA_TYPE_IDX].Split(',');
 
         //데이터 타입 행부터
         for (int i = DATA_START_IDX; i < rows.Length; i++)
