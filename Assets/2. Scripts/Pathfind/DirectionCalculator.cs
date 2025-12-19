@@ -1,11 +1,10 @@
 using UnityEngine;
+//▼ 방향을 나타내는 enum
+public enum DIRECTION
+{
+    West = -2, South = 1, None = 0, North = -1, East = 2
+}
 
-    //▼ 방향을 나타내는 enum
-    public enum DIRECTION
-    {
-        West = -2, South = 1, None = 0, North = -1, East = 2
-    }
-    
 public class DirectionCalculator
 {
     /// <summary>
@@ -34,7 +33,4 @@ public class DirectionCalculator
         Debug.LogError("Not valiable direction to find opposite direction");
         return DIRECTION.None;
     }
-
-
-
 }

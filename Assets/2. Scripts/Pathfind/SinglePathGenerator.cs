@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 //▼ 이전 스텝의 정보를 저장해두기 위한 구조체
 struct Step
 {
@@ -102,6 +104,7 @@ public class SinglePathGenerator : MonoBehaviour
                 continue;
             
             TileManager.Instance.SetTileData(path.x, path.y, TileData.TYPE.Road);
+ 
         }
     }
 
@@ -131,6 +134,7 @@ public class SinglePathGenerator : MonoBehaviour
         curveCount = 0;
         startPos = TileManager.Instance.enemyBasePosition;
         destinationPos = TileManager.Instance.allyBasePosition;
+        directionCalculator = new DirectionCalculator();
     }
 
 
@@ -282,7 +286,8 @@ public class SinglePathGenerator : MonoBehaviour
         {
             return DIRECTION.None;
         }
-        //▼ 2개 이상이면 랜덤으로 선택 
+
+        //▼ 2개이면 랜덤으로 선택 
         if (valiableDirList.Count > 1)
         {
             //▼ 직전에 커브했다면 커브를 최대한 피한다.
@@ -368,7 +373,7 @@ public class SinglePathGenerator : MonoBehaviour
                 //▼ 가능한 방향을 저장
                 selectedDirection = SelectDirection(lastDirection, banDirection, takenPath, continuousYStep, continuousCurve, currentX, currentY, AddDirection.Count + 1);
 
-                //▼ 가능한 경로가 없을경우 재탐색 
+                //▼ 가능한 경로가 없을 경우 재탐색 
                 if (selectedDirection == DIRECTION.None)
                 {
                     if (steps.Count <= 0)
