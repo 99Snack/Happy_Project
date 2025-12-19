@@ -20,7 +20,7 @@ public static class DataParser
             Debug.LogWarning($"csv 파일이 없습니다. Data/{filename}");
         }
 
-        Debug.Log(csv.text);
+        //Debug.Log(csv.text);
         /*예시 Gacha
         인덱스,그룹 ID,타워ID,확률
         Index,GroupID,TowerID,Probability
@@ -65,13 +65,13 @@ public static class DataParser
                 string header = headers[j].Trim();
                 string value = values[j].Trim();
 
-                Debug.Log($"{j} : {header},{value}");
+                //Debug.Log($"{j} : {header},{value}");
 
                 //T클래스의 변수명과 csv파일의 헤더명이 같은지
                 //StringComparison.OrdinalIgnoreCase : 대소문자 구분하지않고 비교하는 옵션
                 FieldInfo field = Array.Find(fields, f => f.Name.Equals(header, StringComparison.OrdinalIgnoreCase));
 
-                Debug.Log(field);
+                //Debug.Log(field);
 
                 if (field != null)
                 {

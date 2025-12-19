@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Unity.Multiplayer.Center.Common.Analytics;
 using UnityEngine;
 
 public class GeneratorMap : MonoBehaviour

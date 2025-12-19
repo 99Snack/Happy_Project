@@ -1,5 +1,3 @@
-﻿using UnityEngine;
-
 public class Gacha
 {
     public int Index; // 인덱스

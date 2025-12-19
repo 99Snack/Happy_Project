@@ -50,12 +50,12 @@ public class MonsterMove : MonoBehaviour
     void Update()
     {
         // 테스트용 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { OnHit(); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { Attack(); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { Dead(); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { TurnLeft(); }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { TurnRight(); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) { Spawn(); }
+        //if (Input.GetKeyDown(KeyCode.Alpha1)) { OnHit(); }
+        //if (Input.GetKeyDown(KeyCode.Alpha2)) { Attack(); }
+        //if (Input.GetKeyDown(KeyCode.Alpha3)) { Dead(); }
+        //if (Input.GetKeyDown(KeyCode.Alpha4)) { TurnLeft(); }
+        //if (Input.GetKeyDown(KeyCode.Alpha5)) { TurnRight(); }
+        //if (Input.GetKeyDown(KeyCode.Alpha6)) { Spawn(); }
 
         // 회전 처리
         if (isTurning)
