@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using System.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -26,8 +27,11 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
     //타일 전환 기능
     public void OnPointerClick(PointerEventData eventData)
     {
-        TileData data = TileManager.Instance.GetTileData(X,Y);
+        //유효한 좌표가 아니면
+        if (!TileManager.Instance.IsValidCoordinate(X, Y)) return;
 
+        TileData data = TileManager.Instance.GetTileData(X,Y);
+        
         if (!data.IsTransition || isAlreadyTower) return;
 
 

@@ -90,11 +90,13 @@ public class TileManager : MonoBehaviour
         foreach (var y in enemyBaseYCoords)
         {
             allTiles[y, enemyBaseCoordX].Type = TileData.TYPE.EnemyBase;
+            allTiles[y, enemyBaseCoordX].IsTransition = false;
         }
 
         foreach (var y in allyBaseYCoords)
         {
             allTiles[y, allyBaseCoordX].Type = TileData.TYPE.AllyBase;
+            allTiles[y, allyBaseCoordX].IsTransition = false;
         }
     }
 
@@ -140,7 +142,7 @@ public class TileManager : MonoBehaviour
     }
 
     //좌표가 유효한지
-    bool IsValidCoordinate(int x, int y)
+    public bool IsValidCoordinate(int x, int y)
     {
         if (x >= 0 && x < MAP_SIZE_X && y >= 0 && y < MAP_SIZE_Y)
         {
