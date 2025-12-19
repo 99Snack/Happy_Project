@@ -53,6 +53,7 @@ public class PlayPathGenerator
     /// </summary>
     private void InitDirPriorities()
     {
+        dirPriorities = new();
         dirPriorities[0] = new DIRECTION[]{DIRECTION.North,DIRECTION.East,DIRECTION.West,DIRECTION.South};
         dirPriorities[1] = new DIRECTION[]{DIRECTION.East,DIRECTION.West,DIRECTION.South,DIRECTION.North};
         dirPriorities[2] = new DIRECTION[]{DIRECTION.West,DIRECTION.South,DIRECTION.North,DIRECTION.East};
@@ -69,7 +70,7 @@ public class PlayPathGenerator
         
         for(int i = 0; i < TILE_X_LENGTH; i++)
         {
-            for (int j = 0; i < TILE_Y_LENGTH; j++)
+            for (int j = 0; j < TILE_Y_LENGTH; j++)
             {
                 pathNodes[j, i] = pathNodeDatas[j, i].ClonePathNodeData(); 
             }
@@ -97,6 +98,7 @@ public class PlayPathGenerator
         { 
             getPath = new Vector2Int[path.Length];
             path.CopyTo(getPath, 0);
+           
         }
         else
         {
@@ -174,13 +176,13 @@ public class PlayPathGenerator
             //백트래킹 중이라면 이전 방향 제외 
             if(isBackTraking)
             {
-              pathNodes[calX,calY].ChangeOpenStatus(backDir, CLOSED); 
+              pathNodes[calY,calX].ChangeOpenStatus(backDir, CLOSED); 
             }
             //▼ 경로 시작 노드의 모든 면이 막혀있고 현재 좌표가 해당 좌표이거나 경로 시작 노드가 막혀있으면 실패로 간주 
             if(
                 pathNodes[startPosition.y, startPosition.x + 1].IsBlocked || 
                 (!pathNodes[startPosition.y,startPosition.x + 1].CheckEveryDirectionBlocked() && 
-                calX == startPosition.x && calY == startPosition.y)
+                calX == startPosition.x + 1 && calY == startPosition.y)
             ) 
             {
                 isSuccess = false;
@@ -228,6 +230,23 @@ public class PlayPathGenerator
                     }
                 }
             }
+             foreach(var dir in tempClosedDirections)
+                {
+                    //▼ 백트래킹 중이라면 돌아가는 방향 영구적으로 닫기 
+                    if(dir == backDir && isBackTraking)
+                    {
+                        continue;
+                    }
+                    //▼ 임시로 막아두었던 방향 열기  
+                    else if(dir != DIRECTION.None)
+                    { 
+                        pathNodes[calY, calX].ChangeOpenStatus(dir, OPENED);  
+                    } 
+                    else
+                    {
+                    
+                    }
+                }
 
             //▼ 실제 이동한 경로 추가 하면서 해당 방향 막기 
             switch(selected)
@@ -265,29 +284,39 @@ public class PlayPathGenerator
             }
             //▼ 백트래킹 중이라면 현재 되돌아가는 방향을 닫고 돌아가기 
             else 
-            {
-                pathNodes[calY,calX].ChangeOpenStatus(backDir, CLOSED);
-                selected = backDir;
-
-                Vector2Int temp = passed.Pop();
-        
+            { 
+                passed.Pop();
+                Vector2Int temp = passed.Peek();
+                if(temp.x ==  calX - 1 && temp.y == calY)
+                {
+                    selected = DIRECTION.West;
+                }
+                else if(temp.x ==  calX && temp.y == calY - 1)
+                {
+                   selected = DIRECTION.South; 
+                }
+                else if(temp.x ==  calX + 1 && temp.y == calY )
+                {
+                    selected = DIRECTION.East;                    
+                }
+                else if(temp.x ==  calX  && temp.y == calY +1)
+                {
+                    selected = DIRECTION.North;
+                }
+                else
+                {
+                    Debug.LogError("Unvaliable BackTracking Direction");
+                    selected = DIRECTION.None;
+                }
+                pathNodes[calY,calX].ChangeOpenStatus(selected, CLOSED);
+                
                 calX = temp.x;
                 calY = temp.y;
             }
 
-            foreach(var dir in tempClosedDirections)
-                {
-                    //▼ 백트래킹 중이라면 돌아가는 방향 영구적으로 닫기 
-                    if(dir == backDir && isBackTraking)
-                    {
-                        continue;
-                    }
-                    //▼ 임시로 막아두었던 방향 열기  
-                    else if(dir != DIRECTION.None)
-                    {
-                        pathNodes[calY,calX].ChangeOpenStatus(dir, OPENED);  
-                    } 
-                }
+           
+
+            tempClosedDirections = new DIRECTION[]{DIRECTION.None,DIRECTION.None,DIRECTION.None,DIRECTION.None};
 
             //▼ 도착했다면 성공으로 전환한 뒤 탈출 
             if(calX == destinationPosition.x && calY == destinationPosition.y)
@@ -302,11 +331,14 @@ public class PlayPathGenerator
         {
             path = new Vector2Int[passed.Count];
 
-            for(int i = passed.Count - 1; passed.Count <= 0; i--)
+            for(int i = passed.Count - 1; passed.Count > 0; i--)
             {
                Vector2Int pathVector = passed.Pop();
+               Debug.Log($"{pathVector.x},{pathVector.y}");
                path[i] = pathVector;
-            } 
+            }
+            
         }
+         
     }
 }

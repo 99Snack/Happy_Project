@@ -3,8 +3,6 @@
 */
 using UnityEngine;
 
-
-
 public class PathNodeData
 {
      //▼ 현재 타일 데이터 
@@ -28,9 +26,9 @@ public class PathNodeData
      {
           coordinate = new Vector2Int(X, Y);
           tileData = TileManager.Instance.GetTileData(coordinate.x, coordinate.y);
-          isOpenDir = new bool[4];
+          isOpenDir = new bool[4]{true,true,true,true};
           disToBlocks = new int[4];
-          isBlocked = !tileData.IsWalkable;
+          isBlocked = !(tileData.Type == TileData.TYPE.Road);
      }
 
      /// <summary>
@@ -100,7 +98,7 @@ public class PathNodeData
                {
                     openDir[i] = ChangeIndexToDirection(i);
                }
-          }
+     }
           return openDir;
      }
 
@@ -171,7 +169,7 @@ public class PathNodeData
                     Debug.LogError("Unvaliable Direction");
                     return -1;
           }
-     }
+      }
      /// <summary>
      /// index값에 해당하는 방향을 반환해주는 메서드 
      /// </summary>

@@ -3,6 +3,7 @@
 */
 
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class PathNodeManager : MonoBehaviour
@@ -39,25 +40,21 @@ public class PathNodeManager : MonoBehaviour
         }
     }
 
-     private void OnEnable()
-    {
-        GeneratePathNodeTiles();
-    }
-
-     private void Start()
-    {
+    public void GeneratePath()
+    {   pathes = new();
         destinationPosition = TileManager.Instance.allyBasePosition;
-    }
-
-    public void  GeneratePath()
-    {
+        pathGenerator = new PlayPathGenerator();
+        GeneratePathNodeTiles();
+        IsGenerated = false;
         SetBlockedStatus();
         CheckPathGenerate();
         
         if(IsGenerated)
         {
-            SetDistanceToBlock();
-            GenerateRestPath();
+            Debug.Log("경로 생성 성공");
+
+            // SetDistanceToBlock();
+            // GenerateRestPath();
         }
         else
         {
@@ -118,13 +115,15 @@ public class PathNodeManager : MonoBehaviour
     /// <param name="ruleNum"></param>
     private void CheckPathGenerate()
     {
-        Vector2Int[] temp;
+        Vector2Int[] outTemp;
         
-        IsGenerated = pathGenerator.GetPath(pathNodeTiles, 0, out temp);
+        IsGenerated = pathGenerator.GetPath(pathNodeTiles, 0, out outTemp);
+        
+        pathes[0] = new Vector2Int[outTemp.Length];
         
         if(IsGenerated)
         {
-            temp.CopyTo(pathes[0],0); 
+            outTemp.CopyTo(pathes[0],0); 
         }
        
     }
@@ -132,9 +131,10 @@ public class PathNodeManager : MonoBehaviour
     {
         for(int i = 1; i < 4; i++)
         {
-            Vector2Int[] temp;
-            pathGenerator.GetPath(pathNodeTiles, i, out temp);
-            temp.CopyTo(pathes[i],0);
+            Vector2Int[] outTemp;
+            pathGenerator.GetPath(pathNodeTiles, i, out outTemp);
+            pathes[i] = new Vector2Int[outTemp.Length];
+            outTemp.CopyTo(pathes[i],0);
         }
     }
 
