@@ -14,7 +14,7 @@ public class PathNodeManager : MonoBehaviour
     private const bool CLOSED = false;
 
     private static PathNodeManager instance;
-    private static PathNodeManager Instance => instance;
+    public static PathNodeManager Instance => instance;
     private Vector2Int destinationPosition;
     //▼ 생성된 경로를 저장하는 딕셔너리
     private Dictionary<int, Vector2Int[]> pathes;
