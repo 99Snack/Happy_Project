@@ -1,9 +1,7 @@
 /*
     경로 생성의 전반적인 로직을 관리하는 클래스 
 */
-
 using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
 
 public class PathNodeManager : MonoBehaviour
@@ -14,11 +12,10 @@ public class PathNodeManager : MonoBehaviour
     //▼ 해당 방향이 열려있는지 표시하는 상수 bool
     private const bool OPENED = true;
     private const bool CLOSED = false;
-    private Vector2Int startPosition;
-    private Vector2Int destinationPosition;
 
     private static PathNodeManager instance;
     private static PathNodeManager Instance => instance;
+    private Vector2Int destinationPosition;
     //▼ 생성된 경로를 저장하는 딕셔너리
     private Dictionary<int, Vector2Int[]> pathes;
     //▼ 실제 PathNodeData를 담고 잇는 배열 (y, x)
@@ -27,6 +24,7 @@ public class PathNodeManager : MonoBehaviour
     PlayPathGenerator pathGenerator;
     //▼ 경로가 생성되었는지 여부 
     bool IsGenerated;
+
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -40,8 +38,12 @@ public class PathNodeManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 실제 경로를 생성하는 메서드 
+    /// </summary>
     public void GeneratePath()
-    {   pathes = new();
+    {   
+        pathes = new();
         destinationPosition = TileManager.Instance.allyBasePosition;
         pathGenerator = new PlayPathGenerator();
         GeneratePathNodeTiles();
@@ -51,18 +53,149 @@ public class PathNodeManager : MonoBehaviour
         
         if(IsGenerated)
         {
-            Debug.Log("경로 생성 성공");
-
-            // SetDistanceToBlock();
-            // GenerateRestPath();
+            GenerateRestPath();
         }
         else
         {
-            //todo: 실패했을 떄 수행한 행동 
+            //todo: 실패했을 떄 수행할 행동 
             Debug.LogError("경로 없음");
         }
     }
 
+    public void test()
+    {
+        Vector2Int[] feedBacks;
+        Vector2Int[] pathes = GetPathAndFeedBack(1, 2, out feedBacks);
+
+        // foreach(var path in pathes)
+        // {
+        //     Debug.Log($"{path.x},{path.y}");
+        // }
+
+        // foreach(var feedback in feedBacks)
+        // {
+        //     Debug.Log($"feedBack{feedback.x},{feedback.y}");
+        // }
+    }
+
+    /// <summary>
+    /// 외부에서 호출되어 실제 경로와 
+    /// 피드백을 출력할 노드들을 반환하는 메서드
+    /// </summary>
+    /// <param name="spawnNum">스폰 번호</param>
+    /// <param name="n">피드백 수</param>
+    /// <param name="feedBack">피드백을 출력할 노드 배열 </param>
+    /// <returns>계산된 경로</returns>
+    public Vector2Int[] GetPathAndFeedBack (int spawnNum, int n , out Vector2Int[] feedBack)
+    {
+        Vector2Int[] basePath = GetBasePath(spawnNum);//기본 경로 
+        Vector2Int[] calcPath ;//계산된 경로 
+        Vector2Int targetVector = new Vector2Int(-1, -1); //찾아야하는 벡터 
+        List<Vector2Int> feedBackList = new();//피드백 지점 
+        Stack<Vector2Int> calculatedPath = new();//계산된 경로
+        Stack<Vector2Int> calculateStack = new();//계산을 위한 스택
+        
+        bool isPathToDelete = false;//버려야 할 경로인지 여부
+
+        for(int i = 0; i < basePath.Length; i++)
+        {
+            Vector2Int pathVector = basePath[i];
+
+            if(i == 0 || i == basePath.Length - 1)
+            {
+                calculatedPath.Push(pathVector);
+                continue;
+            }
+
+            if(isPathToDelete) //삭제 중
+            {
+                //▼ 타깃 벡터라면 삭제 모드 해제
+                if(pathVector == targetVector) 
+                {
+                    isPathToDelete = false;
+                    calculateStack.Clear();
+                    continue;
+                }
+                else
+                {
+                    continue;
+                } 
+            }
+            else if(i == 1 || i == basePath.Length - 2)
+            {
+                if(pathNodeTiles[pathVector.y,pathVector.x].GetOpenDirectionCount() + 1 > 2)
+                {
+                    calculateStack.Clear();
+                    calculateStack.Push(pathVector);
+                }
+            }
+            else if(pathNodeTiles[pathVector.y,pathVector.x].GetOpenDirectionCount() > 2)//분기점이라면 
+            {
+                calculateStack.Clear();
+                calculateStack.Push(pathVector);
+            }
+            //▼ 분기점이 아닌데 피드백 계산 중 
+            else if(calculateStack.Count > 0) 
+            {
+                //▼ 현재 벡터가 이미 지나왔던 길이고 분기점 부터 거리가 n보다 크다면 
+                if(calculatedPath.Contains(pathVector) && calculateStack.Count > n + 1 ) 
+                {
+                    isPathToDelete = true;
+
+                    //▼ 반환점을 조건에 맞는 반환점을 제외한 경로 삭제  
+                    while(calculateStack.Count > n + 1)
+                    {
+                        calculateStack.Pop();
+                        calculatedPath.Pop();   
+                    }
+
+                    targetVector = calculateStack.Peek();
+
+                    //▼ 피드백 지점 리스트에 없다면 
+                    if(!feedBackList.Contains(targetVector))
+                    {
+                        feedBackList.Add(targetVector);   
+                    }
+                }
+                else
+                {
+                    calculateStack.Push(pathVector);
+                }
+            }
+            //▼ 버려야할 경로가 아니라면 
+            if(!isPathToDelete)
+            {
+                calculatedPath.Push(pathVector);
+            }    
+        }
+        calcPath = new Vector2Int[calculatedPath.Count]; 
+
+        for(int i = calculatedPath.Count - 1; i >= 0; i--)
+        {
+            calcPath[i] = calculatedPath.Pop();     
+        }
+
+        feedBack = feedBackList.ToArray();
+
+        return calcPath;
+    }
+
+
+
+    /// <summary>
+    /// 스폰 넘버를 통해 복사된 경로배열을 반환받는 메서드
+    /// </summary>
+    /// <param name="spawnNum">몬스터 스폰 번호 </param>
+    /// <returns></returns>
+    private Vector2Int[] GetBasePath(int spawnNum)
+    {
+        int pathNum = ChangeSpawnNumToRuleNum(spawnNum);
+        Vector2Int [] returnPath = new Vector2Int[pathes[pathNum].Length];
+        pathes[pathNum].CopyTo(returnPath, 0);
+        return returnPath;
+    }
+
+    
     /// <summary>
     /// PathNodeTIles를 생성하는 메서드 
     /// </summary>
@@ -79,6 +212,9 @@ public class PathNodeManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 방향별 막힘 설정 
+    /// </summary>
     private void SetBlockedStatus()
     {
         pathNodeTiles[destinationPosition.y + 1, destinationPosition.x].BlockPathNode();
@@ -109,6 +245,7 @@ public class PathNodeManager : MonoBehaviour
             }
         }
     }
+
     /// <summary>
     /// 경로가 생성될 수 있으면 생성하고 0번쨰 경로에 넣는다. 
     /// </summary>
@@ -127,6 +264,9 @@ public class PathNodeManager : MonoBehaviour
         }
        
     }
+    /// <summary>
+    /// 생성 여부 확인용 경로를 제외한 경로 생성 
+    /// </summary>
     private void GenerateRestPath()
     {
         for(int i = 1; i < 4; i++)
@@ -137,22 +277,19 @@ public class PathNodeManager : MonoBehaviour
             outTemp.CopyTo(pathes[i],0);
         }
     }
-
-    private void SetDistanceToBlock()
-    {
-        Debug.Log("Bound 값 생성");
-    }
+   
 
     /// <summary>
     /// 스폰 번호 규칙 번호로 변환하는 메서드
     /// </summary>
-    /// <param name="spawnNum">변환하고자하는 스폰 번호</param>
-    /// <returns></returns>
+    /// <param name="spawnNum"> 스폰 번호</param>
+    /// <returns>규칙 번호</returns>
     private int ChangeSpawnNumToRuleNum(int spawnNum)
     {
-        int ruleNumber = spawnNum % 4;
+        int ruleNumber = spawnNum % 4 - 1;
 
         return ruleNumber;
     }
-    
+
+   
 }

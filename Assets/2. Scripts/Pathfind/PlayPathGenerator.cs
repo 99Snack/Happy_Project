@@ -2,8 +2,6 @@
     실제 경로를 생성하는 클래스 
 */
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayPathGenerator 
@@ -150,8 +148,10 @@ public class PlayPathGenerator
         int calY = startPosition.y; //계산을 위한 y좌표 
        
         Stack<Vector2Int> passed = new(); //지나온 경로를 저장하는 스택
+        Stack<Vector2Int> everyPath = new(); //지나온 모든 길을 저장하는 스택 
         
         passed.Push(new Vector2Int(calX,calY));//시작 좌표 추가 
+        everyPath.Push(new Vector2Int(calX,calY));//시작 좌표 추가 
 
         DIRECTION selected = DIRECTION.None; //선택된 방향
         DIRECTION backDir = DIRECTION.None; //되돌아가는 방향 
@@ -299,7 +299,7 @@ public class PlayPathGenerator
                 {
                     selected = DIRECTION.East;                    
                 }
-                else if(temp.x ==  calX  && temp.y == calY +1)
+                else if(temp.x ==  calX && temp.y == calY +1)
                 {
                     selected = DIRECTION.North;
                 }
@@ -314,27 +314,28 @@ public class PlayPathGenerator
                 calY = temp.y;
             }
 
-           
-
             tempClosedDirections = new DIRECTION[]{DIRECTION.None,DIRECTION.None,DIRECTION.None,DIRECTION.None};
 
+            everyPath.Push(new Vector2Int(calX, calY));
+            
             //▼ 도착했다면 성공으로 전환한 뒤 탈출 
             if(calX == destinationPosition.x && calY == destinationPosition.y)
             {
                 isSuccess = true;
                 break;
             }
+
+
         }
 
         //▼ 성공했다면 path에 스택의 요소들 담기 
         if(isSuccess)
         {
-            path = new Vector2Int[passed.Count];
+            path = new Vector2Int[everyPath.Count];
 
-            for(int i = passed.Count - 1; passed.Count > 0; i--)
+            for(int i = everyPath.Count - 1; everyPath.Count > 0; i--)
             {
-               Vector2Int pathVector = passed.Pop();
-               Debug.Log($"{pathVector.x},{pathVector.y}");
+               Vector2Int pathVector = everyPath.Pop();
                path[i] = pathVector;
             }
             
