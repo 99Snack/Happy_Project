@@ -62,21 +62,6 @@ public class PathNodeManager : MonoBehaviour
         }
     }
 
-    public void test()
-    {
-        Vector2Int[] feedBacks;
-        Vector2Int[] pathes = GetPathAndFeedBack(1, 2, out feedBacks);
-
-        // foreach(var path in pathes)
-        // {
-        //     Debug.Log($"{path.x},{path.y}");
-        // }
-
-        // foreach(var feedback in feedBacks)
-        // {
-        //     Debug.Log($"feedBack{feedback.x},{feedback.y}");
-        // }
-    }
 
     /// <summary>
     /// 외부에서 호출되어 실제 경로와 
@@ -157,6 +142,10 @@ public class PathNodeManager : MonoBehaviour
                         feedBackList.Add(targetVector);   
                     }
                 }
+                else if(calculatedPath.Contains(pathVector) && calculateStack.Count <= n + 1 )
+                {
+                    calculateStack.Clear();
+                }
                 else
                 {
                     calculateStack.Push(pathVector);
@@ -166,6 +155,12 @@ public class PathNodeManager : MonoBehaviour
             if(!isPathToDelete)
             {
                 calculatedPath.Push(pathVector);
+            }
+            //▼ 이미 버려야할 경로를 전부 버렸다면
+            else if(targetVector == pathVector && isPathToDelete)
+            {
+                isPathToDelete = false;
+                calculateStack.Clear();
             }    
         }
         calcPath = new Vector2Int[calculatedPath.Count]; 
@@ -278,7 +273,6 @@ public class PathNodeManager : MonoBehaviour
         }
     }
    
-
     /// <summary>
     /// 스폰 번호 규칙 번호로 변환하는 메서드
     /// </summary>
@@ -287,6 +281,10 @@ public class PathNodeManager : MonoBehaviour
     private int ChangeSpawnNumToRuleNum(int spawnNum)
     {
         int ruleNumber = spawnNum % 4 - 1;
+        if(ruleNumber == -1)
+        {
+            ruleNumber = 3;
+        }
 
         return ruleNumber;
     }

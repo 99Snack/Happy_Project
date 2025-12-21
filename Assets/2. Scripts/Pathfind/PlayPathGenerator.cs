@@ -325,7 +325,6 @@ public class PlayPathGenerator
                 break;
             }
 
-
         }
 
         //▼ 성공했다면 path에 스택의 요소들 담기 
