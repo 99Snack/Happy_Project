@@ -293,7 +293,11 @@ public class SinglePathGenerator : MonoBehaviour
             //▼ 직전에 커브했다면 커브를 최대한 피한다.
             if (continuousCurve > 0 && valiableDirList.Contains(lastDirection))
                 return lastDirection;
-
+            else if(valiableDirList.Contains(DIRECTION.West))
+            {
+                valiableDirList.Remove(DIRECTION.West);
+                return valiableDirList[UnityEngine.Random.Range(0,valiableDirList.Count)];   
+            }
             else
                 return valiableDirList[UnityEngine.Random.Range(0, valiableDirList.Count)];
         }
