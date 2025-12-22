@@ -9,7 +9,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public Animator animator;
 
     public TileInteractor MyTile{ get; private set; }
-    public TowerBase Data { get; private set; }
+    public TowerBaseData Data { get; private set; }
     public Vector2Int Coord { get; set; }
     public float PlacedTime { get; set; }
 
@@ -42,13 +42,12 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         if(shooter == null){
             shooter = GetComponent<TowerShooter>();
         }
-
         ChangeState(new IdleState(this));
     }
 
     protected virtual void Update()
     {
-        if (MyTile.Type == TileData.TYPE.Wait) return;
+        if (MyTile.Type == TileInfo.TYPE.Wait) return;
 
         currentState?.Update();
 

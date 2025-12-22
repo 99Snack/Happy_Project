@@ -1,4 +1,4 @@
-public class Gacha
+public class GachaData
 {
     public int Index; // 인덱스
     public int GroupID; // 그룹 ID

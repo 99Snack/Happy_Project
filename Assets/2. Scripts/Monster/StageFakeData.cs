@@ -1,7 +1,7 @@
-﻿    using UnityEngine;
+    using UnityEngine;
 
 [System.Serializable]
-public class StageData
+public class StageFakeData
 {
     [Header("스폰 순서")]
     public int[] SpawnOrder;

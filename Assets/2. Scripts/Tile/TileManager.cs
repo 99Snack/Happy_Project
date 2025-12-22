@@ -19,7 +19,7 @@ public class TileManager : MonoBehaviour
     }
 
     //모든 타일들 관리
-    public TileData[,] allTiles;
+    public TileInfo[,] allTiles;
 
     // 맵 사이즈
     public const int MAP_SIZE_X = 14;
@@ -44,13 +44,13 @@ public class TileManager : MonoBehaviour
     void Initialize()
     {
         // 맵 초기화
-        allTiles = new TileData[MAP_SIZE_Y, MAP_SIZE_X];
+        allTiles = new TileInfo[MAP_SIZE_Y, MAP_SIZE_X];
 
         for (int i = 0; i < MAP_SIZE_Y; i++)
         {
             for (int j = 0; j < MAP_SIZE_X; j++)
             {
-                allTiles[i, j] = new TileData(j, i, TileData.TYPE.Wall);
+                allTiles[i, j] = new TileInfo(j, i, TileInfo.TYPE.Wall);
             }
         }
 
@@ -89,28 +89,28 @@ public class TileManager : MonoBehaviour
         //정해진 좌표에 베이스 설정
         foreach (var y in enemyBaseYCoords)
         {
-            allTiles[y, enemyBaseCoordX].Type = TileData.TYPE.EnemyBase;
+            allTiles[y, enemyBaseCoordX].Type = TileInfo.TYPE.EnemyBase;
             allTiles[y, enemyBaseCoordX].IsTransition = false;
         }
 
         foreach (var y in allyBaseYCoords)
         {
-            allTiles[y, allyBaseCoordX].Type = TileData.TYPE.AllyBase;
+            allTiles[y, allyBaseCoordX].Type = TileInfo.TYPE.AllyBase;
             allTiles[y, allyBaseCoordX].IsTransition = false;
         }
     }
 
-    public void SetTileData(int x, int y, TileData.TYPE type)
+    public void SetTileInfo(int x, int y, TileInfo.TYPE type)
     {
-        if (type != TileData.TYPE.Wall && type != TileData.TYPE.Road) return;
+        if (type != TileInfo.TYPE.Wall && type != TileInfo.TYPE.Road) return;
 
         if (IsValidCoordinate(x, y))
         {
-            allTiles[y, x] = new TileData(x, y, type);
+            allTiles[y, x] = new TileInfo(x, y, type);
         }
     }
 
-    public void ChangeType(int x,int y, TileData.TYPE type){
+    public void ChangeType(int x,int y, TileInfo.TYPE type){
         if (IsValidCoordinate(x, y))
         {
             allTiles[y, x].Type = type;
@@ -118,7 +118,7 @@ public class TileManager : MonoBehaviour
     }
 
 
-    public TileData.TYPE GetTileType(int x, int y)
+    public TileInfo.TYPE GetTileType(int x, int y)
     {
 
         if (IsValidCoordinate(x, y))
@@ -127,9 +127,9 @@ public class TileManager : MonoBehaviour
         }
 
 
-        return TileData.TYPE.None;
+        return TileInfo.TYPE.None;
     }
-    public TileData GetTileData(int x, int y)
+    public TileInfo GetTileInfo(int x, int y)
     {
 
         if (IsValidCoordinate(x, y))

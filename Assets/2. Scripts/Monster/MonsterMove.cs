@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using UnityEngine;
 
 public class MonsterMove : MonoBehaviour
@@ -101,8 +101,8 @@ public class MonsterMove : MonoBehaviour
         {
             // 이동 방향은 타겟을 향해
             Vector3 moveDir = (TargetAnchor - transform.position).normalized;
-            transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
-
+            //transform.position += moveDir *  monster.Data.MoveSpeed * Time.deltaTime;
+            transform.position += moveDir *  2f * Time.deltaTime;
             if (!isTurning)   // 회전 중이 아닐 때만 이동 방향을 바라봄
             {
                 currentLookDir = moveDir;

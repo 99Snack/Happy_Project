@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI; 
 
 public class SpawnManager : MonoBehaviour
@@ -21,7 +21,8 @@ public class SpawnManager : MonoBehaviour
     public float SpawnInterval = 1f; // 몬스터 스폰 간격
 
     [Header("스테이지 데이터")]
-    public StageData[] Stages;
+    //public StageData[] Stages;
+    public StageFakeData[] Stages;
 
 
     // 현재 상태
@@ -65,7 +66,7 @@ public class SpawnManager : MonoBehaviour
 
 
         // 현재 스테이지 데이터로 스폰 순서 가져와서 설정
-        StageData currentData = Stages[_currentStage]; // 현재 스테이지 데이터 가져오기
+        StageFakeData currentData = Stages[_currentStage]; // 현재 스테이지 데이터 가져오기
         _currentSpawnOrder = currentData.GetSpawnOrder(); // 스폰 순서 배열 생성
         _aliveMonsterCount = _currentSpawnOrder.Length; // 살아있는 몬스터 수 설정
 

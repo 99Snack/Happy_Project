@@ -1,6 +1,6 @@
 
 [System.Serializable]
-public class TileData
+public class TileInfo
 {
     public enum TYPE
     {
@@ -17,7 +17,7 @@ public class TileData
     public bool IsWalkable;
     public bool IsTransition = false;
 
-    public TileData(int x, int y, TYPE type)
+    public TileInfo(int x, int y, TYPE type)
     {
         this.X = x;
         this.Y = y;

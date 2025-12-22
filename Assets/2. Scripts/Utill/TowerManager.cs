@@ -106,7 +106,7 @@ public class TowerManager : MonoBehaviour
 
             var sortedMatches = matches
                                 //1. 타일 위 여부
-                                .OrderByDescending(t => t.MyTile.Type == TileData.TYPE.Wall)
+                                .OrderByDescending(t => t.MyTile.Type == TileInfo.TYPE.Wall)
                                 //2. 먼저 배치된 순서
                                 .ThenBy(t => t.PlacedTime)
                                 .ToList();

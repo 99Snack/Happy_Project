@@ -9,7 +9,7 @@ public class PathNodeData
      private const bool OPENED = true;
      private const bool CLOSED = false;
      //▼ 현재 타일 데이터 
-     private TileData tileData;
+     private TileInfo tileData;
      //▼ 해당 방향의 노드의 개폐 여부를 저장하는 배열 방향은 (동, 서, 남, 북) 
      private bool[] isOpenDir;
      //▼ 막힌 노드까지의 거리를 나타내는 배열(동, 서, 남, 북)
@@ -28,10 +28,10 @@ public class PathNodeData
      public PathNodeData(int X, int Y)
      {
           coordinate = new Vector2Int(X, Y);
-          tileData = TileManager.Instance.GetTileData(coordinate.x, coordinate.y);
+          tileData = TileManager.Instance.GetTileInfo(coordinate.x, coordinate.y);
           isOpenDir = new bool[4]{true,true,true,true};
           disToBlocks = new int[4];
-          isBlocked = !(tileData.Type == TileData.TYPE.Road);
+          isBlocked = !(tileData.Type == TileInfo.TYPE.Road);
      }
 
      /// <summary>

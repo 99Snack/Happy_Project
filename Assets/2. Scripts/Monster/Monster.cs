@@ -1,3 +1,4 @@
+using System.Xml;
 using UnityEngine;
 
 /// <summary>
@@ -14,13 +15,15 @@ public class Monster : MonoBehaviour
 
     void Start()
     {
-        currentHp = Data.Hp; // 시작 시 현재 체력 = 최대 체력 
+        currentHp = (Data != null) ? Data.Hp : 1; // 시작 시 현재 체력 = 최대 체력 
     }
 
     // 스포너에서 호출해서 번호 설정
     public void SetSpawnNumber(int number)
     {
         SpawnNumber = number;
+
+
     }
 
     // 몬스터 죽을 때 호출 
@@ -33,4 +36,4 @@ public class Monster : MonoBehaviour
         Destroy(gameObject);
     }
 
- }
+}

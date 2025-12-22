@@ -42,7 +42,8 @@ public class UIManager : MonoBehaviour
 
     public void GachaBtn()
     {
-        Debug.Log(TowerManager.Instance.Gacha());
+       int towerid = TowerManager.Instance.Gacha();
+        //Debug.Log(towerid);
     }
 
     public void OpenTowerInfo(Tower SelectTower)

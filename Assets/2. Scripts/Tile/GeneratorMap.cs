@@ -15,21 +15,21 @@ public class GeneratorMap : MonoBehaviour
         {
             for (int j = 0; j < TileManager.MAP_SIZE_X; j++)
             {
-                TileData tile = TileManager.Instance.GetTileData(j, i);
+                TileInfo tile = TileManager.Instance.GetTileInfo(j, i);
                 int x = j * TileManager.CELL_SIZE;
                 int y = i * TileManager.CELL_SIZE;
 
                 GameObject tilePrefab = null;
                 switch (tile.Type)
                 {
-                    case TileData.TYPE.Wall:
-                    case TileData.TYPE.Road:
+                    case TileInfo.TYPE.Wall:
+                    case TileInfo.TYPE.Road:
                         tilePrefab = transitionPrefab;
                         break;
-                    case TileData.TYPE.AllyBase:
+                    case TileInfo.TYPE.AllyBase:
                         tilePrefab = allyBasePrefab;
                         break;
-                    case TileData.TYPE.EnemyBase:
+                    case TileInfo.TYPE.EnemyBase:
                         tilePrefab = enemyBasePrefab;
                         break;
                 }
@@ -44,11 +44,11 @@ public class GeneratorMap : MonoBehaviour
                     TileInteractor interactor = tileObject.GetComponent<TileInteractor>();
                     interactor.Setup(j, i,tile.Type);
 
-                    TileData data = TileManager.Instance.GetTileData(j, i);
+                    TileInfo data = TileManager.Instance.GetTileInfo(j, i);
 
                     //타일이 벽이나 길이라면
-                    if (data.Type == TileData.TYPE.Wall || data.Type == TileData.TYPE.Road) { 
-                        bool isWall = tile.Type == TileData.TYPE.Wall ? true : false;
+                    if (data.Type == TileInfo.TYPE.Wall || data.Type == TileInfo.TYPE.Road) { 
+                        bool isWall = tile.Type == TileInfo.TYPE.Wall ? true : false;
 
                         tileObject.transform.GetChild(0).gameObject.SetActive(isWall);
                         tileObject.transform.GetChild(1).gameObject.SetActive(!isWall);

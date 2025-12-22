@@ -19,38 +19,72 @@ public class DataManager : MonoBehaviour
         {
             instance = this;
         }
+
+        DataParse();
     }
 
-    #region Tower Table
+    #region Data Table
 
-    public Dictionary<int, Gacha> GachaData = new Dictionary<int, Gacha>();
-    public Dictionary<int, TowerBase> TowerBaseData = new Dictionary<int, TowerBase>();
+    public Dictionary<int, StageData>                   StageData               = new Dictionary<int, StageData>();
+    public Dictionary<int, WaveData>                    WaveData                = new Dictionary<int, WaveData>();
+    public Dictionary<int, MonsterSpawnGroupData>       MonsterSpawnGroupData   = new Dictionary<int, MonsterSpawnGroupData>();
+    public Dictionary<int, TileData>                    TileData                = new Dictionary<int, TileData>();
+    public Dictionary<int, MonsterData>                 MonsterData             = new Dictionary<int, MonsterData>();
+    public Dictionary<int, RewardData>                  RewardData              = new Dictionary<int, RewardData>();
+    public Dictionary<int, RewardGroupData>             RewardGroupData         = new Dictionary<int, RewardGroupData>();
+    public Dictionary<int, TowerBaseData>               TowerBaseData           = new Dictionary<int, TowerBaseData>();
+    public Dictionary<int, GachaData>                   GachaData               = new Dictionary<int, GachaData>();
+    public Dictionary<int, DebuffData>                  DebuffData              = new Dictionary<int, DebuffData>();
+    public Dictionary<int, AugmentData>                 AugmentData             = new Dictionary<int, AugmentData>();
+    public Dictionary<string, LocalizationData>         LocalizationData        = new Dictionary<string, LocalizationData>();
 
     #endregion
 
-    private void Start()
+    private void DataParse()
     {
-        //1. 모든파일들 파서 진행
-        List<Gacha> gaches = DataParser.Parse<Gacha>("gacha");
-        List<TowerBase> towerBases = DataParser.Parse<TowerBase>("tower_base");
 
-        //Gacha 파서
-        foreach (var gacha in gaches)
+        // 스테이지 및 웨이브
+        AddToDictionary(StageData, DataParser.Parse<StageData>("stage"), d => d.Index);
+        AddToDictionary(WaveData, DataParser.Parse<WaveData>("wave"), d => d.Index);
+
+        // 몬스터 관련
+        AddToDictionary(MonsterSpawnGroupData, DataParser.Parse<MonsterSpawnGroupData>("mon_spawn_groups"), d => d.Index);
+        AddToDictionary(MonsterData, DataParser.Parse<MonsterData>("monsters"), d => d.MonsterId);
+
+        // 타일 및 환경
+        AddToDictionary(TileData, DataParser.Parse<TileData>("tiles"), d => d.Index);
+
+        // 보상 관련
+        AddToDictionary(RewardData, DataParser.Parse<RewardData>("rewards"), d => d.RewardId);
+        AddToDictionary(RewardGroupData, DataParser.Parse<RewardGroupData>("reward_groups"), d => d.Index);
+
+        // 타워 및 전투
+        AddToDictionary(TowerBaseData, DataParser.Parse<TowerBaseData>("tower_base"), d => d.TowerID);
+        AddToDictionary(GachaData, DataParser.Parse<GachaData>("gacha"), d => d.Index);
+        AddToDictionary(DebuffData, DataParser.Parse<DebuffData>("debuff"), d => d.DebuffId);
+
+        // 증강
+        AddToDictionary(AugmentData, DataParser.Parse<AugmentData>("augment"), d=> d.Index);
+
+        AddToDictionary(LocalizationData, DataParser.Parse<LocalizationData>("localization"), d=> d.Index);
+
+        Debug.Log("모든 데이터 파싱 완료");
+    }
+
+    private void AddToDictionary<TKey, TValue>(Dictionary<TKey, TValue> dict, List<TValue> list, System.Func<TValue, TKey> keySelector)
+    {
+        if (list == null) return;
+
+        foreach (var item in list)
         {
-            int primaryKey = gacha.Index;
-            if (!GachaData.ContainsKey(primaryKey))
+            TKey key = keySelector(item);
+            if (!dict.ContainsKey(key))
             {
-                GachaData.Add(primaryKey, gacha);
+                dict.Add(key, item);
             }
-        }
-
-        //Tower_Base 파서
-        foreach (var tower in towerBases)
-        {
-            int primaryKey = tower.TowerID;
-            if (!TowerBaseData.ContainsKey(primaryKey))
+            else
             {
-                TowerBaseData.Add(primaryKey, tower);
+                Debug.LogWarning($"중복된 키 발견: {key} in {typeof(TValue).Name}");
             }
         }
     }
