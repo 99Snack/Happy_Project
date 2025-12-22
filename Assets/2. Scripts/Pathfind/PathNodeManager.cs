@@ -43,17 +43,17 @@ public class PathNodeManager : MonoBehaviour
     /// 몬스터 경로 생성 후 경로 반환반기 
     /// </summary>
     /// <param name="spawnNum">스폰 번호</param>
-    /// <param name="n">피드백 수 </param>
+    /// <param name="deadEndMoveLimit">막다른 길 감지 거리  </param>
     /// <param name="feedBack">피드백 좌표를 받을 배열</param>
     /// <returns>실제로 가야하는 경로</returns>
-    public Vector2Int[] GetPathNode (int spawnNum, int n , out Vector2Int[] feedBack)
+    public Vector2Int[] GetPathNode (int spawnNum, int deadEndMoveLimit , out Vector2Int[] feedBack)
     {
         bool isSucceedGenerte = GeneratePath();
         feedBack = Array.Empty<Vector2Int>();
 
         if(isSucceedGenerte)
         {
-            return GetPathAndFeedBack(spawnNum, n, out feedBack);
+            return GetPathAndFeedBack(spawnNum, deadEndMoveLimit, out feedBack);
         }
         else
         {
@@ -95,10 +95,10 @@ public class PathNodeManager : MonoBehaviour
     /// 피드백을 출력할 노드들을 반환하는 메서드
     /// </summary>
     /// <param name="spawnNum">스폰 번호</param>
-    /// <param name="n">피드백 수</param>
+    /// <param name="deadEndMoveLimit">막다른 길 감지거리</param>
     /// <param name="feedBack">피드백을 출력할 노드 배열 </param>
     /// <returns>계산된 경로</returns>
-    public Vector2Int[] GetPathAndFeedBack (int spawnNum, int n , out Vector2Int[] feedBack)
+    public Vector2Int[] GetPathAndFeedBack (int spawnNum, int deadEndMoveLimit , out Vector2Int[] feedBack)
     {
         
         Vector2Int[] basePath = GetBasePath(spawnNum);//기본 경로 
@@ -151,12 +151,12 @@ public class PathNodeManager : MonoBehaviour
             else if(calculateStack.Count > 0) 
             {
                 //▼ 현재 벡터가 이미 지나왔던 길이고 분기점 부터 거리가 n보다 크다면 
-                if(calculatedPath.Contains(pathVector) && calculateStack.Count > n + 1 ) 
+                if(calculatedPath.Contains(pathVector) && calculateStack.Count > deadEndMoveLimit + 1 ) 
                 {
                     isPathToDelete = true;
 
                     //▼ 반환점을 조건에 맞는 반환점을 제외한 경로 삭제  
-                    while(calculateStack.Count > n + 1)
+                    while(calculateStack.Count > deadEndMoveLimit + 1)
                     {
                         calculateStack.Pop();
                         calculatedPath.Pop();   
@@ -170,7 +170,7 @@ public class PathNodeManager : MonoBehaviour
                         feedBackList.Add(targetVector);   
                     }
                 }
-                else if(calculatedPath.Contains(pathVector) && calculateStack.Count <= n + 1 )
+                else if(calculatedPath.Contains(pathVector) && calculateStack.Count <= deadEndMoveLimit + 1 )
                 {
                     calculateStack.Clear();
                 }
