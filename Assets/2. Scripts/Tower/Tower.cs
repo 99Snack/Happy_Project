@@ -6,7 +6,7 @@ public enum TowerSlot
     None, Wait, Tile
 }
 
-public class Tower : MonoBehaviour, IPointerClickHandler
+public abstract class Tower : MonoBehaviour, IPointerClickHandler
 {
     public TowerShooter shooter;
     public Animator animator;
@@ -22,18 +22,12 @@ public class Tower : MonoBehaviour, IPointerClickHandler
     // 현재 타겟
     [HideInInspector] public MonsterMove currentTarget;
 
-    // 탐지
-    public float detectionInterval = 0.1f;
-    [HideInInspector] public float detectionTimer = 0f;
-
-    // 공격
-    public float attackSpeed = 1f;
-    public int attackRange = 1;
-    public int attackHitCount = 1;
     [HideInInspector] public float attackCooldown = 0f;
 
     // 상태 패턴 FSM
     private ITowerState currentState;
+    protected IdleState IdleState;
+    protected AttackStopState AttackStopState;
 
     public void Setup(int towerId, TileInteractor tile)
     {
@@ -52,7 +46,7 @@ public class Tower : MonoBehaviour, IPointerClickHandler
         Coord = new Vector2Int(x, y);
     }
 
-    void Start()
+    protected virtual void Start()
     {
         //towerTile = tilemap.WorldToCell(transform.position);
         //Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
@@ -60,7 +54,7 @@ public class Tower : MonoBehaviour, IPointerClickHandler
         ChangeState(new IdleState(this));
     }
 
-    void Update()
+    protected virtual void Update()
     {
         currentState?.Update();
 
@@ -73,18 +67,6 @@ public class Tower : MonoBehaviour, IPointerClickHandler
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
-    }
-
-    public void OnAttackStopEnd()
-    {
-        //if (currentTarget != null)
-        //{
-        //    ChangeState(new SearchingState(this)); // AttackReady 역할
-        //}
-        //else
-        //{
-        //    ChangeState(new IdleState(this));
-        //}
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -105,6 +87,24 @@ public class Tower : MonoBehaviour, IPointerClickHandler
         GameManager.Instance.Gold += Data.price;
         Destroy(gameObject);
     }
+
+    public bool IsTargetInRange()
+    {
+        if (currentTarget == null)
+            return false;
+
+
+        int enemyX = Mathf.FloorToInt(currentTarget.transform.position.x);
+        int enemyY = Mathf.FloorToInt(currentTarget.transform.position.z);
+
+        int dx = Mathf.Abs(enemyX - Coord.x);
+        int dy = Mathf.Abs(enemyY - Coord.y);
+
+
+        return Mathf.Max(dx, dy) <= Data.Range;
+    }
+
+    public abstract void Attack();
 }
 
 
