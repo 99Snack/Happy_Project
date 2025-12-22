@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -42,8 +41,13 @@ public class UIManager : MonoBehaviour
 
     public void GachaBtn()
     {
-       int towerid = TowerManager.Instance.Gacha();
-        //Debug.Log(towerid);
+        //타워 뽑기 비용 100
+        if (GameManager.Instance.Gold >= TowerManager.GACHA_PRICE)
+        {
+            GameManager.Instance.Gold -= TowerManager.GACHA_PRICE;
+            int towerid = TowerManager.Instance.Gacha();
+            //Debug.Log(towerid);
+        }
     }
 
     public void OpenTowerInfo(Tower SelectTower)
@@ -83,7 +87,8 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateGold(int gold){
+    public void UpdateGold(int gold)
+    {
         goldText.text = $"Gold : {gold}";
     }
 

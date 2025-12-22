@@ -2,7 +2,6 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using System.Runtime.Serialization.Json;
 
 public class TowerManager : MonoBehaviour
 {
@@ -23,6 +22,9 @@ public class TowerManager : MonoBehaviour
         }
 
     }
+
+    public static readonly int GACHA_PRICE = 100;
+
     public List<TileInteractor> waitingSeat = new List<TileInteractor>();
     public List<Tower> allTowers = new List<Tower>();
 
