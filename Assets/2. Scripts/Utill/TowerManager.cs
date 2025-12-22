@@ -2,11 +2,24 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
+[System.Serializable]
+public struct TowerPrefabData{
+    public int towerId;
+    public GameObject prefab;
+}
+
 public class TowerManager : MonoBehaviour
 {
     private static TowerManager instance;
 
     public static TowerManager Instance { get => instance; set => instance = value; }
+
+    #region 타워 프리팹
+    public GameObject spearTower;
+    public GameObject MineThrowerTower;
+    public List<TowerPrefabData> resources = new List<TowerPrefabData>();
+    private Dictionary<int, GameObject> towerPrefabDic = new Dictionary<int, GameObject>();
+    #endregion
 
     private void Awake()
     {
@@ -19,14 +32,17 @@ public class TowerManager : MonoBehaviour
         {
             instance = this;
         }
+
+        foreach(var resource in resources)
+        {
+            towerPrefabDic.Add(resource.towerId, resource.prefab);
+        }
     }
 
-    #region 타워 프리팹
-    public GameObject spearTower;
-    public GameObject MineThrowerTower;
-    #endregion
+   
 
     public List<TileInteractor> waitingSeat = new List<TileInteractor>();
+    public List<Tower> allTowers = new List<Tower>();
 
     public int Gacha()
     {
@@ -68,9 +84,14 @@ public class TowerManager : MonoBehaviour
         {
             if (!tile.isAlreadyTower)
             {
-                GameObject tower = Instantiate(prefab, tile.transform);
-                tower.transform.localPosition = new Vector3(0, 0.5f, 0);
+                GameObject towerObj = Instantiate(prefab, tile.transform);
+                towerObj.transform.localPosition = new Vector3(0, 0.5f, 0);
                 tile.isAlreadyTower = true;
+
+                Tower tower = towerObj.transform.GetComponent<Tower>();
+                tower.Setup(towerId, tile);
+
+                allTowers.Add(tower);
                 return;
             }
         }
@@ -92,5 +113,19 @@ public class TowerManager : MonoBehaviour
                 break;
         }
         return prefab;
+    }
+
+    public void SellTower(Tower sellTower){
+        //1. 리스트에서 제거
+        allTowers.Remove(sellTower);
+        //2. 판매한 재화 게임매니저에서 제어
+        //3. 타일 isAlreadyTower =false 변경
+        sellTower.MyTile.isAlreadyTower = false;
+        //TileInteractor interactor = sellTower.transform.parent.GetComponent<TileInteractor>();
+        //interactor.isAlreadyTower = false;
+
+        //4. currentTower= null 변경
+        //5. 타워 객체에도 Sell메서드 실행
+        sellTower.OnSold();
     }
 }

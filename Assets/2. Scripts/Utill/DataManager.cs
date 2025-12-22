@@ -6,7 +6,7 @@ public class DataManager : MonoBehaviour
 {
     private static DataManager instance;
 
-    public static DataManager Instance { get => instance; set => instance = value; }
+    public static DataManager Instance { get => instance; private set => instance = value; }
 
     private void Awake()
     {
@@ -31,8 +31,8 @@ public class DataManager : MonoBehaviour
     private void Start()
     {
         //1. 모든파일들 파서 진행
-        List<Gacha> gaches = DataParser.Parse<Gacha>("Gacha");
-        List<Tower_Base> towerBases = DataParser.Parse<Tower_Base>("Tower_Base");
+        List<Gacha> gaches = DataParser.Parse<Gacha>("gacha");
+        List<Tower_Base> towerBases = DataParser.Parse<Tower_Base>("tower_base");
 
         //Gacha 파서
         foreach (var gacha in gaches)

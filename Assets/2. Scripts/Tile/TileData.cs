@@ -5,7 +5,7 @@ public class TileData
     public enum TYPE
     {
         None, 
-        Stay, //대기석
+        Wait, //대기석
         Wall, Road, AllyBase, EnemyBase,
     }
 

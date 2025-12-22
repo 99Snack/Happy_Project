@@ -75,9 +75,43 @@ public static class DataParser
 
                 if (field != null)
                 {
-                    //csv에서 가져온 데이터를 field데이터 타입으로 변환
-                    object convertedValue = Convert.ChangeType(value, field.FieldType);
-                    //실제 T클래스의 변수에 convertedValue할당
+                    //빈 문자열이거나 "-" 인 경우 예외 처리
+                    bool isInvalidValue = string.IsNullOrEmpty(value) || value == "-";
+
+                    object convertedValue;
+
+                    if (isInvalidValue)
+                    {
+                        //타입에 따라 기본값 할당
+                        if (field.FieldType == typeof(string))
+                        {
+                            //스트링은 빈 값으로
+                            convertedValue = string.Empty; 
+                        }
+                        else if (field.FieldType == typeof(int) || field.FieldType == typeof(float))
+                        {
+                            //숫자형은 -1로
+                            convertedValue = -1; 
+                        }
+                        else
+                        {
+                            //그 외 타입은 시스템 기본값
+                            convertedValue = field.FieldType.IsValueType ? Activator.CreateInstance(field.FieldType) : null;
+                        }
+                    }
+                    else
+                    {
+                        try
+                        {
+                            convertedValue = Convert.ChangeType(value, field.FieldType);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogWarning($"{header} 필드 형변환 실패: {value} (Error: {ex.Message})");
+                            continue;
+                        }
+                    }
+
                     field.SetValue(item, convertedValue);
                 }
             }
