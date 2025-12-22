@@ -11,6 +11,7 @@ public class TowerShooter : MonoBehaviour
         if (target == null) return;
 
         GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+
         Projectile projectile = proj.GetComponent<Projectile>();
         if (projectile != null)
         {

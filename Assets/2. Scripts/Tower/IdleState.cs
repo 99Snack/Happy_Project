@@ -1,5 +1,7 @@
+﻿
 using UnityEngine;
 using UnityEngine.Tilemaps;
+
 
 public class IdleState : ITowerState
 {
@@ -12,7 +14,7 @@ public class IdleState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[타워] Idle 상태 진입");
+        //Debug.Log("[타워] Idle 상태 진입");
 
         //tower.animator.SetBool("isAttacking", false);
         //tower.animator.SetBool("isAttackReady", false);

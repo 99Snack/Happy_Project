@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
 
-public abstract class RangeTower : MonoBehaviour
+public abstract class RangeTower : Tower
 {
     //protected override void Start()
     //{
     //    base.Start();
-    //    Debug.Log("RangeTower Start");
-    //    ChangeState(new IdleState(this));
     //}
 
     //protected override void Update()
@@ -14,19 +12,37 @@ public abstract class RangeTower : MonoBehaviour
     //    base.Update();
     //}
 
+    public override void Attack()
+    {
+        //기본 원거리 공격 방식 구현
 
-    //public override void Attack()
-    //{
-    //    Debug.Log("단일 원거리 공격");
-    //}
+        int enemyX = Mathf.FloorToInt(currentTarget.transform.position.x);
+        int enemyY = Mathf.FloorToInt(currentTarget.transform.position.z);
 
-    //public override void debuff()
-    //{
-    //    Debug.Log("디버프");
-    //}
+        Vector2Int enemyTile = new Vector2Int(enemyX, enemyY);
 
-    //public override void area Attack()
-    //{
-    //    Debug.Log("광역 공격");
-    //}
+        int dx = Mathf.Abs(Coord.x - enemyTile.x);
+        int dy = Mathf.Abs(Coord.y - enemyTile.y);
+        int distance = Mathf.Max(dx, dy);
+
+        //Debug.Log($"{distance} : {tower.attackRange}");
+        //사거리 벗어나면
+        if (distance > attackRange)
+        {
+            currentTarget = null;
+            ChangeState(AttackStopState);
+            return;
+        }
+        // 사거리 안에 있으면
+        else
+        {
+            if (attackCooldown <= 0f)
+            {
+                //shooter.Shoot(currentTarget, 0f, attackHitCount);
+                shooter.Shoot(currentTarget, 1 , attackHitCount);
+                attackCooldown = 1f / attackSpeed;
+                animator.SetTrigger("AttackTrigger");
+            }
+        }
+    }
 }

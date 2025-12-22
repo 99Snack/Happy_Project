@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6882311094252984848}
   - component: {fileID: 7955353836202669403}
   - component: {fileID: 7288812833210510153}
-  - component: {fileID: 4297217522303139539}
   - component: {fileID: 9082036631111533785}
   - component: {fileID: -4211088169548970564}
   - component: {fileID: 1716115057818804}
@@ -94,27 +93,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4297217522303139539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2658677335914711759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7183368eab5e9f747b39e88e41c4910f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Tower
-  shooter: {fileID: 9082036631111533785}
-  animator: {fileID: 8064219548360085636}
-  currentTarget: {fileID: 0}
-  detectionInterval: 0.1
-  detectionTimer: 0
-  attackSpeed: 1
-  attackRange: 2
-  attackHitCount: 1
-  attackCooldown: 0
 --- !u!114 &9082036631111533785
 MonoBehaviour:
   m_ObjectHideFlags: 0
