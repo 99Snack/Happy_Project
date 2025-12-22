@@ -1,4 +1,4 @@
-using NUnit.Framework.Interfaces;
+﻿using NUnit.Framework.Interfaces;
 using System.Collections;
 using UnityEngine;
 
@@ -15,7 +15,7 @@ public class AttackStopState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[타워] AttackStop 상태 진입");
+        //Debug.Log("[타워] AttackStop 상태 진입");
         tower.animator.SetBool("isAttackStop", true);
         // Animator Event에서 Tower.OnAttackStopEnd() 호출
     }

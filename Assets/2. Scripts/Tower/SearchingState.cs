@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SearchingState : ITowerState
@@ -12,7 +12,7 @@ public class SearchingState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[타워] AttackReady 상태 진입");
+        //Debug.Log("[타워] AttackReady 상태 진입");
         tower.animator.SetBool("isAttackReady", true);
         //tower.animator.SetBool("isAttacking", false);
     }
