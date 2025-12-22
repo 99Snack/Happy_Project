@@ -1,6 +1,7 @@
 /*
     경로 생성의 전반적인 로직을 관리하는 클래스 
 */
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -39,9 +40,33 @@ public class PathNodeManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 실제 경로를 생성하는 메서드 
+    /// 몬스터 경로 생성 후 경로 반환반기 
     /// </summary>
-    public void GeneratePath()
+    /// <param name="spawnNum">스폰 번호</param>
+    /// <param name="n">피드백 수 </param>
+    /// <param name="feedBack">피드백 좌표를 받을 배열</param>
+    /// <returns>실제로 가야하는 경로</returns>
+    public Vector2Int[] GetPathNode (int spawnNum, int n , out Vector2Int[] feedBack)
+    {
+        bool isSucceedGenerte = GeneratePath();
+        feedBack = Array.Empty<Vector2Int>();
+
+        if(isSucceedGenerte)
+        {
+            return GetPathAndFeedBack(spawnNum, n, out feedBack);
+        }
+        else
+        {
+            Debug.LogError("경로 없음");
+            return Array.Empty<Vector2Int>();
+        }
+    }
+
+
+    /// <summary>
+    /// 경로 유효성 검사 후 경로 생성하는 메서드 
+    /// </summary>
+    public bool GeneratePath()
     {   
         pathes = new();
         destinationPosition = TileManager.Instance.allyBasePosition;
@@ -59,7 +84,9 @@ public class PathNodeManager : MonoBehaviour
         {
             //todo: 실패했을 떄 수행할 행동 
             Debug.LogError("경로 없음");
+            
         }
+        return IsGenerated;
     }
 
 
@@ -73,6 +100,7 @@ public class PathNodeManager : MonoBehaviour
     /// <returns>계산된 경로</returns>
     public Vector2Int[] GetPathAndFeedBack (int spawnNum, int n , out Vector2Int[] feedBack)
     {
+        
         Vector2Int[] basePath = GetBasePath(spawnNum);//기본 경로 
         Vector2Int[] calcPath ;//계산된 경로 
         Vector2Int targetVector = new Vector2Int(-1, -1); //찾아야하는 벡터 
