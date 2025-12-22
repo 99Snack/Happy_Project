@@ -1126,7 +1126,6 @@ GameObject:
   - component: {fileID: 7582130393854240232}
   - component: {fileID: 8113256554076917872}
   - component: {fileID: 4458311615779883069}
-  - component: {fileID: 3186321676628462985}
   - component: {fileID: 2188007740142039460}
   - component: {fileID: 1736512535252168508}
   m_Layer: 0
@@ -1206,33 +1205,6 @@ MonoBehaviour:
   TargetAnchor: {x: 0, y: 0, z: 0}
   AttackRange: 0
   isTurning: 0
---- !u!54 &3186321676628462985
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9064185288204918239}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &2188007740142039460
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1250,7 +1222,7 @@ MonoBehaviour:
     MonsterType: 0
     MonsterRank: 0
     AttackType: 0
-    Hp: 100
+    Hp: 20
     Defense: 0
     Atk: 0
     AtkIntervalMs: 0
