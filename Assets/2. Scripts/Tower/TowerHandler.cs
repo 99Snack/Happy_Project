@@ -61,15 +61,25 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
             if (interactor != null && !interactor.isAlreadyTower)
             {
-                if (interactor.Type == TileData.TYPE.Wall || interactor.Type == TileData.TYPE.Stay)
+                if (interactor.Type == TileData.TYPE.Wall || interactor.Type == TileData.TYPE.Wait)
                 {
+                    //todo: 타일에 배치하면 .Towerslot tile로 waitaus towerslot wait으로
+                    if (interactor.Type == TileData.TYPE.Wall)
+                    {
+                        tower.TowerSlot = TowerSlot.Tile;
+                    }
+                    else if (interactor.Type == TileData.TYPE.Wait)
+                    {
+                        tower.TowerSlot = TowerSlot.Wait;
+                    }
+
                     //타일 중앙 탑에 위치
                     Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.X, interactor.Y);
                     centerPos.y = hit.point.y;
                     transform.position = centerPos;
 
                     //타워 좌표 설정
-                    tower.Setup(interactor.X, interactor.Y);
+                    tower.SetCoord(interactor.X, interactor.Y);
 
                     //초기 위치 변경
                     initPosition = transform.position;
@@ -80,6 +90,12 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     //타일에 타워를 건설했다는 표시하기
                     interactor.isAlreadyTower = true;
                     originTile = interactor;
+
+                    //타워의 현재 타일 변경
+                    tower.SetMyTile(interactor);
+
+                    //드래그 드랍했을때 타워정보창 닫기
+                    UIManager.Instance.CloseTowerInfo();
 
                     return;
                 }
@@ -92,7 +108,8 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
         transform.position = initPosition;
 
-        if(originTile != null){
+        if (originTile != null)
+        {
             originTile.isAlreadyTower = true;
         }
     }
