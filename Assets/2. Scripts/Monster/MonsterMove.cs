@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 using UnityEngine;
 
 public class MonsterMove : MonoBehaviour
@@ -155,13 +155,21 @@ public class MonsterMove : MonoBehaviour
         TargetAnchor = target.position;
     }
 
-    // 테스트용 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
+    // 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet")) // 총알 태그와 충돌했을 때 // 
         {
             OnHit(); // 피격 애니메이션 호출 
-                     // Destroy(other.gameObject); // 총알 파괴
+            
+            Projectile projectile = other.GetComponent<Projectile>();
+            if (projectile != null)
+            {
+                monster.TakeDamage(projectile.damage); // 피 까임
+            }
+
+             
+          //  Destroy(other.gameObject); // 총알 파괴
         }
 
         // 나중에 hp도 까이게 
