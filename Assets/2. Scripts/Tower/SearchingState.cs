@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class SearchingState : ITowerState
@@ -37,7 +37,7 @@ public class SearchingState : ITowerState
         int dy = Mathf.Abs(tower.Coord.y - enemyTile.y);
         int distance = Mathf.Max(dx, dy);
 
-        if (distance <= tower.attackRange)
+        if (distance <= tower.Data.Range)
         {
             tower.animator.SetTrigger("AttackTrigger");
             tower.ChangeState(new AttackingState(tower));

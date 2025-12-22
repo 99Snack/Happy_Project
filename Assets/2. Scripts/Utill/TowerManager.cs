@@ -89,6 +89,7 @@ public class TowerManager : MonoBehaviour
                 tile.isAlreadyTower = true;
 
                 Tower tower = towerObj.transform.GetComponent<Tower>();
+                Debug.Log(towerId);
                 tower.Setup(towerId, tile);
 
                 allTowers.Add(tower);
@@ -96,7 +97,7 @@ public class TowerManager : MonoBehaviour
             }
         }
 
-        Tower_Base data = DataManager.Instance.TowerBaseData[towerId];
+        TowerBase data = DataManager.Instance.TowerBaseData[towerId];
     }
 
     //todo : 추후 타워 id말고 타워 이름(string)으로 리소스에서 프리팹 가져와 생성하는 식으로

@@ -24,7 +24,7 @@ public class DataManager : MonoBehaviour
     #region Tower Table
 
     public Dictionary<int, Gacha> GachaData = new Dictionary<int, Gacha>();
-    public Dictionary<int, Tower_Base> TowerBaseData = new Dictionary<int, Tower_Base>();
+    public Dictionary<int, TowerBase> TowerBaseData = new Dictionary<int, TowerBase>();
 
     #endregion
 
@@ -32,7 +32,7 @@ public class DataManager : MonoBehaviour
     {
         //1. 모든파일들 파서 진행
         List<Gacha> gaches = DataParser.Parse<Gacha>("gacha");
-        List<Tower_Base> towerBases = DataParser.Parse<Tower_Base>("tower_base");
+        List<TowerBase> towerBases = DataParser.Parse<TowerBase>("tower_base");
 
         //Gacha 파서
         foreach (var gacha in gaches)

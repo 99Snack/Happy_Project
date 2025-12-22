@@ -21,31 +21,4 @@ public class TowerBase
 
     public string ModelResource; // 타워명Img번호
     public string SoundResource; // 타워명Sound번호
-
-    //public Tower_Base(Tower_Base copy)
-    //{
-    //    // 기본 정보
-    //    TowerID = copy.TowerID;
-    //    Name = copy.Name;
-    //    Desc = copy.Desc;
-
-    //    // 타입 정보
-    //    MainType = copy.MainType;
-    //    SubType = copy.SubType;
-    //    AtkType = copy.AtkType;
-
-    //    // 전투 능력치
-    //    Attack = copy.Attack;
-    //    AttackInterval = copy.AttackInterval;
-    //    Range = copy.Range;
-    //    AtkScale = copy.AtkScale;
-    //    ProjectileSpeed = copy.ProjectileSpeed;
-    //    HitCount = copy.HitCount;
-    //    Size = copy.Size;
-
-    //    // 디버프 및 리소스
-    //    DebuffID = copy.DebuffID;
-    //    ModelResource = copy.ModelResource;
-    //    SoundResource = copy.SoundResource;
-    //}
 }

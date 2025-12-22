@@ -14,7 +14,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public TileInteractor MyTile{ get; private set; }
     private TowerSlot towerSlot = TowerSlot.None;
 
-    public Tower_Base Data { get; private set; }
+    public TowerBase Data { get; private set; }
     // 타워 좌표
     public Vector2Int Coord { get; set; }
     public TowerSlot TowerSlot { get => towerSlot; set => towerSlot = value; }

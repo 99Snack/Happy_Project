@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+using UnityEngine;
 
-public abstract class RangeTower : Tower
+public class RangeTower : Tower
 {
     //protected override void Start()
     //{
@@ -27,7 +27,7 @@ public abstract class RangeTower : Tower
 
         //Debug.Log($"{distance} : {tower.attackRange}");
         //사거리 벗어나면
-        if (distance > attackRange)
+        if (distance > Data.Range)
         {
             currentTarget = null;
             ChangeState(AttackStopState);
@@ -39,8 +39,8 @@ public abstract class RangeTower : Tower
             if (attackCooldown <= 0f)
             {
                 //shooter.Shoot(currentTarget, 0f, attackHitCount);
-                shooter.Shoot(currentTarget, 1 , attackHitCount);
-                attackCooldown = 1f / attackSpeed;
+                shooter.Shoot(currentTarget, 1 , Data.HitCount);
+                attackCooldown = Data.AttackInterval;
                 animator.SetTrigger("AttackTrigger");
             }
         }

@@ -1,4 +1,4 @@
-﻿
+
 using UnityEngine;
 
 
@@ -25,7 +25,7 @@ public class IdleState : ITowerState
         Vector2Int baseCampTile = TileManager.Instance.allyBasePosition;
         MonsterMove nearest = TowerTargetDetector.Instance.FindNearestEnemyInRange(
             tower.Coord,
-            tower.attackRange, // 사거리 그대로
+            tower.Data.Range, // 사거리 그대로
             baseCampTile
         );
 

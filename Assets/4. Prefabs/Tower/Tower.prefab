@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 9082036631111533785}
   - component: {fileID: -4211088169548970564}
   - component: {fileID: 1716115057818804}
+  - component: {fileID: -3817679539009921700}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -143,6 +144,22 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 8.467821, y: 7.479527, z: 8.467822}
   m_Center: {x: -0.00000029802322, y: 3.7397635, z: 0}
+--- !u!114 &-3817679539009921700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2658677335914711759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 500adbb8efb1f664d977feff362041f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MineThrowerTower
+  shooter: {fileID: 9082036631111533785}
+  animator: {fileID: 8064219548360085636}
+  currentTarget: {fileID: 0}
+  attackCooldown: 0
 --- !u!1 &3402102587605307796
 GameObject:
   m_ObjectHideFlags: 0

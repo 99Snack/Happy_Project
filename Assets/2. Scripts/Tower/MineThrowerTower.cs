@@ -1,5 +1,3 @@
-﻿using UnityEngine;
-
 public class MineThrowerTower : RangeTower
 {
     protected override void Start()
