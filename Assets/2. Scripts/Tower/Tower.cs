@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public abstract class Tower : MonoBehaviour
 {
@@ -58,7 +58,7 @@ public abstract class Tower : MonoBehaviour
     }
     public void SetData(Tower_Base data)
     {
-        //Data = new Tower_Base(data);
+        Data = new Tower_Base(data);
     }
 
     public void Setup(int x, int y)
