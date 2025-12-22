@@ -14,13 +14,6 @@ public class TowerManager : MonoBehaviour
 
     public static TowerManager Instance { get => instance; set => instance = value; }
 
-    #region 타워 프리팹
-    public GameObject spearTower;
-    public GameObject MineThrowerTower;
-    public List<TowerPrefabData> resources = new List<TowerPrefabData>();
-    private Dictionary<int, GameObject> towerPrefabDic = new Dictionary<int, GameObject>();
-    #endregion
-
     private void Awake()
     {
         if (instance != null && instance != this)
@@ -33,14 +26,7 @@ public class TowerManager : MonoBehaviour
             instance = this;
         }
 
-        foreach(var resource in resources)
-        {
-            towerPrefabDic.Add(resource.towerId, resource.prefab);
-        }
     }
-
-   
-
     public List<TileInteractor> waitingSeat = new List<TileInteractor>();
     public List<Tower> allTowers = new List<Tower>();
 
@@ -100,19 +86,14 @@ public class TowerManager : MonoBehaviour
         TowerBase data = DataManager.Instance.TowerBaseData[towerId];
     }
 
-    //todo : 추후 타워 id말고 타워 이름(string)으로 리소스에서 프리팹 가져와 생성하는 식으로
     GameObject SelectPrefab(int towerId)
     {
-        GameObject prefab = null;
+        GameObject prefab = Resources.Load<GameObject>($"Prefab/{towerId}");
 
-        switch (towerId)
-        {
-            case 10101:
-                break;
-            default:
-                prefab = MineThrowerTower;
-                break;
+        if(prefab == null){
+            Debug.LogError($"{towerId}에 해당하는 타워가 없습니다.");
         }
+
         return prefab;
     }
 

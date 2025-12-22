@@ -56,6 +56,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     protected virtual void Update()
     {
+        if (towerSlot == TowerSlot.Wait) return;
+
         currentState?.Update();
 
         if (attackCooldown > 0f)
