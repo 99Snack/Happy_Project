@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour
 
     //클릭된 타워
     Tower currentTower;
+    public Tower CurrentTower { get => currentTower; private set => currentTower = value; }
 
     private void Start()
     {
@@ -46,7 +47,7 @@ public class UIManager : MonoBehaviour
 
     public void OpenTowerInfo(Tower SelectTower)
     {
-        currentTower = SelectTower;
+        CurrentTower = SelectTower;
 
         //todo : 해당 타워 정보로 갱신
         towerInfoPanel.SetActive(true);
@@ -57,9 +58,9 @@ public class UIManager : MonoBehaviour
 
     public void CloseTowerInfo()
     {
-        if (currentTower != null)
+        if (CurrentTower != null)
         {
-            currentTower = null;
+            CurrentTower = null;
         }
 
         towerInfoPanel.SetActive(false);
@@ -74,10 +75,10 @@ public class UIManager : MonoBehaviour
 
     public void SellTower()
     {
-        if (currentTower != null)
+        if (CurrentTower != null)
         {
-            TowerManager.Instance.SellTower(currentTower);
-            currentTower = null;
+            TowerManager.Instance.SellTower(CurrentTower);
+            CurrentTower = null;
         }
     }
 

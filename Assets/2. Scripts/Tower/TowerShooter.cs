@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class TowerShooter : MonoBehaviour
 {
@@ -8,9 +8,13 @@ public class TowerShooter : MonoBehaviour
     // 총알 발사
     public void Shoot(MonsterMove target, float attackPower, int hitCount)
     {
+        projectilePrefab = Resources.Load<GameObject>($"Prefab/Projectile");
+
         if (target == null) return;
 
-        GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        //GameObject proj = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+        //todo : 임시 코드
+        GameObject proj = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
 
         Projectile projectile = proj.GetComponent<Projectile>();
         if (projectile != null)

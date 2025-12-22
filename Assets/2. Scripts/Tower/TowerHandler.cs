@@ -63,16 +63,6 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             {
                 if (interactor.Type == TileData.TYPE.Wall || interactor.Type == TileData.TYPE.Wait)
                 {
-                    //todo: 타일에 배치하면 .Towerslot tile로 waitaus towerslot wait으로
-                    if (interactor.Type == TileData.TYPE.Wall)
-                    {
-                        tower.TowerSlot = TowerSlot.Tile;
-                    }
-                    else if (interactor.Type == TileData.TYPE.Wait)
-                    {
-                        tower.TowerSlot = TowerSlot.Wait;
-                    }
-
                     //타일 중앙 탑에 위치
                     Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.X, interactor.Y);
                     centerPos.y = hit.point.y;
