@@ -7,10 +7,9 @@ public class TileUI : MonoBehaviour
     [SerializeField] private GameObject changeTilePanel; //타일 변환 패널 
     [SerializeField] private TextMeshProUGUI currentTileText; // 현재 타일 이름이 출력될 텍스트
     [SerializeField] private TextMeshProUGUI toChangeTileText; // 바뀔 타일 이름이 출력될 텍스트
-
-    [SerializeField] private GameObject succeedToastMessage; //성공 시 출력되는 토스트 메시지 
-    [SerializeField] private GameObject failedToastMessage; //실패 시 출력되는 토스트 메시지 
-    private TileData currentTile; //현재 타일 데이터 
+    [SerializeField] private GameObject succeedToastMessage; //타일 변환 성공 시 출력되는 토스트 메시지 
+    [SerializeField] private GameObject failedToastMessage; //타일 변환 실패 시 출력되는 토스트 메시지 
+    private TileInfo currentTile; //현재 타일 데이터 
 
     public int tileCost = 100; //현재 타일 비용
     public int userMoney = 1000; //User의 현재 재산
@@ -23,11 +22,11 @@ public class TileUI : MonoBehaviour
     /// 해당 타일이 변경 될 수 있는 타일이면 열기  
     /// </summary>
     /// <param name="SelectTileData">선택된 타일의 데이터</param>
-    public void OpenChangeTilePanel(TileData SelectTileData)
+    public void OpenChangeTilePanel(TileInfo SelectTileData)
     {
         currentTile = SelectTileData;
 
-        if(currentTile.Type == TileData.TYPE.Road )
+        if(currentTile.Type == TileInfo.TYPE.Road )
         {
             changeTilePanel.SetActive(true);
             currentTileText.text = $"{SelectTileData.Type}";
@@ -42,7 +41,7 @@ public class TileUI : MonoBehaviour
                 canConfirm = true;
             }
         }
-        else if(currentTile.Type == TileData.TYPE.Wall)
+        else if(currentTile.Type == TileInfo.TYPE.Wall)
         {
             changeTilePanel.SetActive(true);
             currentTileText.text = $"{SelectTileData.Type}";
@@ -125,13 +124,13 @@ public class TileUI : MonoBehaviour
     /// </summary>
     private void ChangeCurrentTileType()
     {
-        if (currentTile.Type == TileData.TYPE.Wall)
+        if (currentTile.Type == TileInfo.TYPE.Wall)
         {
-            currentTile.Type = TileData.TYPE.Road;
+            currentTile.Type = TileInfo.TYPE.Road;
         }
         else
         {
-            currentTile.Type = TileData.TYPE.Wall;
+            currentTile.Type = TileInfo.TYPE.Wall;
         }
     }
 
