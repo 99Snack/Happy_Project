@@ -10010,8 +10010,6 @@ GameObject:
   - component: {fileID: 9140089015780813087}
   - component: {fileID: 7280941258203948956}
   - component: {fileID: -4898386034734585101}
-  - component: {fileID: 4329582071410458706}
-  - component: {fileID: 1507513424985721161}
   m_Layer: 0
   m_Name: 102001
   m_TagString: Untagged
@@ -10072,36 +10070,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4329582071410458706
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2670140796742209555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05847c27cfae35e4d94be4a403fb49bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TowerShooter
-  projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 0}
---- !u!114 &1507513424985721161
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2670140796742209555}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 500adbb8efb1f664d977feff362041f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MineThrowerTower
-  shooter: {fileID: 0}
-  animator: {fileID: 8196637746319335394}
-  currentTarget: {fileID: 0}
-  attackCooldown: 0
 --- !u!1 &3117594852234794782
 GameObject:
   m_ObjectHideFlags: 0

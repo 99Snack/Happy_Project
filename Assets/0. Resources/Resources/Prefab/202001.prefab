@@ -9932,8 +9932,6 @@ GameObject:
   - component: {fileID: 1227822901001384933}
   - component: {fileID: 2555168972769417527}
   - component: {fileID: 7945275120161204433}
-  - component: {fileID: 1278854821105572365}
-  - component: {fileID: 3172065575527995658}
   m_Layer: 0
   m_Name: 202001
   m_TagString: Untagged
@@ -9994,38 +9992,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1278854821105572365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718673134331033471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05847c27cfae35e4d94be4a403fb49bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TowerShooter
-  projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 1227822901001384933}
---- !u!114 &3172065575527995658
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 718673134331033471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 500adbb8efb1f664d977feff362041f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MineThrowerTower
-  shooter: {fileID: 0}
-  animator: {fileID: 3128195822947424262}
-  IsRotate: 0
-  Soldier: {fileID: 0}
-  currentTarget: {fileID: 0}
-  attackCooldown: 0
 --- !u!1 &1012199657243694225
 GameObject:
   m_ObjectHideFlags: 0
@@ -24937,6 +24903,7 @@ GameObject:
   - component: {fileID: 2438436997049198637}
   - component: {fileID: 2729271719665328493}
   - component: {fileID: 3128195822947424262}
+  - component: {fileID: 1988938945900555125}
   m_Layer: 0
   m_Name: TB_Mage
   m_TagString: Untagged
@@ -25029,7 +24996,7 @@ Animator:
   m_GameObject: {fileID: 1519004279902521994}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 7e321904137e97841a838eb216a1ca0b, type: 2}
+  m_Controller: {fileID: 22100000, guid: 8b4d30d1023dc5043b37bb399648fdb4, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -25041,6 +25008,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1988938945900555125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1519004279902521994}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb20462ed392c7c419e7cecb21887432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventProxy
 --- !u!1 &1533051869518149034
 GameObject:
   m_ObjectHideFlags: 0
