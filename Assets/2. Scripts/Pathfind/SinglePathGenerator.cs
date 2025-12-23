@@ -99,11 +99,11 @@ public class SinglePathGenerator : MonoBehaviour
         
         foreach(var path in singlePath)
         {   
-            TileData.TYPE type = TileManager.Instance.GetTileType(path.x, path.y);
-            if (type == TileData.TYPE.AllyBase || type == TileData.TYPE.EnemyBase) 
+            TileInfo.TYPE type = TileManager.Instance.GetTileType(path.x, path.y);
+            if (type == TileInfo.TYPE.AllyBase || type == TileInfo.TYPE.EnemyBase) 
                 continue;
             
-            TileManager.Instance.SetTileData(path.x, path.y, TileData.TYPE.Road);
+            TileManager.Instance.SetTileInfo(path.x, path.y, TileInfo.TYPE.Road);
  
         }
     }

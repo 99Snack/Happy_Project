@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -57,6 +57,7 @@ public class TowerTargetDetector : MonoBehaviour
 
             Vector2Int enemyTile = new Vector2Int(enemyTileX, enemyTileY);
 
+
             // 타워 기준 사거리 검사 (Chebyshev)
             int dx = Mathf.Abs(enemyTileX - towerTile.x);
             int dy = Mathf.Abs(enemyTileY - towerTile.y);
@@ -64,28 +65,25 @@ public class TowerTargetDetector : MonoBehaviour
             
             //Debug.Log($"({towerTile}:{enemyTile}) | {towerDistance} < {range}");
 
-            if (towerDistance > range)
+            if (towerDistance <= range)
             {
-                //Debug.Log($"[감지기] 사거리 OUT | 적({enemyTile.x},{enemyTile.y})");
-                continue;
-            }
+                // BaseCamp 기준 거리
+                int baseDistance =
+                    Mathf.Abs(enemyTileX - baseCampTile.x) +
+                    Mathf.Abs(enemyTileY - baseCampTile.y);
 
-            // BaseCamp 기준 거리
-            int baseDistance =
-                Mathf.Abs(enemyTileX - baseCampTile.x) +
-                Mathf.Abs(enemyTileY - baseCampTile.y);
+                //Debug.Log(
+                //    $"[감지기] 사거리 IN | 적({enemyTile.x},{enemyTile.y}) " +
+                //    $"BaseCamp 거리={baseDistance}"
+                //);
 
-            //Debug.Log(
-            //    $"[감지기] 사거리 IN | 적({enemyTile.x},{enemyTile.y}) " +
-            //    $"BaseCamp 거리={baseDistance}"
-            //);
-
-            // 우선순위 비교
-            //Debug.Log($"{baseDistance} < {minBaseDistance}");
-            if (baseDistance < minBaseDistance)
-            {
-                minBaseDistance = baseDistance;
-                bestTarget = enemy;
+                // 우선순위 비교
+                //Debug.Log($"{baseDistance} < {minBaseDistance}");
+                if (baseDistance < minBaseDistance)
+                {
+                    minBaseDistance = baseDistance;
+                    bestTarget = enemy;
+                }
             }
         }
 

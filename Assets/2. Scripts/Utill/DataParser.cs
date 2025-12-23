@@ -18,6 +18,7 @@ public static class DataParser
         if (csv == null)
         {
             Debug.LogWarning($"csv 파일이 없습니다. Data/{filename}");
+            return null;
         }
 
         //Debug.Log(csv.text);

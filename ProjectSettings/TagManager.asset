@@ -4,9 +4,9 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - TargetAnchor
   - Enemy
   - Bullet
+  - BaseCamp
   layers:
   - Default
   - TransparentFX

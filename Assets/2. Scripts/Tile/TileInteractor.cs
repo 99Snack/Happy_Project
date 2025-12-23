@@ -9,7 +9,7 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
     public int Y;
 
     public bool isAlreadyTower = false;
-    public TileData.TYPE Type = TileData.TYPE.None;
+    public TileInfo.TYPE Type = TileInfo.TYPE.None;
 
     private void Start()
     {
@@ -17,7 +17,7 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         Y = (int)transform.position.z;
     }
 
-    public void Setup(int x,int y, TileData.TYPE type){
+    public void Setup(int x,int y, TileInfo.TYPE type){
         this.X = x;
         this.Y = y;
         Type = type;
@@ -30,23 +30,23 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         //유효한 좌표가 아니면
         if (!TileManager.Instance.IsValidCoordinate(X, Y)) return;
 
-        TileData data = TileManager.Instance.GetTileData(X,Y);
+        TileInfo data = TileManager.Instance.GetTileInfo(X,Y);
         
         if (!data.IsTransition || isAlreadyTower) return;
 
 
-        if (data.Type == TileData.TYPE.Wall)
+        if (data.Type == TileInfo.TYPE.Wall)
         {
-            Type = TileData.TYPE.Road;
+            Type = TileInfo.TYPE.Road;
         }
         else
         {
-            Type = TileData.TYPE.Wall;
+            Type = TileInfo.TYPE.Wall;
         }
 
         TileManager.Instance.ChangeType(X, Y, Type);
 
-        bool isWall = data.Type == TileData.TYPE.Wall ? true : false;
+        bool isWall = data.Type == TileInfo.TYPE.Wall ? true : false;
 
         transform.GetChild(0).gameObject.SetActive(isWall);
         transform.GetChild(1).gameObject.SetActive(!isWall);

@@ -237,7 +237,7 @@ GameObject:
   m_Component:
   - component: {fileID: 71536272}
   m_Layer: 0
-  m_Name: ====================
+  m_Name: =====================
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2380,25 +2380,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c892b266718f0a2468b303fc030cf72d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerManager
-  spearTower: {fileID: 0}
-  MineThrowerTower: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  resources:
-  - towerId: 101001
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 101002
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 101003
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 102001
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 103001
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 201001
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 202001
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
-  - towerId: 203001
-    prefab: {fileID: 2658677335914711759, guid: ed9206076e320d74ab40b7a9709b9771, type: 3}
   waitingSeat:
   - {fileID: 1330641020}
   - {fileID: 729502117}
