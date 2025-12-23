@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public abstract class Tower : MonoBehaviour, IPointerClickHandler
 {
-    public TowerShooter shooter;
+    //public TowerShooter shooter;
     public Animator animator;
 
     public TileInteractor MyTile { get; private set; }
@@ -52,10 +52,10 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     {
         //towerTile = tilemap.WorldToCell(transform.position);
         //Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
-        if (shooter == null)
-        {
-            shooter = GetComponent<TowerShooter>();
-        }
+        //if (shooter == null)
+        //{
+        //    shooter = GetComponent<TowerShooter>();
+        //}
         //ChangeState(new IdleState(this));
     }
 

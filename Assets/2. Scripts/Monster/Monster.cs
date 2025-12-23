@@ -1,21 +1,27 @@
+using System.Collections;
 using UnityEngine;
-
+using System.Collections.Generic;
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
 /// </summary>
 public class Monster : MonoBehaviour
 {
     //몬스터 스탯 데이터 
-    public MonsterData Data;  
+    public MonsterData Data;
+    public float FinalDefence { get; set; }
+
 
     //애니메이션 관련
-    private Animator anim;      
+    private Animator anim;
     private static readonly int hashHit = Animator.StringToHash("Hit");
     private static readonly int hashTurnRight = Animator.StringToHash("TurnRight");
     private static readonly int hashAttack = Animator.StringToHash("Attack");
     private static readonly int hashTurnLeft = Animator.StringToHash("TurnLeft");
     private static readonly int hashDie = Animator.StringToHash("Die");
     private static readonly int hashSpawn = Animator.StringToHash("Spawn");
+
+    //디버프 관련
+    Dictionary<int, (DebuffData, Coroutine)> activeDebuffs = new Dictionary<int, (DebuffData, Coroutine)>();
 
     public int currentHp; // 현재 체력 (DB에 없어서 여기에 선언)
 
@@ -27,12 +33,12 @@ public class Monster : MonoBehaviour
     private void Awake()
     {
         anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
-                                              // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
+                                          // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
     }
 
     void Start()
     {
-        currentHp = (Data != null)? Data.Hp : 100; // 시작 시 현재 체력 = 최대 체력 
+        currentHp = (Data != null) ? Data.Hp : 100; // 시작 시 현재 체력 = 최대 체력 
 
         TowerTargetDetector.Instance.RegisterEnemy(this);
     }
@@ -76,6 +82,53 @@ public class Monster : MonoBehaviour
         }
     }
 
+    public void TakeDebuff(DebuffData debuff = null)
+    {
+        if (debuff == null) return;
+
+        int key = debuff.DebuffId;
+        if (activeDebuffs.TryGetValue(key, out (DebuffData debuffData, Coroutine coroutine) value))
+        {
+            if (value.coroutine != null)
+            {
+                StopCoroutine(value.coroutine);
+            }
+        }
+
+        Coroutine newCoroutine = StartCoroutine(DebuffRoutine(debuff));
+        activeDebuffs[key] = (debuff, newCoroutine);
+    }
+
+    IEnumerator DebuffRoutine(DebuffData debuff)
+    {
+        CalcUpdateStat(debuff);
+
+        yield return new WaitForSeconds(debuff.Duration);
+
+        CalcUpdateStat(debuff);
+    }
+
+    void CalcUpdateStat(DebuffData debuff)
+    {
+        int finalValue = 1;
+
+        foreach (var tuple in activeDebuffs.Values)
+        {
+            finalValue = Mathf.FloorToInt(1 - tuple.Item1.DebuffPower);
+        }
+
+        switch (debuff.Type)
+        {
+            case 1:
+                //FinalMoveSpeed = Data.MoveSpeed * finalValue;
+                break;
+            case 2:
+                FinalDefence = Data.Defense * finalValue;
+                break;
+        }
+    }
+
+
     // 스포너에서 호출해서 번호 설정
     public void SetSpawnNumber(int number)
     {
@@ -116,31 +169,31 @@ public class Monster : MonoBehaviour
     #region Animation
     public void OnHit()
     {
-       anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
+        anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
         // 타워 공격을 맞을 때 피격과 상호작용
     }
 
     public void Attack()
     {
-       anim.SetTrigger(hashAttack);
+        anim.SetTrigger(hashAttack);
 
         // 아마 여기서 베이스캠프를 공격하면 피해를 입히게 할 듯
     }
     public void Dead()
     {
-       anim.SetTrigger(hashDie);
+        anim.SetTrigger(hashDie);
 
     }
 
     public void TurnLeft()
     {
-       anim.SetTrigger(hashTurnLeft);
-        
+        anim.SetTrigger(hashTurnLeft);
+
     }
 
     public void TurnRight()
     {
-       anim.SetTrigger(hashTurnRight);
+        anim.SetTrigger(hashTurnRight);
     }
 
     public void Spawn()

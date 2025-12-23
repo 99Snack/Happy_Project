@@ -1,3 +1,4 @@
+using System.Runtime.Serialization;
 using UnityEngine;
 
 public class MineThrowerTower : RangeTower
@@ -22,9 +23,9 @@ public class MineThrowerTower : RangeTower
     public override void Attack()
     {
         base.Attack();
-    
+
         //타격 이펙트 몬스터자리에 생성
-        Instantiate(hitEffect, currentTarget.transform.position, Quaternion.identity);
+        ObjectPoolManager.Instance.SpawnFromPool("minethrower", currentTarget.transform.position, Quaternion.identity);
     }
 
 }

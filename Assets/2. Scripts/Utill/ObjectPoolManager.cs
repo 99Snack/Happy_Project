@@ -46,11 +46,15 @@ public class ObjectPoolManager : MonoBehaviour
                 objectPool.Enqueue(obj);
 
                 PooledObject pooled = obj.GetComponent<PooledObject>();
-                if(pooled != null){
+                if (pooled != null)
+                {
                     pooled.Tag = pool.tag;
                 }
             }
-            poolDictionary.Add(pool.tag, objectPool);
+            if (!poolDictionary.ContainsKey(pool.tag))
+            {
+                poolDictionary.Add(pool.tag, objectPool);
+            }
         }
     }
 
