@@ -1,6 +1,10 @@
 using System;
+using System.Collections;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using NUnit.Framework.Internal;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -37,6 +41,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject succeedToastMessage; 
     //실패 토스트 메시지 
     [SerializeField] private GameObject failedToastMessage; 
+
+    private GameObject fadeOutObject;
+    private Coroutine fadeOutCoroutine;
+    public float fadeOutDelay = 2;
+    
 
     //클릭된 타워
     Tower currentTower;
@@ -82,9 +91,11 @@ public class UIManager : MonoBehaviour
     }
 
     public void CloseTileTransitionPanel()
-    {
+    {  
+         //하이라이트 제거 
         if(CurrentTile != null)
         {
+            CurrentTile.transform.GetChild(3).gameObject.SetActive(false);
             CurrentTile = null;            
         }
 
@@ -96,15 +107,15 @@ public class UIManager : MonoBehaviour
         if(CurrentTile != null)
         {
             //유효성 검사를 위한 임시 변경
-            ChangeTileType();
-            bool isGenerated = PathNodeManager.Instance.GeneratePath();
-            ChangeTileType();
+            currentTile.ChangeTileType();
 
-            if (isGenerated)
-            {
-                currentTile.ChangeTIleType();
-            }
+            bool isGenerated = PathNodeManager.Instance.GeneratePath();
             
+            if (!isGenerated)
+            {
+                currentTile.ChangeTileType();
+            }
+            //Toast메시지 출력 
             OpenToastMessage(isGenerated);
             CloseTileTransitionPanel();    
         }
@@ -117,36 +128,39 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void OpenToastMessage(bool isSuccess)
     {
+        if(fadeOutCoroutine != null)
+        {
+            StopCoroutine(fadeOutCoroutine);
+            fadeOutObject.SetActive(false);
+        }
+
         if(isSuccess)
         {
             succeedToastMessage.SetActive(true);
+            fadeOutObject = succeedToastMessage;
+            fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(fadeOutObject, 0.5f, fadeOutDelay));
+            
         }
         else
         {
-            failedToastMessage.SetActive(true);    
-        }
-    }
-
-    private void ChangeTileType()
-    {
-        TileInfo tempInfo = TileManager.Instance.GetTileInfo(currentTile.X, currentTile.Y);
-
-        if (currentTile.Type == TileInfo.TYPE.Wall)
-        {
-            currentTile.Type = TileInfo.TYPE.Road;
-        }
-        else
-        {
-            currentTile.Type = TileInfo.TYPE.Wall;
-        }
+            failedToastMessage.SetActive(true); 
+            fadeOutObject = failedToastMessage;   
+            fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(failedToastMessage, 0.5f,  fadeOutDelay));
+        }  
     }
 
     //타일 전환 창
     public void OpenTileTransitionPanel(TileInteractor SelectTile)
     {
-        currentTile = SelectTile;
+        //하이라이트 끄기 
+        if(CurrentTile != null)
+        {
+            CurrentTile.transform.GetChild(3).gameObject.SetActive(false);
+            CurrentTile = null;   
+        }
+        CurrentTile = SelectTile;
 
-        if(currentTile.Type == TileInfo.TYPE.Road )
+        if(CurrentTile.Type == TileInfo.TYPE.Road )
         {
             tileTransitionPanel.SetActive(true);
             currentTileText.text = $"{SelectTile.Type}";
@@ -154,7 +168,7 @@ public class UIManager : MonoBehaviour
             //todo 재화 상태에 따라 버튼이 달라지는 기능 
             
         }
-        else if(currentTile.Type == TileInfo.TYPE.Wall)
+        else if(CurrentTile.Type == TileInfo.TYPE.Wall)
         {
             tileTransitionPanel.SetActive(true);
             currentTileText.text = $"{SelectTile.Type}";
@@ -207,10 +221,6 @@ public class UIManager : MonoBehaviour
                 //OpenTowerInfo();
                 return;
             }
-            if(hit.collider.CompareTag("Tile"))
-            {
-                return;
-            }
         }
 
         if (towerInfoPanel.activeSelf)
@@ -218,10 +228,50 @@ public class UIManager : MonoBehaviour
             //패널 닫기
             CloseTowerInfo();
         }
+
         if(tileTransitionPanel.activeSelf)
         {
             //패널 닫기 
             CloseTileTransitionPanel();
         }
+        
     }
+
+    private IEnumerator FadeOutCanvasGroup(GameObject fadeOutObject, float waitTime, float fadeOutTime)
+    {   
+        CanvasGroup canvasGroup;
+        bool isSucceed= fadeOutObject.TryGetComponent<CanvasGroup>(out canvasGroup);
+        
+        WaitForSeconds wfs = new WaitForSeconds(waitTime);
+        
+        canvasGroup.alpha = 1;
+
+        if(!isSucceed)
+        {
+            Debug.LogError("It has not have canvasGroup");
+            yield break;
+        }
+        
+        yield return wfs;
+
+        float alpha = 1;
+        float previous = 0;   
+
+        while(alpha > 0)
+        {
+            
+            previous += Time.deltaTime; 
+            alpha = Mathf.Lerp(1, 0, previous/fadeOutTime);
+            canvasGroup.alpha = alpha;
+            
+            yield return null;
+        }
+
+        
+        fadeOutObject.SetActive(false);
+        
+
+
+    }
+
 }

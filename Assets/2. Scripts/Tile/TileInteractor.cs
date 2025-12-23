@@ -1,5 +1,3 @@
-using NUnit.Framework;
-using System.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -36,11 +34,14 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         TileInfo data = TileManager.Instance.GetTileInfo(X,Y);
         
         if (!data.IsTransition || isAlreadyTower) return;
-
+        
+        //선택된 좌표 하이라이트
+        transform.GetChild(3).gameObject.SetActive(true);
+        
         UIManager.Instance.OpenTileTransitionPanel(this);
     }
 
-    public void ChangeTIleType()
+    public void ChangeTileType()
     {
         TileInfo data = TileManager.Instance.GetTileInfo(X,Y);
 
@@ -61,7 +62,5 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         transform.GetChild(1).gameObject.SetActive(!isWall);
     }
 
-
-
-
+    
 }
