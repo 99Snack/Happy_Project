@@ -1724,6 +1724,12 @@ MonoBehaviour:
   - tag: minethrower
     prefab: {fileID: 1352952055292810, guid: ebf331f8257a15148982915b9fcc56c0, type: 3}
     size: 10
+  - tag: bloodknight
+    prefab: {fileID: 1106083537938030, guid: 256900100f3867f409ed865d8f8a2b9a, type: 3}
+    size: 10
+  - tag: icemage
+    prefab: {fileID: 8183195218952225956, guid: f59d20c951bb11548a42dd98c57e55e8, type: 3}
+    size: 10
 --- !u!4 &1708640225 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1073715758519971073, guid: 566c758980a55e54999dfef872f1533f, type: 3}

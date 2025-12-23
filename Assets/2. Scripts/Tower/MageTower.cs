@@ -46,6 +46,8 @@ public class MageTower : RangeTower, IAreaAttack
     }
 
     public void HitEffectPlay(){
+        if (currentTarget == null) return;
+
         ObjectPoolManager.Instance.SpawnFromPool("mage", currentTarget.transform.position, Quaternion.identity);
     }
 
