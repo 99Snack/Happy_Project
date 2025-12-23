@@ -1,5 +1,3 @@
-using NUnit.Framework;
-using System.Data;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -23,17 +21,29 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         Type = type;
     }
 
-
+    
     //타일 전환 기능
     public void OnPointerClick(PointerEventData eventData)
     {
+        //타일 건설 불가 상태면 무시 
+        //if (SpawnManager.Instance != null && !SpawnManager.Instance.CanBuild) return;
+    
         //유효한 좌표가 아니면
         if (!TileManager.Instance.IsValidCoordinate(X, Y)) return;
 
         TileInfo data = TileManager.Instance.GetTileInfo(X,Y);
         
         if (!data.IsTransition || isAlreadyTower) return;
+        
+        //선택된 좌표 하이라이트
+        transform.GetChild(3).gameObject.SetActive(true);
+        
+        UIManager.Instance.OpenTileTransitionPanel(this);
+    }
 
+    public void ChangeTileType()
+    {
+        TileInfo data = TileManager.Instance.GetTileInfo(X,Y);
 
         if (data.Type == TileInfo.TYPE.Wall)
         {
@@ -52,4 +62,5 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         transform.GetChild(1).gameObject.SetActive(!isWall);
     }
 
+    
 }

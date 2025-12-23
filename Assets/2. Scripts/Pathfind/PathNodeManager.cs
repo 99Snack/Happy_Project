@@ -272,7 +272,6 @@ public class PathNodeManager : MonoBehaviour
     /// <summary>
     /// 경로가 생성될 수 있으면 생성하고 0번쨰 경로에 넣는다. 
     /// </summary>
-    /// <param name="ruleNum"></param>
     private void CheckPathGenerate()
     {
         Vector2Int[] outTemp;
