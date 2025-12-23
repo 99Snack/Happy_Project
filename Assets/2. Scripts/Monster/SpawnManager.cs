@@ -30,7 +30,7 @@ public class SpawnManager : MonoBehaviour
  
     // 스폰 관련 
     private int _spawnCount = 0; // 현재 스폰된 몬스터 수
-    private int _orderIndex = 0; // 스폰 순서 인덱스 (예: 벌1, 꽃2, 쥐3, 유령4) 
+    private int _orderIndex = 0; // 스폰 순서 인덱스 
     private int[] _currentSpawnOrder; // 현재 웨이브의 스폰 순서 배열
     private int _aliveMonsterCount = 0; // 현재 살아있는 몬스터 수
 
