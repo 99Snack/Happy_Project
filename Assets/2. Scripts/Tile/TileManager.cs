@@ -27,6 +27,8 @@ public class TileManager : MonoBehaviour
 
     public const int CELL_SIZE = 1;
 
+    public static readonly int TRANSITION_PRICE = 200;
+
     //캠프 좌표 관리 y 1~6 랜덤 좌표
     const int enemyBaseCoordX = 0;
     const int allyBaseCoordX = 13;
