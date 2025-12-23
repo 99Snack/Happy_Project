@@ -12,11 +12,12 @@ public class TileUI : MonoBehaviour
     [SerializeField] private GameObject failedToastMessage; //실패 시 출력되는 토스트 메시지 
     private TileData currentTile; //현재 타일 데이터 
 
-    public int tileCost; //현재 타일 비용
-    public int userMoney; //User의 현재 재산
+    public int tileCost = 100; //현재 타일 비용
+    public int userMoney = 1000; //User의 현재 재산
 
     [HideInInspector]
     public bool isChanged = false;
+    public bool canConfirm = true;
 
     /// <summary>
     /// 해당 타일이 변경 될 수 있는 타일이면 열기  
@@ -31,12 +32,31 @@ public class TileUI : MonoBehaviour
             changeTilePanel.SetActive(true);
             currentTileText.text = $"{SelectTileData.Type}";
             toChangeTileText.text = $"Wall"; //(테스트용)
+            
+            if(tileCost > userMoney)
+            {
+                canConfirm = false;
+            }
+            else
+            {
+                canConfirm = true;
+            }
         }
         else if(currentTile.Type == TileData.TYPE.Wall)
         {
             changeTilePanel.SetActive(true);
             currentTileText.text = $"{SelectTileData.Type}";
             toChangeTileText.text = $"Wall";
+
+            if(tileCost > userMoney)
+            {
+                canConfirm = false;
+            }
+            else
+            {
+                canConfirm = true;
+            }
+
         }
         else
         {
@@ -126,8 +146,5 @@ public class TileUI : MonoBehaviour
 
         fadeOutObject.SetActive(false);
     }
-
-
-
 
 }
