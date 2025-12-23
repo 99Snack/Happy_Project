@@ -41,7 +41,7 @@ public class PathNodeManager : MonoBehaviour
     /// <summary>
     /// 실제 경로를 생성하는 메서드 
     /// </summary>
-    public void GeneratePath()
+    public bool GeneratePath()
     {   
         pathes = new();
         destinationPosition = TileManager.Instance.allyBasePosition;
@@ -57,9 +57,9 @@ public class PathNodeManager : MonoBehaviour
         }
         else
         {
-            //todo: 실패했을 떄 수행할 행동 
-            Debug.LogError("경로 없음");
+            //경로 없음 
         }
+        return IsGenerated;
     }
 
 
@@ -244,7 +244,6 @@ public class PathNodeManager : MonoBehaviour
     /// <summary>
     /// 경로가 생성될 수 있으면 생성하고 0번쨰 경로에 넣는다. 
     /// </summary>
-    /// <param name="ruleNum"></param>
     private void CheckPathGenerate()
     {
         Vector2Int[] outTemp;
