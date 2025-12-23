@@ -42,9 +42,10 @@ public class UIManager : MonoBehaviour
     //실패 토스트 메시지 
     [SerializeField] private GameObject failedToastMessage; 
 
+    //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
-    private Coroutine fadeOutCoroutine;
-    public float fadeOutDelay = 2;
+    private Coroutine fadeOutCoroutine; 
+    private const float fadeOutDelay = 0.75f; 
     
 
     //클릭된 타워
@@ -255,7 +256,7 @@ public class UIManager : MonoBehaviour
         yield return wfs;
 
         float alpha = 1;
-        float previous = 0;   
+        float previous = 0; //지난 시간   
 
         while(alpha > 0)
         {
@@ -270,8 +271,6 @@ public class UIManager : MonoBehaviour
         
         fadeOutObject.SetActive(false);
         
-
-
     }
 
 }
