@@ -9932,6 +9932,7 @@ GameObject:
   - component: {fileID: 1227822901001384933}
   - component: {fileID: 2555168972769417527}
   - component: {fileID: 7945275120161204433}
+  - component: {fileID: 6566282753189991197}
   m_Layer: 0
   m_Name: 202001
   m_TagString: Untagged
@@ -9992,6 +9993,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &6566282753189991197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 718673134331033471}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad96b91b2d5bb6e4daa38279f19a3357, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MageTower
+  shooter: {fileID: 0}
+  animator: {fileID: 3128195822947424262}
+  Soldier: {fileID: 8249450888091984785}
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  currentTarget: {fileID: 0}
+  attackCooldown: 0
 --- !u!1 &1012199657243694225
 GameObject:
   m_ObjectHideFlags: 0

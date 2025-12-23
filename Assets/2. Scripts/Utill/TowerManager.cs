@@ -78,7 +78,9 @@ public class TowerManager : MonoBehaviour
 
                 allTowers.Add(tower);
 
-                if (tower.Data.Grade != 3)
+                if (tower == null) return;
+
+                if (tower.Data?.Grade != 3)
                 {
                     //임시 제한
                     if (tower.Data.TowerID == 101001 ||

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectPoolManager : MonoBehaviour
 {
-    public static ObjectPoolManager Instance;
+    private static ObjectPoolManager instance;
 
     [System.Serializable]
     public struct Pool
@@ -13,12 +13,26 @@ public class ObjectPoolManager : MonoBehaviour
         public int size;
     }
 
-    public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
+    public static ObjectPoolManager Instance { get => instance; set => instance = value; }
 
     void Awake()
     {
-        Instance = this;
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
+
+    public List<Pool> pools;
+    public Dictionary<string, Queue<GameObject>> poolDictionary;
+
+    private void Start()
+    {
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
         foreach (Pool pool in pools)
@@ -30,6 +44,11 @@ public class ObjectPoolManager : MonoBehaviour
                 obj.SetActive(false);
                 obj.transform.SetParent(transform);
                 objectPool.Enqueue(obj);
+
+                PooledObject pooled = obj.GetComponent<PooledObject>();
+                if(pooled != null){
+                    pooled.Tag = pool.tag;
+                }
             }
             poolDictionary.Add(pool.tag, objectPool);
         }

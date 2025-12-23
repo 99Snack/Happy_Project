@@ -1,6 +1,7 @@
+
 using UnityEngine;
 
-public class KnightTower : MeleeTower , IAreaAttack
+public class MageTower : RangeTower, IAreaAttack
 {
     private int finalAttackPower;
 
@@ -44,6 +45,10 @@ public class KnightTower : MeleeTower , IAreaAttack
 
     }
 
+    public void HitEffectPlay(){
+        ObjectPoolManager.Instance.SpawnFromPool("mage", currentTarget.transform.position, Quaternion.identity);
+    }
+
     public void AreaAttack()
     {
         Vector3 center = currentTarget.transform.position;
@@ -60,4 +65,5 @@ public class KnightTower : MeleeTower , IAreaAttack
             }
         }
     }
+
 }

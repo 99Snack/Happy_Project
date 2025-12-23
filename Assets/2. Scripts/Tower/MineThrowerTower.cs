@@ -19,12 +19,12 @@ public class MineThrowerTower : RangeTower
     //    base.Update();
     //}
 
-    public override void Attack(Monster monster)
+    public override void Attack()
     {
-        base.Attack(monster);
+        base.Attack();
     
         //타격 이펙트 몬스터자리에 생성
-        Instantiate(hitEffect, monster.transform.position, Quaternion.identity);
+        Instantiate(hitEffect, currentTarget.transform.position, Quaternion.identity);
     }
 
 }

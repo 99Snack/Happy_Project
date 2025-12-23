@@ -13,12 +13,12 @@ public class BloodKnightTower : MeleeTower
         ChangeState(IdleState);
     }
 
-    public override void Attack(Monster monster)
+    public override void Attack()
     {
 
-        if (monster == null) return;
+        if (currentTarget == null) return;
 
-        int attackPower = CalcAttackPower(monster);
+        int attackPower = CalcAttackPower();
 
         //monster.OnHit(attackPower);
 

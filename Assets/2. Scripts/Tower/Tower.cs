@@ -12,8 +12,10 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public Vector2Int Coord { get; set; }
     public float PlacedTime { get; set; }
 
-    public Transform Soldier;
     public bool IsRotate { get; protected set; } //회전체가 있으면 true : false
+    public Transform Soldier;
+
+    public LayerMask monsterLayer;
 
     // 현재 타겟
     [HideInInspector] public Monster currentTarget;
@@ -129,13 +131,13 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public bool CanAttack() => attackCooldown <= 0f ? true : false;
     public void ResetCooldown(float interval) => attackCooldown = interval;
 
-    public virtual void Attack(Monster monster)
+    public virtual void Attack()
     {
-        if (monster == null) return;
+        if (currentTarget == null) return;
 
-        int attackPower = CalcAttackPower(monster);
+        int attackPower = CalcAttackPower();
 
-        monster.TakeDamage(attackPower);
+        currentTarget.TakeDamage(attackPower);
 
         if (CanAttack())
         {
@@ -144,7 +146,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public virtual int CalcAttackPower(Monster monster)
+    public virtual int CalcAttackPower()
     {
         //1회 공격 피해량 = 타워 공격력 x 타격 수 x(1 – 몬스터 방어력)
         //기본 단일 공격 공식

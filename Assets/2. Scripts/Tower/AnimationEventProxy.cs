@@ -12,6 +12,12 @@ public class AnimationEventProxy : MonoBehaviour
     public void OnAttack(){
         if (tower.currentTarget == null) return;
 
-        tower.Attack(tower.currentTarget);
+        tower.Attack();
+    }
+
+    public void AttackReady(){
+        if(tower is MageTower){
+            (tower as MageTower)?.HitEffectPlay();
+        }
     }
 }
