@@ -2184,7 +2184,6 @@ GameObject:
   - component: {fileID: 735503987233169661}
   - component: {fileID: 2680269676859601313}
   - component: {fileID: 5696873425121044039}
-  - component: {fileID: 8553224892186372243}
   - component: {fileID: 4870384288554238815}
   - component: {fileID: 5868835531402340575}
   m_Layer: 0
@@ -2260,40 +2259,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9f271160ca26143bf6eff10078616a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
-  TargetAnchor: {fileID: 0}
+  TargetAnchor: {x: 0, y: 0, z: 0}
   AttackRange: 0
-  Waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
---- !u!54 &8553224892186372243
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9080197952385587564}
-  serializedVersion: 5
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  deadEndMoveLimit: 2
+  FeedbackUIPrefab: {fileID: 783306877111485512, guid: b7b3b5dd6c6271c4a8bc29baf34e873b, type: 3}
+  isTurning: 0
 --- !u!114 &4870384288554238815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2311,7 +2281,7 @@ MonoBehaviour:
     MonsterType: 0
     MonsterRank: 0
     AttackType: 0
-    Hp: 0
+    Hp: 100
     Defense: 0
     Atk: 0
     AtkIntervalMs: 0

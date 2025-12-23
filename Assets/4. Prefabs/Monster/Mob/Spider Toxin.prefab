@@ -100,7 +100,7 @@ Animator:
   m_Avatar: {fileID: 9000000, guid: 23257a295c7a2e74ea3c91fc781add7b, type: 3}
   m_Controller: {fileID: 9100000, guid: a8e1642d567bf9241aba3691499f72bd, type: 2}
   m_CullingMode: 1
-  m_UpdateMode: 1
+  m_UpdateMode: 0
   m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -122,13 +122,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9f271160ca26143bf6eff10078616a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
-  TargetAnchor: {fileID: 0}
+  TargetAnchor: {x: 0, y: 0, z: 0}
   AttackRange: 0
-  Waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  deadEndMoveLimit: 2
+  FeedbackUIPrefab: {fileID: 783306877111485512, guid: b7b3b5dd6c6271c4a8bc29baf34e873b, type: 3}
+  isTurning: 0
 --- !u!114 &2456504175636732682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,7 +144,7 @@ MonoBehaviour:
     MonsterType: 0
     MonsterRank: 0
     AttackType: 0
-    Hp: 0
+    Hp: 100
     Defense: 0
     Atk: 0
     AtkIntervalMs: 0

@@ -146,13 +146,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b9f271160ca26143bf6eff10078616a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterMove
-  TargetAnchor: {fileID: 0}
+  TargetAnchor: {x: 0, y: 0, z: 0}
   AttackRange: 0
-  Waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  deadEndMoveLimit: 2
+  FeedbackUIPrefab: {fileID: 783306877111485512, guid: b7b3b5dd6c6271c4a8bc29baf34e873b, type: 3}
+  isTurning: 0
 --- !u!114 &8731095666963011900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +168,7 @@ MonoBehaviour:
     MonsterType: 0
     MonsterRank: 0
     AttackType: 0
-    Hp: 0
+    Hp: 100
     Defense: 0
     Atk: 0
     AtkIntervalMs: 0

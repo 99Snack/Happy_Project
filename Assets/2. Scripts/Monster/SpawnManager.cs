@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
  
     // 스폰 관련 
     private int _spawnCount = 0; // 현재 스폰된 몬스터 수
-    private int _orderIndex = 0; // 스폰 순서 인덱스 (예: 벌1, 꽃2, 쥐3, 유령4) 
+    private int _orderIndex = 0; // 스폰 순서 인덱스 
     private int[] _currentSpawnOrder; // 현재 웨이브의 스폰 순서 배열
     private int _aliveMonsterCount = 0; // 현재 살아있는 몬스터 수
 
@@ -91,16 +91,17 @@ public class SpawnManager : MonoBehaviour
         int monsterType = _currentSpawnOrder[_orderIndex]; // 현재 스폰할 몬스터 타입 가져오기
         GameObject prefab = MonsterPrefabs[monsterType]; // 몬스터 프리팹 선택
 
-        // 스폰 위치 결정
-        Vector3 spawnPos = (SpawnPoint != null) ? SpawnPoint.position : transform.position; // 스폰 포인트 위치 사용, 없으면 매니저 위치 사용
+        // 타일매니저의 적 베이스 위치에서 월드 좌표 가져와서 스폰 위치로 사용
+        Vector3 spawnPos = TileManager.Instance.GetWorldPosition(TileManager.Instance.enemyBasePosition);
+
         GameObject monster = Instantiate(prefab, spawnPos, Quaternion.identity); // 몬스터 생성
 
         Monster monsterScript = monster.GetComponent<Monster>();
         monsterScript.SetSpawnNumber(_spawnCount); // 스폰 번호 설정
 
         // 타겟 위치 설정
-        MonsterMove moveScript = monster.GetComponent<MonsterMove>();
-        moveScript.SetTarget(TargetPoint); // 타겟 위치 설정
+        //MonsterMove moveScript = monster.GetComponent<MonsterMove>();
+        //moveScript.SetTarget(TargetPoint); // 타겟 위치 설정
 
         Debug.Log("스폰 : " + prefab.name + "(번호 : " + _spawnCount + ")");
 
