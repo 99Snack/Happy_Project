@@ -1,12 +1,9 @@
-﻿using NUnit.Framework.Interfaces;
-using System.Collections;
 using UnityEngine;
 
 public class AttackStopState : ITowerState
 {
     private Tower tower;
-    float timer = 0;
-    float duration = 0.5f;
+    AnimatorStateInfo StateInfo;
 
     public AttackStopState(Tower tower)
     {
@@ -15,26 +12,29 @@ public class AttackStopState : ITowerState
 
     public void Enter()
     {
-        //Debug.Log("[타워] AttackStop 상태 진입");
-        tower.animator.SetBool("isAttackStop", true);
-        // Animator Event에서 Tower.OnAttackStopEnd() 호출
+        Debug.Log("attackStop ->");
+
+
+        tower.animator.SetBool(tower.hashIsCooldown, true);
     }
 
     public void Update()
     {
-        if (timer < duration)
+        StateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
+
+        if (tower.IsTargetInRange())
         {
-            timer += Time.deltaTime;
+            tower.ChangeState(new AttackingState(tower));
+            return;
         }
-        else
-        {
-            timer = 0;
-            tower.ChangeState(new IdleState(tower));
-        }
+
+        if (StateInfo.normalizedTime < 1.0f) return;
+
+        tower.ChangeState(new SearchingState(tower));
     }
 
     public void Exit()
     {
-        tower.animator.SetBool("isAttackStop", false);
+        tower.animator.SetBool(tower.hashIsCooldown, false);
     }
 }

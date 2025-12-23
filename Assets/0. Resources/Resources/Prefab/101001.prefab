@@ -189,8 +189,7 @@ GameObject:
   - component: {fileID: 4221056059592273182}
   - component: {fileID: -2916617458587745}
   - component: {fileID: 2979943431871966004}
-  - component: {fileID: 1861550123414567636}
-  - component: {fileID: -3102583580248252109}
+  - component: {fileID: -3264435585364733669}
   m_Layer: 0
   m_Name: 101001
   m_TagString: Untagged
@@ -251,7 +250,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1861550123414567636
+--- !u!114 &-3264435585364733669
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,25 +259,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 4496890156274031992}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 05847c27cfae35e4d94be4a403fb49bb, type: 3}
+  m_Script: {fileID: 11500000, guid: 058d24ff7143bee44a0af0e2e642ce1c, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TowerShooter
-  projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 0}
---- !u!114 &-3102583580248252109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4496890156274031992}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 500adbb8efb1f664d977feff362041f3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MineThrowerTower
+  m_EditorClassIdentifier: Assembly-CSharp::SpearTower
   shooter: {fileID: 0}
   animator: {fileID: 7473166372897974146}
+  IsRotate: 0
+  Soldier: {fileID: 8313852025066997297}
   currentTarget: {fileID: 0}
   attackCooldown: 0
 --- !u!1 &4528583806068672900
@@ -293,6 +280,7 @@ GameObject:
   - component: {fileID: 5039559256158862882}
   - component: {fileID: 2384016963675391633}
   - component: {fileID: 7473166372897974146}
+  - component: {fileID: 8491288057972638751}
   m_Layer: 0
   m_Name: SP_Soldier_Spearman_Attack
   m_TagString: Untagged
@@ -384,10 +372,10 @@ Animator:
   m_GameObject: {fileID: 4528583806068672900}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 8812ef2f6fe481b44a488b2d8d8b4a09, type: 2}
+  m_Controller: {fileID: 9100000, guid: 5866367148b10424a975a3e697a0428e, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -396,6 +384,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8491288057972638751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4528583806068672900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb20462ed392c7c419e7cecb21887432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventProxy
 --- !u!1 &4641840549686524318
 GameObject:
   m_ObjectHideFlags: 0

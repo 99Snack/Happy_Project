@@ -10007,7 +10007,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TowerShooter
   projectilePrefab: {fileID: 0}
-  firePoint: {fileID: 0}
+  firePoint: {fileID: 1227822901001384933}
 --- !u!114 &3172065575527995658
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10022,6 +10022,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MineThrowerTower
   shooter: {fileID: 0}
   animator: {fileID: 3128195822947424262}
+  IsRotate: 0
+  Soldier: {fileID: 0}
   currentTarget: {fileID: 0}
   attackCooldown: 0
 --- !u!1 &1012199657243694225

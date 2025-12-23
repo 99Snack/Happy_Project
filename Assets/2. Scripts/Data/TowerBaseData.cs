@@ -12,7 +12,10 @@ public class TowerBaseData
     public string Effect;           //타워 이펙트 리소스(주변오라)
 
     public int Grade;               //1성 2성 3성
-    public int Attack;              //공격력
+    /// <summary>
+    /// 공격력
+    /// </summary>
+    public int Attack;              
     
     public float AttackInterval;    //공격 속도 (1=1초에 1번공격)
     
