@@ -10010,6 +10010,7 @@ GameObject:
   - component: {fileID: 9140089015780813087}
   - component: {fileID: 7280941258203948956}
   - component: {fileID: -4898386034734585101}
+  - component: {fileID: -3806734338423080397}
   m_Layer: 0
   m_Name: 102001
   m_TagString: Untagged
@@ -10070,6 +10071,26 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &-3806734338423080397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2670140796742209555}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e618eae8ce5ee804e9a17fb0b5433f04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::KnightTower
+  shooter: {fileID: 0}
+  animator: {fileID: 8196637746319335394}
+  Soldier: {fileID: 6999804005234792909}
+  currentTarget: {fileID: 0}
+  attackCooldown: 0
+  monsterLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!1 &3117594852234794782
 GameObject:
   m_ObjectHideFlags: 0
@@ -24914,6 +24935,7 @@ GameObject:
   - component: {fileID: 6418882565303729927}
   - component: {fileID: 8386349190987631960}
   - component: {fileID: 8196637746319335394}
+  - component: {fileID: 6855113800267335772}
   m_Layer: 0
   m_Name: TB_Soldier_Swordman_Attack
   m_TagString: Untagged
@@ -25006,10 +25028,10 @@ Animator:
   m_GameObject: {fileID: 5601701317773243783}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 37e1173b515734b43ad508ed2a289a04, type: 2}
+  m_Controller: {fileID: 22100000, guid: 798e62bd78397a046bce52846fde1555, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_AnimatePhysics: 0
@@ -25018,6 +25040,18 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &6855113800267335772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5601701317773243783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb20462ed392c7c419e7cecb21887432, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AnimationEventProxy
 --- !u!1 &5684492719914963222
 GameObject:
   m_ObjectHideFlags: 0

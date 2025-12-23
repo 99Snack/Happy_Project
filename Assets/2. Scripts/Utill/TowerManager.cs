@@ -73,8 +73,8 @@ public class TowerManager : MonoBehaviour
                 tile.isAlreadyTower = true;
 
                 Tower tower = towerObj.transform.GetComponent<Tower>();
-                Debug.Log(towerId);
-                tower.Setup(towerId, tile);
+                //Debug.Log(towerId);
+                tower?.Setup(towerId, tile);
 
                 allTowers.Add(tower);
 

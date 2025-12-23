@@ -19,23 +19,12 @@ public class MineThrowerTower : RangeTower
     //    base.Update();
     //}
 
-    public override void Attack(MonsterMove monster)
+    public override void Attack(Monster monster)
     {
-        if (monster == null) return;
-
-        int attackPower = CalcAttackPower();
-        monster.OnHit(attackPower);
-
+        base.Attack(monster);
+    
         //타격 이펙트 몬스터자리에 생성
         Instantiate(hitEffect, monster.transform.position, Quaternion.identity);
-
-        if (attackCooldown <= 0f)
-        {
-            attackCooldown = Data.AttackInterval;
-            //shooter.Shoot(currentTarget, 1, Data.HitCount);
-
-            animator.SetTrigger(hashAttack);
-        }
     }
 
 }

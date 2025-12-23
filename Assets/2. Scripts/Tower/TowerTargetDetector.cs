@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class TowerTargetDetector : MonoBehaviour
 {
@@ -20,9 +19,9 @@ public class TowerTargetDetector : MonoBehaviour
         }
     }
 
-    private List<MonsterMove> enemies = new List<MonsterMove>();
+    private List<Monster> enemies = new List<Monster>();
 
-    public void RegisterEnemy(MonsterMove enemy)
+    public void RegisterEnemy(Monster enemy)
     {
         if (!enemies.Contains(enemy))
         {
@@ -32,23 +31,23 @@ public class TowerTargetDetector : MonoBehaviour
     }
 
     // 적 제거
-    public void UnregisterEnemy(MonsterMove enemy)
+    public void UnregisterEnemy(Monster enemy)
     {
         enemies.Remove(enemy);
         //Debug.Log($"[감지기] 적 제거됨 | 현재 적 수: {enemies.Count}");
     }
 
-    public MonsterMove FindNearestEnemyInRange(
+    public Monster FindNearestEnemyInRange(
         Vector2Int towerTile,
         int range,
         Vector2Int baseCampTile)
     {
-        MonsterMove bestTarget = null;
+        Monster bestTarget = null;
         int minBaseDistance = int.MaxValue;
 
-        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {MonsterMoves.Count}");
+        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {Monster.Count}");
 
-        foreach (MonsterMove enemy in enemies)
+        foreach (Monster enemy in enemies)
         {
             if (enemy == null) continue;
 
@@ -62,8 +61,8 @@ public class TowerTargetDetector : MonoBehaviour
             int dx = Mathf.Abs(enemyTileX - towerTile.x);
             int dy = Mathf.Abs(enemyTileY - towerTile.y);
             int towerDistance = Mathf.Max(dx, dy);
-            
-            //Debug.Log($"({towerTile}:{enemyTile}) | {towerDistance} < {range}");
+
+            //Debug.Log($"({towerTile}:{enemyTile}) | {towerDistance} <= {range}");
 
             if (towerDistance <= range)
             {

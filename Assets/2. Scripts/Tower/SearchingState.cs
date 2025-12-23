@@ -1,11 +1,10 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SearchingState : ITowerState
 {
     private Tower tower;
-    WaitForSeconds searchDelay = new WaitForSeconds(0.1f);
+    WaitForSeconds searchDelay;
 
     public SearchingState(Tower tower)
     {
@@ -15,6 +14,8 @@ public class SearchingState : ITowerState
     public void Enter()
     {
         Debug.Log("search ->");
+
+        searchDelay = new WaitForSeconds(0.1f);
 
         tower.animator.SetBool(tower.hashIsReady, true);
 
@@ -26,10 +27,12 @@ public class SearchingState : ITowerState
         while (true)
         {
             tower.currentTarget = TowerTargetDetector.Instance.FindNearestEnemyInRange(
-           tower.Coord,
-           tower.Data.Range,
-           TileManager.Instance.allyBasePosition
-          );
+               tower.Coord,
+               tower.Data.Range,
+               TileManager.Instance.allyBasePosition
+            );
+
+            //Debug.Log(tower.currentTarget);
 
             yield return searchDelay;
         }

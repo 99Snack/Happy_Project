@@ -5,7 +5,17 @@ using UnityEngine;
 /// </summary>
 public class Monster : MonoBehaviour
 {
-    public MonsterData Data; // 몬스터 스탯 데이터  
+    //몬스터 스탯 데이터 
+    public MonsterData Data;  
+
+    //애니메이션 관련
+    private Animator anim;      
+    private static readonly int hashHit = Animator.StringToHash("Hit");
+    private static readonly int hashTurnRight = Animator.StringToHash("TurnRight");
+    private static readonly int hashAttack = Animator.StringToHash("Attack");
+    private static readonly int hashTurnLeft = Animator.StringToHash("TurnLeft");
+    private static readonly int hashDie = Animator.StringToHash("Die");
+    private static readonly int hashSpawn = Animator.StringToHash("Spawn");
 
     public int currentHp; // 현재 체력 (DB에 없어서 여기에 선언)
 
@@ -14,14 +24,47 @@ public class Monster : MonoBehaviour
 
     private bool isDead = false; // 몬스터 사망 여부 // 중복 사망 방지용 
 
+    private void Awake()
+    {
+        anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
+                                              // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
+    }
+
     void Start()
     {
-        currentHp = Data.Hp; // 시작 시 현재 체력 = 최대 체력 
+        currentHp = (Data != null)? Data.Hp : 100; // 시작 시 현재 체력 = 최대 체력 
+
+        TowerTargetDetector.Instance.RegisterEnemy(this);
+    }
+
+    // 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet")) // 총알 태그와 충돌했을 때 // 
+        {
+            OnHit(); // 피격 애니메이션 호출 
+
+            Projectile projectile = other.GetComponent<Projectile>();
+            if (projectile != null)
+            {
+                TakeDamage(projectile.damage); // 피 까임
+            }
+
+            //  Destroy(other.gameObject); // 총알 파괴 // 현재 프로젝타일에서 자체 파괴 처리함
+        }
+
+        if (other.CompareTag("BaseCamp")) // 베이스캠프 태그와 충돌했을 때
+        {
+            Attack();
+        }
+        // 나중에 hp도 까이게 // 이건 몬스터에서 처리함 
     }
 
     public void TakeDamage(int damage)
     {
         if (isDead) return; // 이미 죽은 몬스터면 무시
+
+        OnHit();
 
         currentHp -= damage;
         Debug.Log(gameObject.name + "남은 체력: " + currentHp);
@@ -37,6 +80,11 @@ public class Monster : MonoBehaviour
     public void SetSpawnNumber(int number)
     {
         SpawnNumber = number;
+
+        //데이터 설정해주기
+        //Data = DataManager.Instance.MonsterData[]
+
+        TowerTargetDetector.Instance.RegisterEnemy(this);
     }
 
     // 길찾기에서 몬스터의 번호 받아가는 용도 
@@ -65,5 +113,40 @@ public class Monster : MonoBehaviour
         Destroy(gameObject);
     }
 
+    #region Animation
+    public void OnHit()
+    {
+       anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
+        // 타워 공격을 맞을 때 피격과 상호작용
+    }
 
+    public void Attack()
+    {
+       anim.SetTrigger(hashAttack);
+
+        // 아마 여기서 베이스캠프를 공격하면 피해를 입히게 할 듯
+    }
+    public void Dead()
+    {
+       anim.SetTrigger(hashDie);
+
+    }
+
+    public void TurnLeft()
+    {
+       anim.SetTrigger(hashTurnLeft);
+        
+    }
+
+    public void TurnRight()
+    {
+       anim.SetTrigger(hashTurnRight);
+    }
+
+    public void Spawn()
+    {
+        //스폰하는동안 이동못하게 코루틴 필요
+        anim.SetTrigger(hashSpawn);
+    }
+    #endregion
 }

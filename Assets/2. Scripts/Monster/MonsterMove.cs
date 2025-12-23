@@ -1,11 +1,9 @@
-using System.IO;
 using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
 {
     Monster monster;        // 몬스터 스크립트 참조
-    Animator animator;      // 애니메이터 컴포넌트
 
     [Header("타겟 설정")]
     public Vector3 TargetAnchor; // 베이스캠프 도착지 타겟 위치 (인스펙터에서 설정 가능)
@@ -38,20 +36,15 @@ public class MonsterMove : MonoBehaviour
     private void Awake()
     {
         monster = GetComponent<Monster>();    // 몬스터 스크립트 가져오기
-        animator = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
-                                              // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
     }
 
     void OnEnable()
     {
         currentLookDir = transform.forward; // 초기 방향 설정
-
-        TowerTargetDetector.Instance.RegisterEnemy(this);
     }
 
     void Start()
     {
-
         // PathNodeManager에서 경로 및 피드백 좌표 지점 가져오기
         int spawnNum = monster.GetSpawnNumber(); // 몬스터의 스폰 번호 가져오기
 
@@ -68,7 +61,7 @@ public class MonsterMove : MonoBehaviour
             currentLookDir = (TargetAnchor - transform.position).normalized;
         }
 
-        Spawn();  // 스폰 될때 스폰 애니 재생 
+        monster.Spawn();  // 스폰 될때 스폰 애니 재생 
     }
 
     void Update()
@@ -113,7 +106,7 @@ public class MonsterMove : MonoBehaviour
                 // 목적지 도착
                 if (currentIdx >= path.Length)
                 {
-                    Attack(); // 도착 시 공격  // 단일 공격 
+                    monster.Attack(); // 도착 시 공격  // 단일 공격 
                     return; // 더 이상 이동할 경로가 없으면 종료
                 }
 
@@ -133,7 +126,8 @@ public class MonsterMove : MonoBehaviour
         {
             // 이동 방향은 타겟을 향해
             Vector3 moveDir = (TargetAnchor - transform.position).normalized;
-            transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
+            //todo : transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
+            transform.position += moveDir * 2f * Time.deltaTime;
 
             if (!isTurning)   // 회전 중이 아닐 때만 이동 방향을 바라봄
             {
@@ -142,7 +136,7 @@ public class MonsterMove : MonoBehaviour
         }
         else // 도착하고 공격 범위 안일때 공격
         {
-            Attack(); // 계속 공격 
+            monster.Attack(); // 계속 공격 
         }
     }
 
@@ -189,13 +183,13 @@ public class MonsterMove : MonoBehaviour
         }
         // 첫번째 90도 회전
         Vector3 firstTurnDir = Quaternion.Euler(0, 90, 0) * currentLookDir;
-        TurnRight();
+        monster.TurnRight();
         StartTurn(firstTurnDir);
         yield return new WaitForSeconds(0.5f); // 0.5초 대기 = 회전 애니메이션과 같음
 
         // 두번째 180도 회전 
         Vector3 secondTurnDir = Quaternion.Euler(0, 90, 0) * firstTurnDir;
-        TurnRight();
+        monster.TurnRight();
         StartTurn(secondTurnDir);
         yield return new WaitForSeconds(0.5f);
 
@@ -211,12 +205,12 @@ public class MonsterMove : MonoBehaviour
         float turnAngle = Vector3.SignedAngle(currentLookDir, direction, Vector3.up);
         if (turnAngle > 45f) // 방향 전환
         {
-            TurnRight();
+            monster.TurnRight();
             StartTurn(direction);
         }
         else if (turnAngle < -45f)
         {
-            TurnLeft();
+            monster.TurnLeft();
             StartTurn(direction);
         }
         else  // 같은 방향이면 앞 바라보게 설정
@@ -238,64 +232,5 @@ public class MonsterMove : MonoBehaviour
     public void SetTarget(Transform target) // 타겟 위치 설정 메서드
     {
         TargetAnchor = target.position;
-    }
-
-    // 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bullet")) // 총알 태그와 충돌했을 때 // 
-        {
-            OnHit(); // 피격 애니메이션 호출 
-
-            Projectile projectile = other.GetComponent<Projectile>();
-            if (projectile != null)
-            {
-                monster.TakeDamage(projectile.damage); // 피 까임
-            }
-
-            //  Destroy(other.gameObject); // 총알 파괴 // 현재 프로젝타일에서 자체 파괴 처리함
-        }
-
-        if (other.CompareTag("BaseCamp")) // 베이스캠프 태그와 충돌했을 때
-        {
-            Attack();
-        }
-        // 나중에 hp도 까이게 // 이건 몬스터에서 처리함 
-    }
-
-    public void OnHit(float attackPower=0)
-    {
-        animator.SetTrigger("Hit");   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
-
-        // 타워 공격을 맞을 때 피격과 상호작용
-    }
-
-    void Attack()
-    {
-        animator.SetTrigger("Attack");
-
-        // 아마 여기서 베이스캠프를 공격하면 피해를 입히게 할 듯
-    }
-    void Dead()
-    {
-        animator.SetTrigger("Die");
-
-    }
-
-
-    void TurnLeft()
-    {
-        animator.SetTrigger("TurnLeft");
-    }
-
-    void TurnRight()
-    {
-        animator.SetTrigger("TurnRight");
-    }
-
-    void Spawn()
-    {
-        //스폰하는동안 이동못하게 코루틴 필요
-        animator.SetTrigger("Spawn");
     }
 }

@@ -12,11 +12,11 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public Vector2Int Coord { get; set; }
     public float PlacedTime { get; set; }
 
-    public bool IsRotate = false;
     public Transform Soldier;
+    public bool IsRotate { get; protected set; } //회전체가 있으면 true : false
 
     // 현재 타겟
-    [HideInInspector] public MonsterMove currentTarget;
+    [HideInInspector] public Monster currentTarget;
     [HideInInspector] public float attackCooldown = 0f;
 
     // 상태 패턴 FSM
@@ -110,7 +110,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         return Mathf.Max(dx, dy) <= Data.Range;
     }
 
-    public void SearchingCoroutine(IEnumerator enumerator){
+    public void SearchingCoroutine(IEnumerator enumerator)
+    {
         if (CoSearch != null) return;
 
         CoSearch = StartCoroutine(enumerator);
@@ -118,17 +119,36 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public void SearchingStopCoroutine()
     {
-        if(CoSearch != null){
+        if (CoSearch != null)
+        {
             StopCoroutine(CoSearch);
             CoSearch = null;
         }
     }
 
-    public abstract void Attack(MonsterMove monster);
+    public bool CanAttack() => attackCooldown <= 0f ? true : false;
+    public void ResetCooldown(float interval) => attackCooldown = interval;
 
-    public virtual int CalcAttackPower()
+    public virtual void Attack(Monster monster)
     {
+        if (monster == null) return;
+
+        int attackPower = CalcAttackPower(monster);
+
+        monster.TakeDamage(attackPower);
+
+        if (CanAttack())
+        {
+            ResetCooldown(Data.AttackInterval);
+            animator.SetTrigger(hashAttack);
+        }
+    }
+
+    public virtual int CalcAttackPower(Monster monster)
+    {
+        //1회 공격 피해량 = 타워 공격력 x 타격 수 x(1 – 몬스터 방어력)
         //기본 단일 공격 공식
+        //todo : return Data.Attack * Data.HitCount * (1 - monster.Data.Defense);
         return Data.Attack * Data.HitCount;
     }
 

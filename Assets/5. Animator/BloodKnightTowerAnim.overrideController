@@ -6,14 +6,14 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: IceMageTowerAnim
+  m_Name: BloodKnightTowerAnim
   m_Controller: {fileID: 9100000, guid: 5866367148b10424a975a3e697a0428e, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: 21060f5eb578efd4da6666c06c508ec0, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 565c966b468890e4d89922ef805f9158, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d86fef36a8322f6439b7073115f0aaa7, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 642a26526e92a724ba93e126875b582b, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: bba0fd8d5141e984dae78274b6b43f01, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 32d4893f97aabdd48a354dddb20e1773, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 6319d8cd3eb1f6843aef408d5a893763, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: e3da595949dd394458cb6b6c884d4a25, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 4d97b44219d6aa8439f639579e35053b, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: b8435991ef03bd24b85487d71b91a209, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 682323ff39d5292429ca38a6af18741d, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: d81703eeeb81cb041b8d58ed7555016c, type: 2}

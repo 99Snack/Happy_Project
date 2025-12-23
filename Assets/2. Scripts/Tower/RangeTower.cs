@@ -10,8 +10,4 @@ public class RangeTower : Tower
     //{
     //    base.Update();
     //}
-    public override void Attack(MonsterMove monster)
-    {
-
-    }
 }
