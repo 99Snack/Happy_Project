@@ -167,11 +167,12 @@ public class MonsterMove : MonoBehaviour
         // 나중에 hp도 까이게 
     }
 
-    public void OnHit()
+    public void OnHit(int attackPower = 0)
     {
         animator.SetTrigger("Hit");   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
 
         // 타워 공격을 맞을 때 피격과 상호작용
+        monster.currentHp -= attackPower;
     }
 
     void Attack()
