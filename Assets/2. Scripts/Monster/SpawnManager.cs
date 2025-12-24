@@ -1,9 +1,19 @@
-using UnityEngine;
-using UnityEngine.UI; 
+﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnManager : MonoBehaviour
 {
-   public enum STATE { Idle, Wave, Maintenance }
+    // Preparation : 웨이브 준비 상태
+    // InProgress : 웨이브 진행 상태 
+    public enum STATE { Preparation, InProgress }
+
+    private static SpawnManager _instance;
+    public static SpawnManager Instance => _instance;
+
+    // 타일 건설 가능 여부
+    public bool CanBuild => _currentState == STATE.Preparation;
+    // 전투 중 여부 
+    public bool IsBattle => _currentState == STATE.InProgress;
 
     [Header("몬스터 프리팹")]
     public GameObject[] MonsterPrefabs; // 생성할 몬스터 프리팹
@@ -26,25 +36,34 @@ public class SpawnManager : MonoBehaviour
 
 
     // 현재 상태
-    private STATE _currentState = STATE.Idle;
-    private int _currentStage = 0; // 현재 스테이지 번호(0부터 시작, 스테이지 1 = 인덱스0) 
- 
+    private STATE _currentState = STATE.Preparation;
+    private int _currentStage = 0; // 현재 스테이지 번호 (0부터 시작, 인덱스 0 = 스테이지 1) 
+
     // 스폰 관련 
     private int _spawnCount = 0; // 현재 스폰된 몬스터 수
     private int _orderIndex = 0; // 스폰 순서 인덱스 
     private int[] _currentSpawnOrder; // 현재 웨이브의 스폰 순서 배열
     private int _aliveMonsterCount = 0; // 현재 살아있는 몬스터 수
 
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _instance = this;
+    }
     private void Start()
     {
-        _currentState = STATE.Idle;
-        UpdateStageUI(); 
+        _currentState = STATE.Preparation; // 대기 상태 
+        UpdateStageUI();
     }
 
     // UI 버튼에서 호출할 메서드 
     public void OnStartButtonClick()
-    {  
-        if (_currentState == STATE.Idle || _currentState == STATE.Maintenance)
+    {
+        if (_currentState == STATE.Preparation)
         {
             StartWave();  // Idle 또는 Maintenance 상태에서만 시작 가능
         }
@@ -52,14 +71,14 @@ public class SpawnManager : MonoBehaviour
 
     private void StartWave()
     {
-        if(_currentStage >= Stages.Length)
+        if (_currentStage >= Stages.Length)
         {
             Debug.Log("모든 스테이지 완료");
-            return; 
+            return;
         }
 
-        _currentState = STATE.Wave; // 웨이브 단계로 전환   
-        
+        _currentState = STATE.InProgress; // 웨이브 단계로 전환   
+
         // 스폰 초기화
         _spawnCount = 0;
         _orderIndex = 0;
@@ -115,9 +134,9 @@ public class SpawnManager : MonoBehaviour
         Debug.Log("남은 몬스터 수: " + _aliveMonsterCount);
 
         // 몬스터 전멸하면 정비 단계로 전환
-        if (_aliveMonsterCount <= 0 && _currentState == STATE.Wave)
+        if (_aliveMonsterCount <= 0 && _currentState == STATE.InProgress)
         {
-            _currentState = STATE.Maintenance; // 유지보수 단계로 전환
+            _currentState = STATE.Preparation; // 유지보수 단계로 전환
             _currentStage++; // 다음 스테이지 단계 증가 
             Debug.Log("스테이지 클리어! 정비 단계로 전환");
             UpdateStageUI();
@@ -125,10 +144,10 @@ public class SpawnManager : MonoBehaviour
     }
     private void UpdateStageUI()
     {
-        if (StageText != null) 
+        if (StageText != null)
         {
             int displayStage = _currentStage + 1; // 사용자에게는 1부터 표시
-            StageText.text = "Stage: " + displayStage; 
+            StageText.text = "Stage: " + displayStage;
         }
     }
 

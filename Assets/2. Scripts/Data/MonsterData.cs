@@ -1,4 +1,6 @@
+﻿[System.Serializable]
 public class MonsterData
+
 {
     public int MonsterId;            // 몬스터 ID
     public int MonsterType;          // 1=일반, 2=레어, 3=엘리트
