@@ -11,6 +11,8 @@ public static class DataParser
 
     static public List<T> Parse<T>(string filename) where T : new()
     {
+        filename = filename.ToLower();
+
         List<T> data = new List<T>();
 
         //csv파일가져오기
@@ -50,7 +52,10 @@ public static class DataParser
         //데이터 타입 행부터
         for (int i = DATA_START_IDX; i < rows.Length; i++)
         {
+
             string[] values = rows[i].Split(',');
+            //빈값이 들어오면 패스
+            if (string.IsNullOrEmpty(values[0].Trim())) continue;
 
             //제목의 개수와 데이터의 개수가 다르면 오류이므로 패스!
             if (values.Length != headers.Length) continue;
