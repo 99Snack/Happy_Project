@@ -1,0 +1,18 @@
+웨이브 ID,웨이브 그룹,몬스터 스폰 그룹,스폰 시작 지연,스폰 간격,베이스캠프 체력,웨이브명 스트링키
+index,wavegroup,monsterspawngroup,spawnstartdelay_ms,spawninterval_ms,basecamphp,wavename
+int,string,string,int,int,int,string
+100101,wavegroup_10001,monsterspawngroup_100101,3,2,1000,wave_name_100101
+100102,wavegroup_10002,monsterspawngroup_100102,3,2,1000,wave_name_100102
+100103,wavegroup_10003,monsterspawngroup_100103,3,2,1000,wave_name_100103
+100104,wavegroup_10004,monsterspawngroup_100104,3,2,1000,wave_name_100104
+100105,wavegroup_10005,monsterspawngroup_100105,3,2,1000,wave_name_100105
+100106,wavegroup_10006,monsterspawngroup_100106,3,2,1000,wave_name_100106
+100107,wavegroup_10007,monsterspawngroup_100107,3,2,1000,wave_name_100107
+100108,wavegroup_10008,monsterspawngroup_100108,3,2,1000,wave_name_100108
+100109,wavegroup_10009,monsterspawngroup_100109,3,2,1000,wave_name_100109
+100110,wavegroup_10010,monsterspawngroup_100110,3,2,1000,wave_name_100110
+100111,wavegroup_10011,monsterspawngroup_100111,3,2,1000,wave_name_100111
+100112,wavegroup_10012,monsterspawngroup_100112,3,2,1000,wave_name_100112
+100113,wavegroup_10013,monsterspawngroup_100113,3,2,1000,wave_name_100113
+100114,wavegroup_10014,monsterspawngroup_100114,3,2,1000,wave_name_100114
+100115,wavegroup_10015,monsterspawngroup_100115,3,2,1000,wave_name_100115

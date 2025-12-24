@@ -1,0 +1,26 @@
+몬스터 그룹 ID,몬스터 스폰 그룹,몬스터 ID,몬스터 수량,스폰 번호
+index,monsterspawngroup,monsterid,monstercount,spawnorder
+int,string,int,int,int
+10101,monsterspawngroup_100101,101001,15,1
+10102,monsterspawngroup_100102,101001,20,1
+10103,monsterspawngroup_100103,102101,6,1
+10104,monsterspawngroup_100104,104101,6,1
+10105,monsterspawngroup_100105,103101,1,1
+10106,monsterspawngroup_100106,106101,30,1
+10107,monsterspawngroup_100107,107101,10,1
+10108,monsterspawngroup_100108,101101,15,1
+10109,monsterspawngroup_100108,104101,5,2
+10110,monsterspawngroup_100109,107101,8,1
+10111,monsterspawngroup_100109,104101,6,2
+10112,monsterspawngroup_100110,105101,1,1
+10113,monsterspawngroup_100111,102101,12,1
+10114,monsterspawngroup_100111,107101,10,2
+10115,monsterspawngroup_100112,104101,10,1
+10116,monsterspawngroup_100112,107101,10,2
+10117,monsterspawngroup_100113,104101,5,1
+10118,monsterspawngroup_100113,103001,1,2
+10119,monsterspawngroup_100114,107101,9,1
+10120,monsterspawngroup_100114,108101,1,2
+10121,monsterspawngroup_100115,103101,1,1
+10122,monsterspawngroup_100115,105101,1,2
+10123,monsterspawngroup_100115,108101,1,3

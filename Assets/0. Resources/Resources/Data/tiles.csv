@@ -1,0 +1,5 @@
+타일id,타일 유형,타일명 스트링키,타일 설명 스트링키,타일 리소스 파일명
+index,tiletype,tilename,tiledesc,tileresource
+int,int,string,string,string
+1001,1,tile_name_1001,tile_desc_1001,-
+2001,2,tile_name_2001,tile_desc_2001,-

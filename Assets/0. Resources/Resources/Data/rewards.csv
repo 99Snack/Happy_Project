@@ -1,0 +1,4 @@
+리워드 ID,리워드 유형,리워드명 스트링키,리워드 설명 스트링키,리워드 아이콘 리소스
+rewardid,rewardtype,rewardname,rewarddesc,rewardresource
+int,int,string,string,string
+1101,1,reward_name_1101,reward_desc_1101,-
