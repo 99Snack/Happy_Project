@@ -61,6 +61,5 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         transform.GetChild(0).gameObject.SetActive(isWall);
         transform.GetChild(1).gameObject.SetActive(!isWall);
     }
-
     
 }

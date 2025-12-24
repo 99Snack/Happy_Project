@@ -44,8 +44,8 @@ Material:
     - _QueueOffset: 0
     - _XRMotionVectorsPass: 1
     m_Colors:
-    - _EmissionColor: {r: 1, g: 0.91763973, b: 0, a: 1}
-    - _NeonColor: {r: 1, g: 0.16203359, b: 0, a: 1}
+    - _EmissionColor: {r: 1, g: 0, b: 0.06896591, a: 1}
+    - _NeonColor: {r: 0.47798735, g: 0.14279492, b: 0.17219782, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &6297110881045359820

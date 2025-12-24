@@ -9,6 +9,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public LayerMask tileLayer;
     private Tower tower;
     private TileInteractor originTile;
+    private TileInteractor previousTile;
 
     private void Awake()
     {
@@ -48,7 +49,20 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             Vector3 colPos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
             transform.position = colPos;
 
-            //todo : 타워가 있는지 없는지 확인하는 로직
+            TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
+            if(interactor != null)
+            {
+                if(previousTile != null && previousTile != interactor)
+                {
+                    UIManager.Instance.TurnOffHighlightTile(previousTile);     
+                }
+                if(interactor.Type == TileInfo.TYPE.Wall)
+                {
+                    UIManager.Instance.TurnOnHighlightTile(interactor, interactor.isAlreadyTower);
+                    previousTile = interactor;
+                }
+            }
+            
         }
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -58,6 +72,17 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
         {
             TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
+            
+            if(interactor.Type == TileInfo.TYPE.Wall)
+            {
+                UIManager.Instance.TurnOffHighlightTile(interactor); 
+            }
+            
+            if(interactor != previousTile)
+            {
+                UIManager.Instance.TurnOffHighlightTile(previousTile);
+            }   
+
 
             if (interactor != null && !interactor.isAlreadyTower)
             {
@@ -93,6 +118,10 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                 {
                     Debug.LogError($"현재 타일의 타입은 {interactor.Type}입니다");
                 }
+            }
+            else if(interactor.isAlreadyTower)
+            {
+                UIManager.Instance.OpenAttachToastMessage();
             }
         }
 
