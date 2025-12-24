@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Android;
+using UnityEngine.Tilemaps;
+
 
 public class UIManager : MonoBehaviour
 {
@@ -33,10 +35,12 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject tileTransitionPanel;
     [SerializeField] private TextMeshProUGUI currentTileText;
     [SerializeField] private TextMeshProUGUI toChangeTileText;
-    //성공 토스트 메시지 
-    [SerializeField] private GameObject succeedToastMessage;
-    //실패 토스트 메시지 
-    [SerializeField] private GameObject failedToastMessage;
+    //타일 변환 성공 토스트 메시지 
+    [SerializeField] private GameObject transitionSucceedToast;
+    //타일 변환 실패 토스트 메시지 
+    [SerializeField] private GameObject transitionFailedToast;
+    //타워 배치 실패 메시지 
+    [SerializeField] private GameObject attachToastMessage;
 
     //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
@@ -118,7 +122,7 @@ public class UIManager : MonoBehaviour
                 currentTile.ChangeTileType();
             }
             //Toast메시지 출력 
-            OpenToastMessage(isGenerated);
+            OpenTileToastMessage(isGenerated);
             CloseTileTransitionPanel();
         }
         else
@@ -126,9 +130,9 @@ public class UIManager : MonoBehaviour
     }
 
     /// <summary>
-    /// 성공 여부를 받아 해당하는 토스트 메시지를 출력 
+    /// 타일 변환 성공 여부를 받아 해당하는 토스트 메시지를 출력 
     /// </summary>
-    public void OpenToastMessage(bool isSuccess)
+    public void OpenTileToastMessage(bool isSuccess)
     {
         if (fadeOutCoroutine != null)
         {
@@ -138,17 +142,29 @@ public class UIManager : MonoBehaviour
 
         if (isSuccess)
         {
-            succeedToastMessage.SetActive(true);
-            fadeOutObject = succeedToastMessage;
+            transitionSucceedToast.SetActive(true);
+            fadeOutObject = transitionSucceedToast;
             fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(fadeOutObject, 0.5f, fadeOutDelay));
 
         }
         else
         {
-            failedToastMessage.SetActive(true);
-            fadeOutObject = failedToastMessage;
-            fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(failedToastMessage, 0.5f, fadeOutDelay));
+            transitionFailedToast.SetActive(true);
+            fadeOutObject = transitionFailedToast;
+            fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(transitionFailedToast, 0.5f, fadeOutDelay));
         }
+    }
+    public void OpenAttachToastMessage()
+    {
+        if (fadeOutCoroutine != null)
+        {
+            StopCoroutine(fadeOutCoroutine);
+            fadeOutObject.SetActive(false);
+        }
+
+        attachToastMessage.SetActive(true);
+        fadeOutObject = attachToastMessage;
+        fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(attachToastMessage, 0.5f, fadeOutDelay));
     }
 
     //타일 전환 창
@@ -191,6 +207,21 @@ public class UIManager : MonoBehaviour
         //    currentTileText.text = $"{SelectTile.Type}";
         //    toChangeTileText.text = $"Road";
         //}
+    }
+
+    public void TurnOnHighlightTile(TileInteractor tileInteractor, bool isValid)
+    {
+        int num = isValid ? 6:5;
+
+        // 하이라이트
+        tileInteractor.gameObject.transform.GetChild(num).gameObject.SetActive(true);
+    }
+
+    public void TurnOffHighlightTile(TileInteractor tileInteractor)
+    {
+        // 모든 하이라이트 비활성화  
+        tileInteractor.gameObject.transform.GetChild(5).gameObject.SetActive(false);
+        tileInteractor.gameObject.transform.GetChild(6).gameObject.SetActive(false);
     }
 
     public void SellTower()
