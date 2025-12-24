@@ -73,8 +73,8 @@ public class SpawnManager : MonoBehaviour
     {
         if (_currentStage >= Stages.Length)
         {
-            Debug.Log("모든 스테이지 완료");
-            return;
+            Debug.Log("모든 스테이지를 클리어하여 더 이상 진행할 수 없습니다.");
+            return; 
         }
 
         _currentState = STATE.InProgress; // 웨이브 단계로 전환   
@@ -138,7 +138,16 @@ public class SpawnManager : MonoBehaviour
         {
             _currentState = STATE.Preparation; // 유지보수 단계로 전환
             _currentStage++; // 다음 스테이지 단계 증가 
-            Debug.Log("스테이지 클리어! 정비 단계로 전환");
+
+            if (_currentStage >= Stages.Length)
+            {
+                Debug.Log("모든 스테이지 클리어!");
+            }
+            else
+            {
+                Debug.Log("스테이지 클리어! 정비 단계로 전환");
+            }
+
             UpdateStageUI();
         }
     }
