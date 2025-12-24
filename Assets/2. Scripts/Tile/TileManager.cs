@@ -36,8 +36,6 @@ public class TileManager : MonoBehaviour
     public Vector2Int enemyBasePosition { get; private set; }
     public Vector2Int allyBasePosition { get; private set; }
 
-    public GameObject enemy;
-
     private void Start()
     {
         Initialize();
@@ -68,9 +66,6 @@ public class TileManager : MonoBehaviour
         {
             map.Generator();
         }
-
-        Vector3 enemyStartPos = GetWorldPosition(enemyBasePosition);
-        Instantiate(enemy, enemyStartPos, Quaternion.identity);
     }
 
     void RandomBaseCamp()
