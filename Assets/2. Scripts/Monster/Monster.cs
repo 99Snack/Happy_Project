@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 /// <summary>
@@ -32,8 +32,11 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-        anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
-                                          // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
+       anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
+        if (anim == null)
+        {
+            anim = transform.GetChild(0).GetComponent<Animator>(); // 애니메이터 컴포넌트가 자식에 있을때
+        }
     }
 
     void Start()
@@ -169,37 +172,37 @@ public class Monster : MonoBehaviour
     #region Animation
     public void OnHit()
     {
-        anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
+       if (anim != null) anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
         // 타워 공격을 맞을 때 피격과 상호작용
     }
 
     public void Attack()
     {
-        anim.SetTrigger(hashAttack);
+        if (anim != null) anim.SetTrigger(hashAttack);
 
         // 아마 여기서 베이스캠프를 공격하면 피해를 입히게 할 듯
     }
     public void Dead()
     {
-        anim.SetTrigger(hashDie);
+        if (anim != null) anim.SetTrigger(hashDie);
 
     }
 
     public void TurnLeft()
     {
-        anim.SetTrigger(hashTurnLeft);
+        if (anim != null) anim.SetTrigger(hashTurnLeft);
 
     }
 
     public void TurnRight()
     {
-        anim.SetTrigger(hashTurnRight);
+        if (anim != null) anim.SetTrigger(hashTurnRight);
     }
 
     public void Spawn()
     {
         //스폰하는동안 이동못하게 코루틴 필요
-        anim.SetTrigger(hashSpawn);
+        if (anim != null) anim.SetTrigger(hashSpawn);
     }
     #endregion
 }

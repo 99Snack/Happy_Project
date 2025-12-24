@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
@@ -63,7 +63,27 @@ public class MonsterMove : MonoBehaviour
 
         monster.Spawn();  // 스폰 될때 스폰 애니 재생 
     }
+    void FixedUpdate()
+    {
+        // 이동 
+        float distance = Vector3.Distance(transform.position, TargetAnchor); // 타겟과의 거리 계산
+        if (distance > AttackRange)
+        {
+            // 이동 방향은 타겟을 향해
+            Vector3 moveDir = (TargetAnchor - transform.position).normalized;
+            //todo : transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
+            transform.position += moveDir * 2f * Time.fixedDeltaTime;
 
+            if (!isTurning)   // 회전 중이 아닐 때만 이동 방향을 바라봄
+            {
+                currentLookDir = moveDir;
+            }
+        }
+        else // 도착하고 공격 범위 안일때 공격
+        {
+            monster.Attack(); // 계속 공격 
+        }
+    }
     void Update()
     {
         // 회전 처리
@@ -119,25 +139,8 @@ public class MonsterMove : MonoBehaviour
 
         // 따라갈 타겟이 없으면 종료 
         if (TargetAnchor == null) return;
+       
 
-        // 이동 
-        float distance = Vector3.Distance(transform.position, TargetAnchor); // 타겟과의 거리 계산
-        if (distance > AttackRange)
-        {
-            // 이동 방향은 타겟을 향해
-            Vector3 moveDir = (TargetAnchor - transform.position).normalized;
-            //todo : transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
-            transform.position += moveDir * 2f * Time.deltaTime;
-
-            if (!isTurning)   // 회전 중이 아닐 때만 이동 방향을 바라봄
-            {
-                currentLookDir = moveDir;
-            }
-        }
-        else // 도착하고 공격 범위 안일때 공격
-        {
-            monster.Attack(); // 계속 공격 
-        }
     }
 
     void LateUpdate()
