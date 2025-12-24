@@ -7,6 +7,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Android;
 using UnityEngine.Tilemaps;
 
+
 public class UIManager : MonoBehaviour
 {
     private static UIManager instance;
@@ -160,7 +161,7 @@ public class UIManager : MonoBehaviour
             StopCoroutine(fadeOutCoroutine);
             fadeOutObject.SetActive(false);
         }
-        
+
         attachToastMessage.SetActive(true);
         fadeOutObject = attachToastMessage;
         fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(attachToastMessage, 0.5f, fadeOutDelay));
