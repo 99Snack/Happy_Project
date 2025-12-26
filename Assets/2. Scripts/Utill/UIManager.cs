@@ -37,10 +37,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject transitionFailedToast;
     //타워 배치 실패 메시지 
     [SerializeField] private GameObject attachToastMessage;
-    //성공 토스트 메시지 
-    [SerializeField] private GameObject succeedToastMessage;
-    //실패 토스트 메시지 
-    [SerializeField] private GameObject failedToastMessage;
     [SerializeField] private GameObject AugmentPanel;
 
     //페이드 아웃 관련 변수
@@ -77,6 +73,7 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    public bool IsAugmentPanelActive => AugmentPanel.activeSelf;
     public void OpenAugmentPanel(int stage)
     {
         //현재 스테이지의 정보르 토대로 증강 가져오기
@@ -95,8 +92,18 @@ public class UIManager : MonoBehaviour
         AugmentPanel.SetActive(true);
     }
 
-    public void OnClickAugment(AugmentData augment){
+    public void OnClickAugment(AugmentData augment)
+    {
         AugmentManager.Instance.ActivateAugment(augment);
+
+        //경제 공용
+        if (augment.Category == 2 && augment.Tag == 0)
+        {
+            //자원확보1,2,3
+            GameManager.Instance.Gold += augment.Value_N;
+        }
+
+        AugmentPanel.SetActive(false);
     }
 
     public void CloseAugmentPanel() => AugmentPanel.SetActive(false);
@@ -236,7 +243,7 @@ public class UIManager : MonoBehaviour
 
     public void TurnOnHighlightTile(TileInteractor tileInteractor, bool isValid)
     {
-        int num = isValid ? 6:5;
+        int num = isValid ? 6 : 5;
 
         // 하이라이트
         tileInteractor.gameObject.transform.GetChild(num).gameObject.SetActive(true);
@@ -267,8 +274,9 @@ public class UIManager : MonoBehaviour
             HandleGlobalInput();
         }
 
-        if(Keyboard.current !=null &&
-        Keyboard.current.f10Key.wasPressedThisFrame){
+        if (Keyboard.current != null &&
+        Keyboard.current.f10Key.wasPressedThisFrame)
+        {
             OpenAugmentPanel(1);
         }
 

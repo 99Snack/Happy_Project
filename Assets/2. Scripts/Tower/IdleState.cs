@@ -24,7 +24,7 @@ public class IdleState : ITowerState
     {
         if (tower.MyTile.Type == TileInfo.TYPE.Wall)
         {
-            tower.ChangeState(new SearchingState(tower));
+            tower.ChangeState(tower.SearchingState);
         }
 
         //Vector2Int baseCampTile = TileManager.Instance.allyBasePosition;

@@ -46,9 +46,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                 }   
                 else
                 {
-                    originTile.isAlreadyTower = false;
                     isBuild = false;
                 }
+                    originTile.isAlreadyTower = false;
                     
             }
         }
@@ -129,6 +129,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
                     //타워의 현재 타일 변경
                     tower.SetMyTile(interactor);
+
+                    //증강 재적용
+                    tower.UpdateConditionAugment();
 
                     //드래그 드랍했을때 타워정보창 닫기
                     UIManager.Instance.CloseTowerInfo();

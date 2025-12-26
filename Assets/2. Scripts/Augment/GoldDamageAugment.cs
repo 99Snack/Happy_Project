@@ -3,11 +3,15 @@ using UnityEngine;
 public class GoldDamageAugment : IStatusCheckAugment
 {
     private int lastBonus = 0;
-    public void UpdateStatus(Tower owner, AugmentData augment)
+    private AugmentData data;
+    public GoldDamageAugment(AugmentData data){
+        this.data = data;
+    }
+    public void UpdateStatus(Tower owner)
     {
         int currentGold = GameManager.Instance.Gold;
-        int unitGold = augment.Value_M; 
-        float damagePerUnit = augment.Value_N; 
+        int unitGold = data.Value_M; 
+        float damagePerUnit = data.Value_N; 
 
         int newBonus = Mathf.FloorToInt((currentGold / unitGold) * damagePerUnit);
 

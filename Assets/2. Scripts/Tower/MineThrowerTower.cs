@@ -5,8 +5,8 @@ public class MineThrowerTower : RangeTower, IHitEffect
     protected override void Start()
     {
         base.Start();
-        IdleState = new IdleState(this);
-        AttackStopState = new AttackStopState(this);
+
+        SetState(this);
 
         ChangeState(IdleState);
 
@@ -32,7 +32,7 @@ public class MineThrowerTower : RangeTower, IHitEffect
         }
         else
         {
-            currentTarget.TakeDamage(atkPower.finalStat);
+            currentTarget.TakeDamage(atkPower.finalStat,this);
         }
 
         if (CanAttack())
@@ -50,7 +50,7 @@ public class MineThrowerTower : RangeTower, IHitEffect
 
         if (augment.Category == 3)
         {
-            UpdateConditionAugment(augment);
+            UpdateConditionAugment();
         }
     }
 

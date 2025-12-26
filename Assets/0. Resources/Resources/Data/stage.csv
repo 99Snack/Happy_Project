@@ -1,4 +1,4 @@
 스테이지ID,웨이브 그룹,리워드 그룹,타일 기준 비용,타일 비용 가중치,스테이지명 스트링키
 index,wavegroup,rewardgroup,tilebasecost,weight,stagename
-int,string,string,int,int,string
-10001,wavegroup_10001,-,200,-,stage_name_10001
+int,int,int,int,int,string
+10001,101,-,200,-,stage_name_10001

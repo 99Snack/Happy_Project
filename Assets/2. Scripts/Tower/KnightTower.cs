@@ -2,14 +2,12 @@ using UnityEngine;
 
 public class KnightTower : MeleeTower , IAreaAttack
 {
-    private int finalAttackPower;
 
     protected override void Start()
     {
         base.Start();
 
-        IdleState = new IdleState(this);
-        AttackStopState = new AttackStopState(this);
+        SetState(this);
 
         ChangeState(IdleState);
     }
@@ -45,7 +43,7 @@ public class KnightTower : MeleeTower , IAreaAttack
                 Monster m = target.GetComponent<Monster>();
                 if (m != null)
                 {
-                    m.TakeDamage(atkPower.finalStat);
+                    m.TakeDamage(atkPower.finalStat,this);
                 }
             }
         }
@@ -59,7 +57,7 @@ public class KnightTower : MeleeTower , IAreaAttack
 
         if (augment.Category == 3)
         {
-            UpdateConditionAugment(augment);
+            UpdateConditionAugment();
         }
     }
 }

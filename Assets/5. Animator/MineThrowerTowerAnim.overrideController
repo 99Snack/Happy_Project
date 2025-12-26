@@ -9,11 +9,11 @@ AnimatorOverrideController:
   m_Name: MineThrowerTowerAnim
   m_Controller: {fileID: 9100000, guid: 5866367148b10424a975a3e697a0428e, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 21060f5eb578efd4da6666c06c508ec0, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 96bdfdb7cea73c6489b2ae5ab7766dcf, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 642a26526e92a724ba93e126875b582b, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 246ab01deba42374fb1361acda27a33c, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: 6319d8cd3eb1f6843aef408d5a893763, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 91ce5362eeec0614da03290428b8f701, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: b8435991ef03bd24b85487d71b91a209, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: 956bdc91c2379c4489d1a4bcef2be394, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 1bd2745b516695b4da553c5d3b1f3e9c, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 96bdfdb7cea73c6489b2ae5ab7766dcf, type: 2}

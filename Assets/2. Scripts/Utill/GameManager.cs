@@ -36,7 +36,25 @@ public class GameManager : MonoBehaviour
             OnChangedGold?.Invoke(gold);
         }
     }
+
+    public int MeleeBonusGold{ get; set; }
+    public int RangeBonusGold{ get; set; }
     #endregion
+
+    private StageData stageInfo;
+    public StageData StageInfo { get => stageInfo; set => stageInfo = value; }
+
+    private WaveData waveInfo;
+    public WaveData WaveInfo
+    {
+        get => waveInfo; set
+        {
+            waveInfo = value;
+            BaseCamp.Instance.SetUp(WaveInfo.Index);
+        }
+    }
+
+
 
     private void Start()
     {

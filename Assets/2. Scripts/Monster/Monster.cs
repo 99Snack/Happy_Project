@@ -1,9 +1,11 @@
-using System.Collections;
-using UnityEngine;
-using System.Collections.Generic;
-using UnityEngine.UI;
 using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using System.Threading;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
+using UnityEngine;
+using UnityEngine.UI;
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
 /// </summary>
@@ -16,6 +18,7 @@ public class Monster : MonoBehaviour
 
     public Stat defense;
     public Stat moveSpeed;
+    public float attackCooldown;
 
     //애니메이션 관련
     private Animator anim;
@@ -73,6 +76,26 @@ public class Monster : MonoBehaviour
         TowerTargetDetector.Instance.RegisterEnemy(this);
     }
 
+    private void FixedUpdate()
+    {
+        if (attackCooldown > 0)
+        {
+            attackCooldown -= Time.fixedDeltaTime;
+        }
+
+        Vector3 allyBasePos = TileManager.Instance.GetWorldPosition(TileManager.Instance.allyBasePosition);
+        float distance = Vector3.Distance(transform.position, allyBasePos);
+        if (distance < 1.5)
+        {
+            if (attackCooldown <= 0)
+            {
+                Attack();
+                BaseCamp.Instance.basecampHp -= data.Atk;
+                attackCooldown = Data.AtkInterval_ms;
+            }
+        }
+    }
+
     void UpdateHpUI()
     {
         if (hpSlider != null)
@@ -82,41 +105,19 @@ public class Monster : MonoBehaviour
             hpSlider.DOValue(current, 0.25f).SetEase(Ease.Linear);
         }
     }
-    // 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
-    void OnTriggerEnter(Collider other)
-    {
-        if (other.CompareTag("Bullet")) // 총알 태그와 충돌했을 때 // 
-        {
-            OnHit(); // 피격 애니메이션 호출 
 
-            Projectile projectile = other.GetComponent<Projectile>();
-            if (projectile != null)
-            {
-                TakeDamage(projectile.damage); // 피 까임
-            }
-
-            //  Destroy(other.gameObject); // 총알 파괴 // 현재 프로젝타일에서 자체 파괴 처리함
-        }
-
-        //if (other.CompareTag("BaseCamp")) // 베이스캠프 태그와 충돌했을 때
-        //{
-        //    Attack();
-        //}
-        // 나중에 hp도 까이게 // 이건 몬스터에서 처리함 
-    }
-
-    public void TakeDamage(float damage)
+    public void TakeDamage(float damage, Tower attacker)
     {
         if (isDead) return; // 이미 죽은 몬스터면 무시
 
         OnHit();
 
         currentHp -= Mathf.FloorToInt(damage * (1 - defense.finalStat));
-        Debug.Log(gameObject.name + "남은 체력: " + currentHp);
+        //Debug.Log(gameObject.name + "남은 체력: " + currentHp);
         UpdateHpUI();
         if (currentHp <= 0)
         {
-            Die();
+            Die(attacker);
 
         }
     }
@@ -185,15 +186,17 @@ public class Monster : MonoBehaviour
         defense.baseStat = data.Defense;
         defense.additiveStat = 0;
         defense.multiStat = 1;
+
+        attackCooldown = data.AtkInterval_ms;
     }
 
     // 스포너에서 호출해서 번호 설정
-    public void SetSpawnNumber(int number)
+    public void SetSpawnNumber(MonsterData data, int number)
     {
         SpawnNumber = number;
 
         //데이터 설정해주기
-        Data = DataManager.Instance.MonsterData[101101];
+        Data = data;
         ResetStatus();
 
         TowerTargetDetector.Instance.RegisterEnemy(this);
@@ -207,15 +210,15 @@ public class Monster : MonoBehaviour
 
     // 몬스터 죽을 때 호출 
     //처형 증강 있을 때 이거 불러오기
-    public void Die()
+    public void Die(Tower attacker)
     {
         if (isDead) return; // 중복 사망 방지 
         isDead = true; // 사망 처리
         currentHp = 0;
 
-        Debug.Log($"체력 : {currentHp}, {gameObject.name} 몬스터 사망!");
+        //Debug.Log($"체력 : {currentHp}, {gameObject.name} 몬스터 사망!");
 
-        GiveReward(); // 미션을 잘 완수 했으니 리워드를 받아야겠지? 
+        GiveReward(attacker); // 미션을 잘 완수 했으니 리워드를 받아야겠지? 
 
         // 스폰 매니저에 알리기
         SpawnManager spawnManager = FindAnyObjectByType<SpawnManager>();
@@ -228,31 +231,35 @@ public class Monster : MonoBehaviour
         Destroy(gameObject);
     }
 
-    void GiveReward()
+    void GiveReward(Tower attacker)
     {
-        // 데이터가 없거나 리워드 그룹도 비어있으면 리턴
-        if (Data == null) return;
-        if (string.IsNullOrEmpty(Data.RewardGroup)) return;
+        if (Data == null || Data.RewardGroup <= 0) return;
 
-        // 리워드 그룹 데이터 순회(RewardGroupData에서 해당 리워드 그룹 찾기) 
-        foreach (var pair in DataManager.Instance.RewardGroupData)
+        if (DataManager.Instance.RewardGroupData.TryGetValue(Data.RewardGroup, out List<RewardGroupData> rewardList))
         {
-            RewardGroupData groupData = pair.Value;
-
-            // 몬스터의 리워드 그룹이 같은 것만 처리 
-            if (groupData.RewardGroup == Data.RewardGroup)
+            foreach (var groupData in rewardList)
             {
-                // RewardData에서 리워드 타입 확인
                 if (DataManager.Instance.RewardData.TryGetValue(groupData.RewardId, out RewardData reward))
                 {
-                    if (reward.RewardType == 1) //골드 지급 
+                    switch (reward.RewardType)
                     {
-                        GameManager.Instance.Gold += groupData.RewardCount;
-                        Debug.Log(groupData.RewardCount + "골드 획득, 총 골드 : " + GameManager.Instance.Gold);
-
+                        case 1:
+                            GameManager.Instance.Gold += groupData.RewardCount;
+                            Debug.Log($"{groupData.RewardCount} 골드 획득! (현재: {GameManager.Instance.Gold})");
+                            break;
                     }
-
                 }
+            }
+        }
+        if (attacker != null)
+        {
+            float bonusGold =
+            attacker.Data.MainType == 1 ?
+            GameManager.Instance.MeleeBonusGold : GameManager.Instance.RangeBonusGold;
+
+            if (bonusGold > 0)
+            {
+                GameManager.Instance.Gold += Mathf.FloorToInt(bonusGold);
             }
         }
     }

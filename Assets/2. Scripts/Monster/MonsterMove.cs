@@ -65,23 +65,17 @@ public class MonsterMove : MonoBehaviour
     }
     void FixedUpdate()
     {
-        // 이동 
-        float distance = Vector3.Distance(transform.position, TargetAnchor); // 타겟과의 거리 계산
+        // 이동 로직
+        float distance = Vector3.Distance(transform.position, TargetAnchor);
         if (distance > AttackRange)
         {
-            // 이동 방향은 타겟을 향해
             Vector3 moveDir = (TargetAnchor - transform.position).normalized;
-            //todo : transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
             transform.position += moveDir * monster.Data.MoveSpeed * Time.fixedDeltaTime;
 
-            if (!isTurning)   // 회전 중이 아닐 때만 이동 방향을 바라봄
+            if (!isTurning)
             {
                 currentLookDir = moveDir;
             }
-        }
-        else // 도착하고 공격 범위 안일때 공격
-        {
-            monster.Attack(); // 계속 공격 
         }
     }
     void Update()
@@ -126,7 +120,7 @@ public class MonsterMove : MonoBehaviour
                 // 목적지 도착
                 if (currentIdx >= path.Length)
                 {
-                    monster.Attack(); // 도착 시 공격  // 단일 공격 
+                    //BaseCamp.Instance.MoveMonsterToAttackPos(gameObject);
                     return; // 더 이상 이동할 경로가 없으면 종료
                 }
 

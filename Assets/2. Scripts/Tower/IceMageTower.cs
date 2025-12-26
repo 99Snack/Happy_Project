@@ -8,14 +8,7 @@ public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
     {
         base.Start();
 
-        IdleState = new IdleState(this);
-        AttackStopState = new AttackStopState(this);
-
-        if (Soldier != null)
-        {
-            IsRotate = true;
-            animator.applyRootMotion = true;
-        }
+        SetState(this);
 
         ChangeState(IdleState);
     }
@@ -55,7 +48,7 @@ public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
                 if (m != null)
                 {
                     //공격
-                    m.TakeDamage(atkPower.finalStat);
+                    m.TakeDamage(atkPower.finalStat,this);
                     //디버프
                     DebuffData debuff = DataManager.Instance.DebuffData[Data.DebuffID];
                     m.TakeDebuff(debuff);
@@ -72,7 +65,7 @@ public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
 
         if (augment.Category == 3)
         {
-            UpdateConditionAugment(augment);
+            UpdateConditionAugment();
         }
     }
 

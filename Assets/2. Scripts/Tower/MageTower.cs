@@ -3,14 +3,11 @@ using UnityEngine;
 
 public class MageTower : RangeTower, IAreaAttack, IHitEffect
 {
-    private int finalAttackPower;
-
     protected override void Start()
     {
         base.Start();
-
-        IdleState = new IdleState(this);
-        AttackStopState = new AttackStopState(this);
+        
+        SetState(this);
 
         ChangeState(IdleState);
     }
@@ -46,7 +43,7 @@ public class MageTower : RangeTower, IAreaAttack, IHitEffect
                 Monster m = target.GetComponent<Monster>();
                 if (m != null)
                 {
-                    m.TakeDamage(atkPower.finalStat);
+                    m.TakeDamage(atkPower.finalStat,this);
                 }
             }
         }
@@ -60,13 +57,13 @@ public class MageTower : RangeTower, IAreaAttack, IHitEffect
 
         if (augment.Category == 3)
         {
-            UpdateConditionAugment(augment);
+            UpdateConditionAugment();
         }
     }
 
     public void HitEffect()
     {
-        ObjectPoolManager.Instance.SpawnFromPool("minethrower", currentTarget.transform.position, Quaternion.identity);
+        ObjectPoolManager.Instance.SpawnFromPool("mage", currentTarget.transform.position, Quaternion.identity);
     }
 
 }

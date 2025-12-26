@@ -12,7 +12,7 @@ public class MonsterData
     public int Atk;                  // 공격력
     public int AtkInterval_ms;       // 공격 주기
     public int AtkSpeed;             // 공격 속도
-    public string RewardGroup;       // 리워드 그룹
+    public int RewardGroup;       // 리워드 그룹
     public string MonsterName;    // 몬스터명 스트링키
     public string MonsterResource;   // 모델링 리소스
 }

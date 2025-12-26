@@ -9,8 +9,7 @@ public class BloodKnightTower : MeleeTower, IAreaAttack, IHitEffect
     {
         base.Start();
 
-        IdleState = new IdleState(this);
-        AttackStopState = new AttackStopState(this);
+        SetState(this);
 
         ChangeState(IdleState);
     }
@@ -49,7 +48,7 @@ public class BloodKnightTower : MeleeTower, IAreaAttack, IHitEffect
                 if (m != null)
                 {
                     //공격
-                    m.TakeDamage(atkPower.finalStat);
+                    m.TakeDamage(atkPower.finalStat,this);
                     //디버프
                     DebuffData debuff = DataManager.Instance.DebuffData[Data.DebuffID];
                     m.TakeDebuff(debuff);
@@ -66,7 +65,7 @@ public class BloodKnightTower : MeleeTower, IAreaAttack, IHitEffect
 
         if (augment.Category == 3)
         {
-            UpdateConditionAugment(augment);
+            UpdateConditionAugment();
         }
     }
 

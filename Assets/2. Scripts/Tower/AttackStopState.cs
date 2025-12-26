@@ -24,13 +24,13 @@ public class AttackStopState : ITowerState
 
         if (tower.IsTargetInRange())
         {
-            tower.ChangeState(new AttackingState(tower));
+            tower.ChangeState(tower.AttackingState);
             return;
         }
 
         if (StateInfo.normalizedTime < 1.0f) return;
 
-        tower.ChangeState(new SearchingState(tower));
+        tower.ChangeState(tower.SearchingState);
     }
 
     public void Exit()

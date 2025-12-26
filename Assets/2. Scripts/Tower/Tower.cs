@@ -23,7 +23,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public TileInteractor MyTile { get; private set; }
 
     [SerializeField] private TowerBaseData data;
-    public TowerBaseData Data { get=>data; private set=>data=value; }
+    public TowerBaseData Data { get => data; private set => data = value; }
     public Vector2Int Coord { get; set; }
     public float PlacedTime { get; set; }
 
@@ -41,8 +41,18 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     // 상태 패턴 FSM
     private ITowerState currentState;
-    protected IdleState IdleState;
-    protected AttackStopState AttackStopState;
+    public IdleState IdleState;
+    public AttackStopState AttackStopState;
+    public AttackingState AttackingState;
+    public SearchingState SearchingState;
+
+    protected void SetState(Tower tower)
+    {
+        IdleState = new IdleState(tower);
+        AttackStopState = new AttackStopState(tower);
+        AttackingState = new AttackingState(tower);
+        SearchingState = new SearchingState(tower);
+    }
 
     public readonly int hashIsReady = Animator.StringToHash("IsReady");
     public readonly int hashAttack = Animator.StringToHash("Attack");
@@ -64,7 +74,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
         //데이터매니저에서 데이터 가져오기
         Data = DataManager.Instance.TowerBaseData[towerId];
-        attackCooldown = Data.AttackInterval;
+        ResetCooldown(data.AttackInterval);
         ResetStatus();
     }
 
@@ -81,25 +91,30 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (MyTile.Type == TileInfo.TYPE.Wait) return;
+
+        if (attackCooldown > 0f)
+        {
+            attackCooldown -= Time.fixedDeltaTime;
+        }
+
+        // 상태 체크는 0.5초마다 (최적화)
+        statusTimer += Time.fixedDeltaTime;
+        if (statusTimer >= 0.5f)
+        {
+            statusTimer = 0;
+            UpdateConditionAugment();
+        }
+    }
+
     private float statusTimer = 0f;
     protected virtual void Update()
     {
         if (MyTile.Type == TileInfo.TYPE.Wait) return;
 
         currentState?.Update();
-
-        if (attackCooldown > 0f)
-        {
-            attackCooldown -= Time.deltaTime;
-        }
-
-        // 상태 체크는 0.5초마다 (최적화)
-        //statusTimer += Time.deltaTime;
-        //if (statusTimer >= 0.5f)
-        //{
-        //    statusTimer = 0;
-        //    foreach (var aug in OnAreaAugs) aug.UpdateStatus(this, 10f);
-        //}
     }
 
 
@@ -168,40 +183,60 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public void AddConditionAugment(AugmentData augment)
     {
         object instance = AugmentFactory.CreateInstance(augment);
+        Debug.Log(instance);
         if (instance == null) return;
 
         if (instance is IOnHitAugment hit) onHitAugs.Add(hit);
         if (instance is IOnKillAugment kill) onKillAugs.Add(kill);
         if (instance is IStatusCheckAugment status) onStatusAugs.Add(status);
     }
-    public void UpdateConditionAugment(AugmentData augment)
-    {
-        foreach (var aug in onStatusAugs)
-        {
-            aug.UpdateStatus(this, augment);
-        }
-    }
+
+    protected HashSet<int> appliedConditionAugments = new HashSet<int>();
 
     public virtual void ApplyAugment(AugmentData augment)
     {
-        ResetStatus();
-
         if (augment.Tag != 0) return;
 
-        //조건부 증강 리스트 체크하고 넣기
-        if ( augment.Category == 3)
+        // 조건부 증강
+        if (augment.Category == 3)
         {
-            UpdateConditionAugment(augment);
+            // 중복 적용 방지
+            if (!appliedConditionAugments.Contains(augment.Index))
+            {
+                AddConditionAugment(augment);
+                appliedConditionAugments.Add(augment.Index);
+                UpdateConditionAugment();
+            }
         }
         else
         {
-            //능력치
+            // 능력치 증강
             if (augment.Category == 1)
             {
                 UpdateStatus(augment);
             }
         }
+    }
+    public void UpdateConditionAugment()
+    {
+        foreach (var aug in onStatusAugs)
+        {
+            aug.UpdateStatus(this);
+        }
+    }
 
+    // ResetStatus는 타워 초기화나 업그레이드 시에만 호출
+    public void ResetAllStatus()
+    {
+        atkPower.baseStat = CalcAttackOfficial();
+        atkPower.additiveStat = 0;
+        atkPower.multiStat = 1;
+
+        // 모든 증강 초기화
+        onHitAugs.Clear();
+        onKillAugs.Clear();
+        onStatusAugs.Clear();
+        appliedConditionAugments.Clear();
     }
 
     public void UpdateStatus(AugmentData augment)
@@ -210,6 +245,16 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         {
             case 1:
                 atkPower.additiveStat += CalcStageStat(augment);
+                break;
+            case 3:
+                if (augment.Tag == 1)
+                {
+                    GameManager.Instance.MeleeBonusGold = augment.Value_N;
+                }
+                else if (augment.Tag == 2)
+                {
+                    GameManager.Instance.RangeBonusGold = augment.Value_N;
+                }
                 break;
         }
     }
@@ -227,7 +272,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     {
         if (currentTarget == null) return;
 
-        currentTarget.TakeDamage(atkPower.finalStat);
+        currentTarget.TakeDamage(atkPower.finalStat,this);
 
         if (CanAttack())
         {

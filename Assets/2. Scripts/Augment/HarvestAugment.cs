@@ -17,7 +17,7 @@ public class HarvestAugment : IOnHitAugment
 
         if (healthPercentage <= ratio)
         {
-            target.Die();
+            target.Die(owner);
             Debug.Log($"{owner.name}의 증강 발동: 수확");
         }
     }

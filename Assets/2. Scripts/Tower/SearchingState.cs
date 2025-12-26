@@ -42,7 +42,7 @@ public class SearchingState : ITowerState
     {
         if (tower.currentTarget == null) return;
 
-        tower.ChangeState(new AttackingState(tower));
+        tower.ChangeState(tower.AttackingState);
     }
 
     public void Exit()

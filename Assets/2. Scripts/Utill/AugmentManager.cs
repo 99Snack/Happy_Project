@@ -37,9 +37,12 @@ public class AugmentManager : MonoBehaviour
 
     public void ActivateAugment(AugmentData augment)
     {
+
         if (activeAugments.Contains(augment)) return;
 
         activeAugments.Add(augment);
+
+        Debug.Log($"{activeAugments.Count} :{augment}");
       
         ApplyAugmentToAllTowers(augment);
     }
@@ -52,12 +55,13 @@ public class AugmentManager : MonoBehaviour
         {
             if (tower != null)
             {
-                tower.ApplyAugment(augment);
-
                 if (augment.Category == 3)
                 {
                     tower.AddConditionAugment(augment);
                 }
+
+                tower.ApplyAugment(augment);
+                Debug.Log(DataManager.Instance.LocalizationData[augment.Name_STR]);
             }
         }
     }
@@ -80,7 +84,7 @@ public class AugmentManager : MonoBehaviour
         {
             >= 9 => 3,
             >= 4 => 2,
-            _ => 1
+            _ => 3
         };
 
         //타워 분석 및 태그별 계산
