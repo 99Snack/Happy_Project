@@ -19,6 +19,8 @@ public class Stage : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log($"[Stage] index={stageIndex}, state={stageState}");
+
         if (button == null)
             button = GetComponent<Button>();
 
