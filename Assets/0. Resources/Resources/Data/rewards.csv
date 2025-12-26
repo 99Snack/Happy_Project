@@ -2,3 +2,4 @@
 rewardid,rewardtype,rewardname,rewarddesc,rewardresource
 int,int,string,string,string
 1101,1,reward_name_1101,reward_desc_1101,-
+10001,1,reward_name_1101,reward_desc_10001,-

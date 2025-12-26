@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
 /// </summary>
@@ -24,6 +25,7 @@ public class Monster : MonoBehaviour
     Dictionary<int, (DebuffData, Coroutine)> activeDebuffs = new Dictionary<int, (DebuffData, Coroutine)>();
 
     public int currentHp; // 현재 체력 (DB에 없어서 여기에 선언)
+    private Slider hpSlider; // 몹 hp ui 
 
     // 스폰 번호(순서) 길찾기에서 사용용
     public int SpawnNumber { get; private set; }
@@ -39,13 +41,40 @@ public class Monster : MonoBehaviour
         }
     }
 
+ 
+   
     void Start()
     {
         currentHp = (Data != null) ? Data.Hp : 100; // 시작 시 현재 체력 = 최대 체력 
+        
+        // 몬스터 HP UI 
+        GameObject hpBarPrefab = Resources.Load<GameObject>("Prefab/Monster/MonsterHpBar");
+        // 디버그 확인
+        if (hpBarPrefab == null)
+        {
+            Debug.LogError("HP바 프리팹을 찾을 수 없음! 경로 확인 필요");
+        }
+       else 
+        {
+            GameObject hpBar = Instantiate(hpBarPrefab, transform);
+            hpBar.transform.localPosition = new Vector3(0, 2.5f, 0); // 몬스터 머리 위
+           //hpBar.transform.localScale = new Vector3(1, 1f, 1);
+            hpSlider = hpBar.GetComponentInChildren<Slider>();
+            Debug.Log("HP바 생성 완료");
+        }
+        UpdateHpUI(); 
 
         TowerTargetDetector.Instance.RegisterEnemy(this);
     }
 
+    void UpdateHpUI()
+    {
+        if (hpSlider != null)
+        {
+            int maxHp = (Data != null) ? Data.Hp : 100;
+            hpSlider.value = (float)currentHp / maxHp;
+        }
+    }
     // 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
     void OnTriggerEnter(Collider other)
     {
@@ -62,10 +91,10 @@ public class Monster : MonoBehaviour
             //  Destroy(other.gameObject); // 총알 파괴 // 현재 프로젝타일에서 자체 파괴 처리함
         }
 
-        if (other.CompareTag("BaseCamp")) // 베이스캠프 태그와 충돌했을 때
-        {
-            Attack();
-        }
+        //if (other.CompareTag("BaseCamp")) // 베이스캠프 태그와 충돌했을 때
+        //{
+        //    Attack();
+        //}
         // 나중에 hp도 까이게 // 이건 몬스터에서 처리함 
     }
 
@@ -77,7 +106,7 @@ public class Monster : MonoBehaviour
 
         currentHp -= damage;
         Debug.Log(gameObject.name + "남은 체력: " + currentHp);
-
+        UpdateHpUI();
         if (currentHp <= 0)
         {
             Die();
@@ -158,6 +187,8 @@ public class Monster : MonoBehaviour
 
         Debug.Log(gameObject.name + " 몬스터 사망!");
 
+        GiveReward(); // 미션을 잘 완수 했으니 리워드를 받아야겠지? 
+
         // 스폰 매니저에 알리기
         SpawnManager spawnManager = FindAnyObjectByType<SpawnManager>();
         if (spawnManager != null)
@@ -167,6 +198,35 @@ public class Monster : MonoBehaviour
 
 
         Destroy(gameObject);
+    }
+
+    void GiveReward()
+    {
+        // 데이터가 없거나 리워드 그룹도 비어있으면 리턴
+        if (Data == null) return; 
+        if (string.IsNullOrEmpty(Data.RewardGroup)) return;
+
+        // 리워드 그룹 데이터 순회(RewardGroupData에서 해당 리워드 그룹 찾기) 
+        foreach (var pair in DataManager.Instance.RewardGroupData)
+        {
+            RewardGroupData groupData = pair.Value;
+
+            // 몬스터의 리워드 그룹이 같은 것만 처리 
+            if (groupData.RewardGroup  == Data.RewardGroup)
+            { 
+                // RewardData에서 리워드 타입 확인
+                if (DataManager.Instance.RewardData.TryGetValue(groupData.RewardId, out RewardData reward))
+                 {                       
+                    if (reward.RewardType ==1) //골드 지급 
+                    {
+                        GameManager.Instance.Gold += groupData.RewardCount;
+                        Debug.Log(groupData.RewardCount + "골드 획득, 총 골드 : " + GameManager.Instance.Gold);
+
+                    }
+
+                }
+            }
+        }
     }
 
     #region Animation
