@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -43,7 +42,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                 if(originTile.Type == TileInfo.TYPE.Wall)
                 {
                     
-                    isBuild = true;
+                    //isBuild = true;
                 }   
                 else
                 {

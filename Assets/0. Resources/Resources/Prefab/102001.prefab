@@ -10083,14 +10083,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e618eae8ce5ee804e9a17fb0b5433f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::KnightTower
-  shooter: {fileID: 0}
   animator: {fileID: 8196637746319335394}
+  data:
+    TowerID: 0
+    Name: 
+    Desc: 
+    MainType: 0
+    SubType: 0
+    AtkType: 0
+    Effect: 
+    Grade: 0
+    Attack: 0
+    AttackInterval: 0
+    Range: 0
+    AtkScale: 0
+    ProjectileSpeed: 0
+    DebuffID: 0
+    HitCount: 0
+    Size: 0
+    ModelResource: 
+    price: 0
   Soldier: {fileID: 6999804005234792909}
-  currentTarget: {fileID: 0}
-  attackCooldown: 0
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
+  currentTarget: {fileID: 0}
+  attackCooldown: 0
+  atkPower:
+    baseStat: 0
+    additiveStat: 0
+    multiStat: 0
 --- !u!1 &3117594852234794782
 GameObject:
   m_ObjectHideFlags: 0

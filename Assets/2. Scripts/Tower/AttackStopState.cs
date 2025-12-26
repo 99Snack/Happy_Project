@@ -12,7 +12,7 @@ public class AttackStopState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("attackStop ->");
+        //Debug.Log("attackStop ->");
 
 
         tower.animator.SetBool(tower.hashIsCooldown, true);

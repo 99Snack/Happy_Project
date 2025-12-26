@@ -11,7 +11,7 @@ public class AttackingState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("attack ->");
+        //Debug.Log("attack ->");
 
         tower.attackCooldown = tower.Data.AttackInterval;
 

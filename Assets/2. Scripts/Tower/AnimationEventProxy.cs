@@ -17,7 +17,7 @@ public class AnimationEventProxy : MonoBehaviour
 
     public void AttackReady(){
         if(tower is MageTower){
-            (tower as MageTower)?.HitEffectPlay();
+            (tower as MageTower)?.HitEffect();
         }
     }
 }

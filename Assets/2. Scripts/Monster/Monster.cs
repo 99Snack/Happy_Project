@@ -2,15 +2,20 @@ using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using DG.Tweening;
+using UnityEditor.Rendering;
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
 /// </summary>
 public class Monster : MonoBehaviour
 {
     //몬스터 스탯 데이터 
-    public MonsterData Data;
-    public float FinalDefence { get; set; }
+    [SerializeField] private MonsterData data;
+    public MonsterData Data { get => data; set => data = value; }
+    [SerializeField] GameObject bar;
 
+    public Stat defense;
+    public Stat moveSpeed;
 
     //애니메이션 관련
     private Animator anim;
@@ -41,12 +46,12 @@ public class Monster : MonoBehaviour
         }
     }
 
- 
-   
+
+
     void Start()
     {
-        currentHp = (Data != null) ? Data.Hp : 100; // 시작 시 현재 체력 = 최대 체력 
-        
+        currentHp = Data.Hp; // 시작 시 현재 체력 = 최대 체력 
+
         // 몬스터 HP UI 
         GameObject hpBarPrefab = Resources.Load<GameObject>("Prefab/Monster/MonsterHpBar");
         // 디버그 확인
@@ -54,15 +59,16 @@ public class Monster : MonoBehaviour
         {
             Debug.LogError("HP바 프리팹을 찾을 수 없음! 경로 확인 필요");
         }
-       else 
+        else
         {
-            GameObject hpBar = Instantiate(hpBarPrefab, transform);
+            //GameObject hpBar = Instantiate(hpBarPrefab, transform);
+            GameObject hpBar = Instantiate(bar, transform);
             hpBar.transform.localPosition = new Vector3(0, 2.5f, 0); // 몬스터 머리 위
-           //hpBar.transform.localScale = new Vector3(1, 1f, 1);
+                                                                     //hpBar.transform.localScale = new Vector3(1, 1f, 1);
             hpSlider = hpBar.GetComponentInChildren<Slider>();
-            Debug.Log("HP바 생성 완료");
+            //Debug.Log("HP바 생성 완료");
         }
-        UpdateHpUI(); 
+        UpdateHpUI();
 
         TowerTargetDetector.Instance.RegisterEnemy(this);
     }
@@ -71,8 +77,9 @@ public class Monster : MonoBehaviour
     {
         if (hpSlider != null)
         {
-            int maxHp = (Data != null) ? Data.Hp : 100;
-            hpSlider.value = (float)currentHp / maxHp;
+            //int maxHp = (Data != null) ? currentHp : 100;
+            float current = (float)currentHp / Data.Hp;
+            hpSlider.DOValue(current, 0.25f).SetEase(Ease.Linear);
         }
     }
     // 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
@@ -98,13 +105,13 @@ public class Monster : MonoBehaviour
         // 나중에 hp도 까이게 // 이건 몬스터에서 처리함 
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(float damage)
     {
         if (isDead) return; // 이미 죽은 몬스터면 무시
 
         OnHit();
 
-        currentHp -= Mathf.FloorToInt(damage * (1 - Data.Defense));
+        currentHp -= Mathf.FloorToInt(damage * (1 - defense.finalStat));
         Debug.Log(gameObject.name + "남은 체력: " + currentHp);
         UpdateHpUI();
         if (currentHp <= 0)
@@ -119,12 +126,10 @@ public class Monster : MonoBehaviour
         if (debuff == null) return;
 
         int key = debuff.DebuffId;
-        if (activeDebuffs.TryGetValue(key, out (DebuffData debuffData, Coroutine coroutine) value))
+
+        if (activeDebuffs.TryGetValue(key, out var value))
         {
-            if (value.coroutine != null)
-            {
-                StopCoroutine(value.coroutine);
-            }
+            if (value.Item2 != null) StopCoroutine(value.Item2);
         }
 
         Coroutine newCoroutine = StartCoroutine(DebuffRoutine(debuff));
@@ -137,29 +142,50 @@ public class Monster : MonoBehaviour
 
         yield return new WaitForSeconds(debuff.Duration);
 
+        activeDebuffs.Remove(debuff.DebuffId);
+
         CalcUpdateStat(debuff);
     }
 
     void CalcUpdateStat(DebuffData debuff)
     {
-        int finalValue = 1;
+        //Debug.Log($"{activeDebuffs.Count} : {debuff.DebuffId} : {debuff.DebuffPower}");
+        float finalValue = 1;
 
+        float maxValue = 0;
         foreach (var tuple in activeDebuffs.Values)
         {
-            finalValue = Mathf.FloorToInt(1 - tuple.Item1.DebuffPower);
+            if (tuple.Item1.Type == debuff.Type)
+            {
+                if (tuple.Item1.DebuffPower > maxValue) maxValue = tuple.Item1.DebuffPower;
+            }
         }
+
+        finalValue = 1 - maxValue;
 
         switch (debuff.Type)
         {
             case 1:
-                //FinalMoveSpeed = Data.MoveSpeed * finalValue;
+                moveSpeed.multiStat = finalValue;
                 break;
             case 2:
-                FinalDefence = Data.Defense * finalValue;
+                defense.multiStat = finalValue;
                 break;
         }
+
+        //Debug.Log($"{finalValue} : {debuff.DebuffId}");
     }
 
+    void ResetStatus()
+    {
+        moveSpeed.baseStat = data.MoveSpeed;
+        moveSpeed.additiveStat = 0;
+        moveSpeed.multiStat = 1;
+
+        defense.baseStat = data.Defense;
+        defense.additiveStat = 0;
+        defense.multiStat = 1;
+    }
 
     // 스포너에서 호출해서 번호 설정
     public void SetSpawnNumber(int number)
@@ -167,7 +193,8 @@ public class Monster : MonoBehaviour
         SpawnNumber = number;
 
         //데이터 설정해주기
-        //Data = DataManager.Instance.MonsterData[]
+        Data = DataManager.Instance.MonsterData[101101];
+        ResetStatus();
 
         TowerTargetDetector.Instance.RegisterEnemy(this);
     }
@@ -204,7 +231,7 @@ public class Monster : MonoBehaviour
     void GiveReward()
     {
         // 데이터가 없거나 리워드 그룹도 비어있으면 리턴
-        if (Data == null) return; 
+        if (Data == null) return;
         if (string.IsNullOrEmpty(Data.RewardGroup)) return;
 
         // 리워드 그룹 데이터 순회(RewardGroupData에서 해당 리워드 그룹 찾기) 
@@ -213,12 +240,12 @@ public class Monster : MonoBehaviour
             RewardGroupData groupData = pair.Value;
 
             // 몬스터의 리워드 그룹이 같은 것만 처리 
-            if (groupData.RewardGroup  == Data.RewardGroup)
-            { 
+            if (groupData.RewardGroup == Data.RewardGroup)
+            {
                 // RewardData에서 리워드 타입 확인
                 if (DataManager.Instance.RewardData.TryGetValue(groupData.RewardId, out RewardData reward))
-                 {                       
-                    if (reward.RewardType ==1) //골드 지급 
+                {
+                    if (reward.RewardType == 1) //골드 지급 
                     {
                         GameManager.Instance.Gold += groupData.RewardCount;
                         Debug.Log(groupData.RewardCount + "골드 획득, 총 골드 : " + GameManager.Instance.Gold);

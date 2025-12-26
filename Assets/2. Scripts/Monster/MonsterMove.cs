@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
@@ -51,7 +51,7 @@ public class MonsterMove : MonoBehaviour
         if (PathNodeManager.Instance != null)
         {
             path = PathNodeManager.Instance.GetPathNode(spawnNum, deadEndMoveLimit, out feedbackPoints);
-            Debug.Log("몬스터 스폰 번호: " + spawnNum + ", 경로 길이: " + path.Length + ", 피드백 좌표 개수: " + feedbackPoints.Length);
+            //Debug.Log("몬스터 스폰 번호: " + spawnNum + ", 경로 길이: " + path.Length + ", 피드백 좌표 개수: " + feedbackPoints.Length);
         }
 
         if (path != null && path.Length > 0)

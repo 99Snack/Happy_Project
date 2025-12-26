@@ -1,3 +1,6 @@
+using System;
+
+[Serializable]
 public class TowerBaseData
 {
     public int TowerID;             // 타워 ID(6자리) (100000~299999)

@@ -108,7 +108,7 @@ GameObject:
   - component: {fileID: 461488943947769662}
   - component: {fileID: 956987655686452790}
   m_Layer: 0
-  m_Name: GHOST
+  m_Name: Ghost
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,6 +173,7 @@ MonoBehaviour:
     RewardGroup: 
     MonsterName: 
     MonsterResource: 
+  hpBar: {fileID: 4686604950343363769, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
   currentHp: 0
 --- !u!136 &956987655686452790
 CapsuleCollider:

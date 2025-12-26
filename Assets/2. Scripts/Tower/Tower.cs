@@ -1,18 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 [Serializable]
 public class Stat
 {
-    public int baseStat;
-    public int additiveStat;
+    public float baseStat;
+    public float additiveStat;
     public float multiStat;
 
-    public int finalStat => Mathf.FloorToInt((baseStat + additiveStat) * multiStat);
+    public float finalStat => (baseStat + additiveStat) * multiStat;
 }
 
 
@@ -22,7 +21,9 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public Animator animator;
 
     public TileInteractor MyTile { get; private set; }
-    public TowerBaseData Data { get; private set; }
+
+    [SerializeField] private TowerBaseData data;
+    public TowerBaseData Data { get=>data; private set=>data=value; }
     public Vector2Int Coord { get; set; }
     public float PlacedTime { get; set; }
 
@@ -64,6 +65,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         //데이터매니저에서 데이터 가져오기
         Data = DataManager.Instance.TowerBaseData[towerId];
         attackCooldown = Data.AttackInterval;
+        ResetStatus();
     }
 
     public void SetMyTile(TileInteractor tile) => MyTile = tile;

@@ -10005,14 +10005,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad96b91b2d5bb6e4daa38279f19a3357, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MageTower
-  shooter: {fileID: 0}
   animator: {fileID: 3128195822947424262}
+  data:
+    TowerID: 0
+    Name: 
+    Desc: 
+    MainType: 0
+    SubType: 0
+    AtkType: 0
+    Effect: 
+    Grade: 0
+    Attack: 0
+    AttackInterval: 0
+    Range: 0
+    AtkScale: 0
+    ProjectileSpeed: 0
+    DebuffID: 0
+    HitCount: 0
+    Size: 0
+    ModelResource: 
+    price: 0
   Soldier: {fileID: 8249450888091984785}
   monsterLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   currentTarget: {fileID: 0}
   attackCooldown: 0
+  atkPower:
+    baseStat: 0
+    additiveStat: 0
+    multiStat: 0
 --- !u!1 &1012199657243694225
 GameObject:
   m_ObjectHideFlags: 0

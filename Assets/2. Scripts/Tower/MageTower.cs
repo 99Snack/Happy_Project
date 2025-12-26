@@ -24,8 +24,6 @@ public class MageTower : RangeTower, IAreaAttack, IHitEffect
     {
         if (currentTarget == null) return;
 
-        HitEffect();
-
         //광역 공격
         AreaAttack();
 

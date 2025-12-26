@@ -1429,7 +1429,7 @@ GameObject:
   - component: {fileID: 7476431777272313515}
   - component: {fileID: 4465424607670017748}
   m_Layer: 0
-  m_Name: SPOOK
+  m_Name: Spook
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1494,6 +1494,7 @@ MonoBehaviour:
     RewardGroup: 
     MonsterName: 
     MonsterResource: 
+  hpBar: {fileID: 4686604950343363769, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
   currentHp: 0
 --- !u!136 &4465424607670017748
 CapsuleCollider:

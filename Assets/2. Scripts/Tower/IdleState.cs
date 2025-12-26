@@ -13,7 +13,7 @@ public class IdleState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("idle ->");
+        //Debug.Log("idle ->");
 
         //tower.animator.SetBool("isAttacking", false);
         //tower.animator.SetBool("isAttackReady", false);

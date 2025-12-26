@@ -5,15 +5,14 @@ public class HarvestAugment : IOnHitAugment
     float ratio;
     public HarvestAugment(float ratio)
     {
-        this.ratio = ratio;
+        this.ratio = ratio * 0.01f;
     }
 
-    public void OnHit(Tower owner, Monster target, AugmentData augment)
+    public void OnHit(Tower owner, Monster target)
     {
         //보스 인지
         //if (target.IsBoss) return;
 
-        ratio = augment.Value_N * 0.01f;
         float healthPercentage = target.currentHp / target.Data.Hp;
 
         if (healthPercentage <= ratio)

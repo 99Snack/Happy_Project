@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class SpawnManager : MonoBehaviour
@@ -88,7 +88,7 @@ public class SpawnManager : MonoBehaviour
         _aliveMonsterCount = _currentSpawnOrder.Length; // 살아있는 몬스터 수 설정
 
         UpdateStageUI();
-        Debug.Log("스테이지 " + (_currentStage + 1) + " 시작, 총 몬스터 수: " + _aliveMonsterCount);
+        //Debug.Log("스테이지 " + (_currentStage + 1) + " 시작, 총 몬스터 수: " + _aliveMonsterCount);
 
         // Start Delay 후에 첫 스폰 시작 
         InvokeRepeating("SpawnOne", StartDelay, SpawnInterval); // 웨이브 시작 지연 후 스폰 반복 시작
@@ -134,7 +134,7 @@ public class SpawnManager : MonoBehaviour
             {  
 
                 prefab = MonsterPrefabs[spawnValue];
-                Debug.Log("기존 인스펙터 프리팹 사용: " + prefab.name);
+                //Debug.Log("기존 인스펙터 프리팹 사용: " + prefab.name);
             }
             else
             {
@@ -163,7 +163,7 @@ public class SpawnManager : MonoBehaviour
             monsterScript.Data =data; // DB에서 가져온 몬스터 데이터 설정
         }
 
-        Debug.Log("스폰 : " + prefab.name + "(번호 : " + _spawnCount + ")");
+        //Debug.Log("스폰 : " + prefab.name + "(번호 : " + _spawnCount + ")");
 
         _orderIndex++;
     }

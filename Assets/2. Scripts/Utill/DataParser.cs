@@ -68,12 +68,14 @@ public static class DataParser
 
             for (int j = 0; j < headers.Length; j++)
             {
-                string header = headers[j].Trim();
+                string header = headers[j].Trim().Replace(" ","");
                 string value = values[j].Trim();
 
                 //Debug.Log($"{j} : {header},{value}");
 
                 //T클래스의 변수명과 csv파일의 헤더명이 같은지
+                //if(filename.Equals("debuff"))
+                //Debug.Log($"{header} : {fields[j].Name}");
                 //StringComparison.OrdinalIgnoreCase : 대소문자 구분하지않고 비교하는 옵션
                 FieldInfo field = Array.Find(fields, f => f.Name.Equals(header, StringComparison.OrdinalIgnoreCase));
 

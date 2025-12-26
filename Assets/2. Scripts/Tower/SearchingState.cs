@@ -13,7 +13,7 @@ public class SearchingState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("search ->");
+        //Debug.Log("search ->");
 
         searchDelay = new WaitForSeconds(0.1f);
 

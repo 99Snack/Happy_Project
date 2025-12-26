@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 1820283667007771205}
   - component: {fileID: 1694031956015431536}
   m_Layer: 0
-  m_Name: SPIDER KING
+  m_Name: Spider King
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -642,6 +642,7 @@ MonoBehaviour:
     RewardGroup: 
     MonsterName: 
     MonsterResource: 
+  hpBar: {fileID: 4686604950343363769, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
   currentHp: 0
 --- !u!136 &1694031956015431536
 CapsuleCollider:

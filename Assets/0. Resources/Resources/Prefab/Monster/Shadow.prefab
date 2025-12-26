@@ -574,7 +574,7 @@ GameObject:
   - component: {fileID: 4697965583376235783}
   - component: {fileID: 2632096099280775655}
   m_Layer: 0
-  m_Name: SHADOW
+  m_Name: Shadow
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -639,6 +639,7 @@ MonoBehaviour:
     RewardGroup: 
     MonsterName: 
     MonsterResource: 
+  hpBar: {fileID: 4686604950343363769, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
   currentHp: 0
 --- !u!136 &2632096099280775655
 CapsuleCollider:

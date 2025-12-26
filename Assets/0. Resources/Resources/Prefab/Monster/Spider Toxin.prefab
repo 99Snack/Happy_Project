@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 2701167140829666635}
   - component: {fileID: 2301178992842112950}
   m_Layer: 0
-  m_Name: SPIDER TOXIN
+  m_Name: Spider Toxin
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -329,6 +329,7 @@ MonoBehaviour:
     RewardGroup: 
     MonsterName: 
     MonsterResource: 
+  hpBar: {fileID: 4686604950343363769, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
   currentHp: 0
 --- !u!136 &2301178992842112950
 CapsuleCollider:
