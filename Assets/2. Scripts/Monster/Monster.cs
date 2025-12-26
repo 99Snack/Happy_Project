@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEditor.Analytics;
@@ -33,7 +33,7 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-       anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
+        anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
         if (anim == null)
         {
             anim = transform.GetChild(0).GetComponent<Animator>(); // 애니메이터 컴포넌트가 자식에 있을때
@@ -76,7 +76,7 @@ public class Monster : MonoBehaviour
 
         OnHit();
 
-        currentHp -= damage;
+        currentHp -= Mathf.FloorToInt(damage * (1 - Data.Defense));
         Debug.Log(gameObject.name + "남은 체력: " + currentHp);
 
         if (currentHp <= 0)
@@ -174,7 +174,7 @@ public class Monster : MonoBehaviour
     #region Animation
     public void OnHit()
     {
-       if (anim != null) anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
+        if (anim != null) anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
         // 타워 공격을 맞을 때 피격과 상호작용
     }
 

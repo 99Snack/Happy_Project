@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 
@@ -14,10 +15,38 @@ public class SpearTower : MeleeTower
 
     }
 
-    protected override void test()
+    public override void Attack()
     {
-        base.test();
+        if (currentTarget == null) return;
 
-        Debug.Log("Spear");
+        if (onHitAugs.Count > 0)
+        {
+            foreach (var aug in onHitAugs)
+            {
+                aug.OnHit(this,currentTarget);
+            }
+        }
+        else
+        {
+            currentTarget.TakeDamage(atkPower.finalStat);
+        }
+
+        if (CanAttack())
+        {
+            ResetCooldown(Data.AttackInterval);
+            animator.SetTrigger(hashAttack);
+        }
+    }
+
+    public override void ApplyAugment(AugmentData augment)
+    {
+        base.ApplyAugment(augment);
+
+        if (augment.Tag != 3) return;
+
+        if (augment.Category == 3)
+        {
+            UpdateConditionAugment(augment);
+        }
     }
 }

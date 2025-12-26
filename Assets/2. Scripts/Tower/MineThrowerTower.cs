@@ -1,10 +1,7 @@
-using System.Runtime.Serialization;
 using UnityEngine;
 
-public class MineThrowerTower : RangeTower
+public class MineThrowerTower : RangeTower, IHitEffect
 {
-    [SerializeField] private GameObject hitEffect;
-
     protected override void Start()
     {
         base.Start();
@@ -15,17 +12,50 @@ public class MineThrowerTower : RangeTower
 
     }
 
-    //protected override void Update()
-    //{
-    //    base.Update();
-    //}
+    public override int CalcAttackOfficial()
+    {
+        return Data.Attack * Data.HitCount;
+    }
 
     public override void Attack()
     {
-        base.Attack();
+        if (currentTarget == null) return;
 
-        //타격 이펙트 몬스터자리에 생성
-        ObjectPoolManager.Instance.SpawnFromPool("minethrower", currentTarget.transform.position, Quaternion.identity);
+        HitEffect();
+
+        if (onHitAugs.Count > 0)
+        {
+            foreach (var aug in onHitAugs)
+            {
+                aug.OnHit(this, currentTarget);
+            }
+        }
+        else
+        {
+            currentTarget.TakeDamage(atkPower.finalStat);
+        }
+
+        if (CanAttack())
+        {
+            ResetCooldown(Data.AttackInterval);
+            animator.SetTrigger(hashAttack);
+        }
+
+    }
+    public override void ApplyAugment(AugmentData augment)
+    {
+        base.ApplyAugment(augment);
+
+        if (augment.Tag != 3) return;
+
+        if (augment.Category == 3)
+        {
+            UpdateConditionAugment(augment);
+        }
     }
 
+    public void HitEffect()
+    {
+        ObjectPoolManager.Instance.SpawnFromPool("minethrower", currentTarget.transform.position, Quaternion.identity);
+    }
 }

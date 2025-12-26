@@ -40,6 +40,34 @@ public class AugmentManager : MonoBehaviour
         if (activeAugments.Contains(augment)) return;
 
         activeAugments.Add(augment);
+      
+        ApplyAugmentToAllTowers(augment);
+    }
+
+    private void ApplyAugmentToAllTowers(AugmentData augment)
+    {
+        if (TowerManager.Instance == null) return;
+
+        foreach (var tower in TowerManager.Instance.allTowers)
+        {
+            if (tower != null)
+            {
+                tower.ApplyAugment(augment);
+
+                if (augment.Category == 3)
+                {
+                    tower.AddConditionAugment(augment);
+                }
+            }
+        }
+    }
+
+    public void ApplyAllActiveAugmentsToTower(Tower newTower)
+    {
+        foreach (var augment in activeAugments)
+        {
+            newTower.ApplyAugment(augment);
+        }
     }
 
     public List<AugmentData> GetGeneratorRandomAugment(int stage = 1)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor.Tilemaps;
 using UnityEngine;
 
 public class GeneratorMap : MonoBehaviour
@@ -7,7 +8,7 @@ public class GeneratorMap : MonoBehaviour
     public GameObject allyBasePrefab;
     public GameObject transitionPrefab;
 
-    public Dictionary<(int x, int y), GameObject> tiles = new Dictionary<(int x, int y), GameObject>();
+    public Dictionary<(int x, int y), TileInteractor> tiles = new Dictionary<(int x, int y), TileInteractor>();
 
     public void Generator()
     {
@@ -39,10 +40,11 @@ public class GeneratorMap : MonoBehaviour
                 {
                     GameObject tileObject = Instantiate(tilePrefab, worldPosition, Quaternion.identity);
                     tileObject.transform.SetParent(transform);
-                    tiles.Add((j, i), tileObject);
 
                     TileInteractor interactor = tileObject.GetComponent<TileInteractor>();
                     interactor.Setup(j, i,tile.Type);
+
+                    tiles.Add((j, i), interactor);
 
                     TileInfo data = TileManager.Instance.GetTileInfo(j, i);
 

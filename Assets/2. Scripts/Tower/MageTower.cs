@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public class MageTower : RangeTower, IAreaAttack
+public class MageTower : RangeTower, IAreaAttack, IHitEffect
 {
     private int finalAttackPower;
 
@@ -15,10 +15,8 @@ public class MageTower : RangeTower, IAreaAttack
         ChangeState(IdleState);
     }
 
-    public override int CalcAttackPower()
+    public override int CalcAttackOfficial()
     {
-        //1회 공격 피해량 = 타워 공격력 x( 1 – 몬스터 방어력 )
-        //todo : return Data.Attack * (1 - monster.Data.Defense);
         return Data.Attack;
     }
 
@@ -26,7 +24,7 @@ public class MageTower : RangeTower, IAreaAttack
     {
         if (currentTarget == null) return;
 
-        finalAttackPower = CalcAttackPower();
+        HitEffect();
 
         //광역 공격
         AreaAttack();
@@ -37,12 +35,6 @@ public class MageTower : RangeTower, IAreaAttack
             animator.SetTrigger(hashAttack);
         }
 
-    }
-
-    public void HitEffectPlay(){
-        if (currentTarget == null) return;
-
-        ObjectPoolManager.Instance.SpawnFromPool("mage", currentTarget.transform.position, Quaternion.identity);
     }
 
     public void AreaAttack()
@@ -56,10 +48,27 @@ public class MageTower : RangeTower, IAreaAttack
                 Monster m = target.GetComponent<Monster>();
                 if (m != null)
                 {
-                    m.TakeDamage(finalAttackPower);
+                    m.TakeDamage(atkPower.finalStat);
                 }
             }
         }
+    }
+
+    public override void ApplyAugment(AugmentData augment)
+    {
+        base.ApplyAugment(augment);
+
+        if (augment.Tag != 4) return;
+
+        if (augment.Category == 3)
+        {
+            UpdateConditionAugment(augment);
+        }
+    }
+
+    public void HitEffect()
+    {
+        ObjectPoolManager.Instance.SpawnFromPool("minethrower", currentTarget.transform.position, Quaternion.identity);
     }
 
 }

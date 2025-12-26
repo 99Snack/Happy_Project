@@ -1,5 +1,3 @@
-using UnityEngine;
-using UnityEngine.Rendering;
 
 public class MeleeTower : Tower
 {
@@ -13,8 +11,20 @@ public class MeleeTower : Tower
     //{
     //    base.Update();
 
-    protected override void test()
+    public override void ApplyAugment(AugmentData augment)
     {
-        Debug.Log("melee");
+        base.ApplyAugment(augment);
+
+        if (augment.Tag != 1) return;
+
+        if(augment.Category == 1)
+        { 
+            UpdateStatus(augment);
+        }
+    }
+
+    public override int CalcAttackOfficial()
+    {
+        return Data.Attack * Data.HitCount;
     }
 }

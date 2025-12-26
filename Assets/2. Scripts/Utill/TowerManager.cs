@@ -81,7 +81,7 @@ public class TowerManager : MonoBehaviour
                 allTowers.Add(tower);
 
                 //todo : 뽑은 후 증강데이터 적용하기
-                //tower.ApplyAugment();
+                AugmentManager.Instance.ApplyAllActiveAugmentsToTower(tower);
 
                 if (tower.Data?.Grade != 3)
                 {

@@ -1,7 +1,20 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
+[Serializable]
+public class Stat
+{
+    public int baseStat;
+    public int additiveStat;
+    public float multiStat;
+
+    public int finalStat => Mathf.FloorToInt((baseStat + additiveStat) * multiStat);
+}
+
 
 public abstract class Tower : MonoBehaviour, IPointerClickHandler
 {
@@ -19,8 +32,11 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public LayerMask monsterLayer;
 
     // 현재 타겟
-    [HideInInspector] public Monster currentTarget;
+    public Monster currentTarget;
     [HideInInspector] public float attackCooldown = 0f;
+
+    //최종 스탯
+    public Stat atkPower = new Stat();
 
     // 상태 패턴 FSM
     private ITowerState currentState;
@@ -37,9 +53,9 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     Coroutine CoSearch;
 
     //증강 관련
-    private List<IOnHitAugment> onHitAugs = new List<IOnHitAugment>();
-    private List<IOnKillAugment> onKillAugs = new List<IOnKillAugment>();
-    private List<IStatusCheckAugment> statusAugs = new List<IStatusCheckAugment>();
+    protected List<IOnHitAugment> onHitAugs = new List<IOnHitAugment>();
+    protected List<IOnKillAugment> onKillAugs = new List<IOnKillAugment>();
+    protected List<IStatusCheckAugment> onStatusAugs = new List<IStatusCheckAugment>();
 
     public void Setup(int towerId, TileInteractor tile)
     {
@@ -63,6 +79,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         }
     }
 
+    private float statusTimer = 0f;
     protected virtual void Update()
     {
         if (MyTile.Type == TileInfo.TYPE.Wait) return;
@@ -70,8 +87,19 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         currentState?.Update();
 
         if (attackCooldown > 0f)
+        {
             attackCooldown -= Time.deltaTime;
+        }
+
+        // 상태 체크는 0.5초마다 (최적화)
+        //statusTimer += Time.deltaTime;
+        //if (statusTimer >= 0.5f)
+        //{
+        //    statusTimer = 0;
+        //    foreach (var aug in OnAreaAugs) aug.UpdateStatus(this, 10f);
+        //}
     }
+
 
     public void ChangeState(ITowerState newState)
     {
@@ -135,25 +163,69 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public bool CanAttack() => attackCooldown <= 0f ? true : false;
     public void ResetCooldown(float interval) => attackCooldown = interval;
 
-    public void ApplyAugment()
+    public void AddConditionAugment(AugmentData augment)
     {
-        foreach (var augment in AugmentManager.Instance.activeAugments)
-        {
+        object instance = AugmentFactory.CreateInstance(augment);
+        if (instance == null) return;
 
+        if (instance is IOnHitAugment hit) onHitAugs.Add(hit);
+        if (instance is IOnKillAugment kill) onKillAugs.Add(kill);
+        if (instance is IStatusCheckAugment status) onStatusAugs.Add(status);
+    }
+    public void UpdateConditionAugment(AugmentData augment)
+    {
+        foreach (var aug in onStatusAugs)
+        {
+            aug.UpdateStatus(this, augment);
         }
     }
 
-    protected virtual void test(){
+    public virtual void ApplyAugment(AugmentData augment)
+    {
+        ResetStatus();
+
+        if (augment.Tag != 0) return;
+
+        //조건부 증강 리스트 체크하고 넣기
+        if ( augment.Category == 3)
+        {
+            UpdateConditionAugment(augment);
+        }
+        else
+        {
+            //능력치
+            if (augment.Category == 1)
+            {
+                UpdateStatus(augment);
+            }
+        }
 
     }
+
+    public void UpdateStatus(AugmentData augment)
+    {
+        switch (augment.Plus_Factor)
+        {
+            case 1:
+                atkPower.additiveStat += CalcStageStat(augment);
+                break;
+        }
+    }
+
+    void ResetStatus()
+    {
+        atkPower.baseStat = CalcAttackOfficial();
+        atkPower.additiveStat = 0;
+        atkPower.multiStat = 1;
+    }
+
+
 
     public virtual void Attack()
     {
         if (currentTarget == null) return;
 
-        int attackPower = CalcAttackPower();
-
-        currentTarget.TakeDamage(attackPower);
+        currentTarget.TakeDamage(atkPower.finalStat);
 
         if (CanAttack())
         {
@@ -162,13 +234,21 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public virtual int CalcAttackPower()
+    public virtual int CalcAttackOfficial()
     {
-        //1회 공격 피해량 = 타워 공격력 x 타격 수 x(1 – 몬스터 방어력)
         //기본 단일 공격 공식
-        //todo : return Data.Attack * Data.HitCount * (1 - monster.Data.Defense);
-        return Data.Attack * Data.HitCount;
+        //1회 공격 피해량 = 타워 공격력 x 타격 수 x(1 – 몬스터 방어력)
+
+        //기본 디버프 공격 공식
+        //1회 공격 피해량 = 타워 공격력 x ( 1 – 몬스터 방어력 ) x 0.8
+
+        //기본 광역 공격 공식
+        //1회 공격 피해량 = 타워 공격력 x( 1 – 몬스터 방어력 )
+
+        return 1;
     }
+
+    public int CalcStageStat(AugmentData augment) => Mathf.FloorToInt((augment.Value_N + augment.CalcGrowValue()));
 
 }
 
