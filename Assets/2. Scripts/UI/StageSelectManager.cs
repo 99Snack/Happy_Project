@@ -45,13 +45,23 @@ public class StageSelectManager : MonoBehaviour
             Stage stage = Instantiate(stagePrefab, stageParent);
             stage.stageIndex = stageData.Index;
             stage.stageState = GetStageState(stageData.Index, true); // CSV 있음
+            stage.RefreshUI();
+
+            if (stage.stageIndex == 1)
+            {
+                Debug.Log("[StageSelectManager] 첫 스테이지 확인: StageIndex=1, State=" + stage.stageState);
+            }
+            else
+            {
+                Debug.Log("[StageSelectManager] Stage 생성: StageIndex=" + stage.stageIndex + ", State=" + stage.stageState);
+            }
+
         }
     }
 
     StageState GetStageState(int index, bool hasStageData)
     {
 #if UNITY_EDITOR
-        // CSV 없을 때만 디버그 상태 허용
         if (!hasStageData && debugMixedState)
         {
             if (index <= debugCompletedUntil)
@@ -63,16 +73,32 @@ public class StageSelectManager : MonoBehaviour
             return StageState.Locked;
         }
 #endif
-        // 실제 로직
+
         bool isCleared = PlayerPrefs.GetInt($"StageClear_{index}", 0) == 1;
+
+        // CSV 있을 때 첫 Stage 판정
+        bool isFirstStage = false;
+        if (DataManager.Instance != null && DataManager.Instance.StageData != null)
+        {
+            int minIndex = DataManager.Instance.StageData.Values.Min(s => s.Index);
+            if (index == minIndex)
+                isFirstStage = true;
+        }
+        else
+        {
+            if (index == 1) // CSV 없을 때 기존 로직 유지
+                isFirstStage = true;
+        }
+
         bool isPrevCleared = PlayerPrefs.GetInt($"StageClear_{index - 1}", 0) == 1;
 
         if (isCleared)
             return StageState.Completed;
 
-        if (index == 1 || isPrevCleared)
+        if (isFirstStage || isPrevCleared)
             return StageState.Available;
 
         return StageState.Locked;
     }
+
 }
