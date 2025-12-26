@@ -12,8 +12,6 @@ public class SpawnManager : MonoBehaviour
 
     // 타일 건설 가능 여부
     public bool CanBuild => _currentState == STATE.Preparation;
-    // 전투 중 여부 
-    public bool IsBattle => _currentState == STATE.InProgress;
 
     [Header("몬스터 프리팹")]
     public GameObject[] MonsterPrefabs; // 생성할 몬스터 프리팹
@@ -107,8 +105,48 @@ public class SpawnManager : MonoBehaviour
 
         _spawnCount++; // 스폰 된 몬스터 번호 증가 
 
-        int monsterType = _currentSpawnOrder[_orderIndex]; // 현재 스폰할 몬스터 타입 가져오기
-        GameObject prefab = MonsterPrefabs[monsterType]; // 몬스터 프리팹 선택
+
+        int spawnValue = _currentSpawnOrder[_orderIndex];
+        GameObject prefab = null;
+        MonsterData data = null;
+
+        // DB에서 몬스터 데이터 찾기 (DB 우선, 없으면 기존 인스펙터 프리팹 사용)
+        if (DataManager.Instance != null &&
+            DataManager.Instance.MonsterData.TryGetValue(spawnValue, out data))
+        {
+            // DB에서 찾음 -> MonsterResource로 프리팹 로드 
+            prefab = Resources.Load<GameObject>(data.MonsterResource);
+            
+            if (prefab == null)
+            {
+                Debug.LogError("프리팹 못찾음:" + data.MonsterResource);
+           
+            }
+            else
+            {
+                Debug.Log("DB에서 프리팹 로드 성공: " + data.MonsterResource);
+            }
+        }
+        // DB에서 못 찾았거나 프리팹 로드 실패 시 -> 기존 프리팹 배열 사용 
+        if (prefab == null)
+        {
+            if (spawnValue >= 0 && spawnValue < MonsterPrefabs.Length)
+            {  
+
+                prefab = MonsterPrefabs[spawnValue];
+                Debug.Log("기존 인스펙터 프리팹 사용: " + prefab.name);
+            }
+            else
+            {
+                Debug.LogError("프리팹 못찾음: " + spawnValue);
+                _orderIndex++;
+                return; // 잘못된 인덱스면 종료
+            }
+            
+        }
+
+        //int monsterType = _currentSpawnOrder[_orderIndex]; // 현재 스폰할 몬스터 타입 가져오기
+        //GameObject prefab = MonsterPrefabs[monsterType]; // 몬스터 프리팹 선택
 
         // 타일매니저의 적 베이스 위치에서 월드 좌표 가져와서 스폰 위치로 사용
         Vector3 spawnPos = TileManager.Instance.GetWorldPosition(TileManager.Instance.enemyBasePosition);
@@ -118,9 +156,12 @@ public class SpawnManager : MonoBehaviour
         Monster monsterScript = monster.GetComponent<Monster>();
         monsterScript.SetSpawnNumber(_spawnCount); // 스폰 번호 설정
 
-        // 타겟 위치 설정
-        //MonsterMove moveScript = monster.GetComponent<MonsterMove>();
-        //moveScript.SetTarget(TargetPoint); // 타겟 위치 설정
+
+        // DB 에서 몬스터 데이터 설정, DB 데이터가 있어야 할당 
+        if (data != null)
+        {
+            monsterScript.Data =data; // DB에서 가져온 몬스터 데이터 설정
+        }
 
         Debug.Log("스폰 : " + prefab.name + "(번호 : " + _spawnCount + ")");
 

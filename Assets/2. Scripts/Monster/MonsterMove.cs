@@ -72,7 +72,7 @@ public class MonsterMove : MonoBehaviour
             // 이동 방향은 타겟을 향해
             Vector3 moveDir = (TargetAnchor - transform.position).normalized;
             //todo : transform.position += moveDir * monster.Data.MoveSpeed * Time.deltaTime;
-            transform.position += moveDir * 2f * Time.fixedDeltaTime;
+            transform.position += moveDir * monster.Data.MoveSpeed * Time.fixedDeltaTime;
 
             if (!isTurning)   // 회전 중이 아닐 때만 이동 방향을 바라봄
             {
