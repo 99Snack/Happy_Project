@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -34,7 +34,7 @@ public class Monster : MonoBehaviour
 
     private void Awake()
     {
-       anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
+        anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
         if (anim == null)
         {
             anim = transform.GetChild(0).GetComponent<Animator>(); // 애니메이터 컴포넌트가 자식에 있을때
@@ -104,7 +104,7 @@ public class Monster : MonoBehaviour
 
         OnHit();
 
-        currentHp -= damage;
+        currentHp -= Mathf.FloorToInt(damage * (1 - Data.Defense));
         Debug.Log(gameObject.name + "남은 체력: " + currentHp);
         UpdateHpUI();
         if (currentHp <= 0)
@@ -179,13 +179,14 @@ public class Monster : MonoBehaviour
     }
 
     // 몬스터 죽을 때 호출 
+    //처형 증강 있을 때 이거 불러오기
     public void Die()
     {
         if (isDead) return; // 중복 사망 방지 
         isDead = true; // 사망 처리
+        currentHp = 0;
 
-
-        Debug.Log(gameObject.name + " 몬스터 사망!");
+        Debug.Log($"체력 : {currentHp}, {gameObject.name} 몬스터 사망!");
 
         GiveReward(); // 미션을 잘 완수 했으니 리워드를 받아야겠지? 
 
@@ -232,7 +233,7 @@ public class Monster : MonoBehaviour
     #region Animation
     public void OnHit()
     {
-       if (anim != null) anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
+        if (anim != null) anim.SetTrigger(hashHit);   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
         // 타워 공격을 맞을 때 피격과 상호작용
     }
 

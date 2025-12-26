@@ -1,7 +1,7 @@
 
 using UnityEngine;
 
-public class BloodKnightTower : MeleeTower, IAreaAttack
+public class BloodKnightTower : MeleeTower, IAreaAttack, IHitEffect
 {
     private int finalAttackPower;
 
@@ -12,19 +12,11 @@ public class BloodKnightTower : MeleeTower, IAreaAttack
         IdleState = new IdleState(this);
         AttackStopState = new AttackStopState(this);
 
-        if (Soldier != null)
-        {
-            IsRotate = true;
-            animator.applyRootMotion = true;
-        }
-
         ChangeState(IdleState);
     }
 
-    public override int CalcAttackPower()
+    public override int CalcAttackOfficial()
     {
-        //1회 공격 피해량 = 타워 공격력 x ( 1 – 몬스터 방어력 ) x 0.8
-        //todo : return Data.Attack * (1 - currentTarget.Data.Defense) * 0.8;
         return Mathf.FloorToInt(Data.Attack * 0.8f);
     }
 
@@ -32,12 +24,10 @@ public class BloodKnightTower : MeleeTower, IAreaAttack
     {
         if (currentTarget == null) return;
 
-        finalAttackPower = CalcAttackPower();
-
         //광역 공격
         AreaAttack();
 
-        HitEffectPlay();
+        HitEffect();
 
         if (CanAttack())
         {
@@ -45,11 +35,6 @@ public class BloodKnightTower : MeleeTower, IAreaAttack
             animator.SetTrigger(hashAttack);
         }
 
-    }
-
-    public void HitEffectPlay()
-    {
-        ObjectPoolManager.Instance.SpawnFromPool("bloodknight", currentTarget.transform.position, Quaternion.identity);
     }
 
     public void AreaAttack()
@@ -64,12 +49,29 @@ public class BloodKnightTower : MeleeTower, IAreaAttack
                 if (m != null)
                 {
                     //공격
-                    m.TakeDamage(finalAttackPower);
+                    m.TakeDamage(atkPower.finalStat);
                     //디버프
                     DebuffData debuff = DataManager.Instance.DebuffData[Data.DebuffID];
                     m.TakeDebuff(debuff);
                 }
             }
         }
+    }
+
+    public override void ApplyAugment(AugmentData augment)
+    {
+        base.ApplyAugment(augment);
+
+        if (augment.Tag != 5) return;
+
+        if (augment.Category == 3)
+        {
+            UpdateConditionAugment(augment);
+        }
+    }
+
+    public void HitEffect()
+    {
+        ObjectPoolManager.Instance.SpawnFromPool("bloodknight", currentTarget.transform.position, Quaternion.identity);
     }
 }

@@ -36,6 +36,7 @@ public class TileManager : MonoBehaviour
     public Vector2Int enemyBasePosition { get; private set; }
     public Vector2Int allyBasePosition { get; private set; }
 
+    public GeneratorMap map;
     private void Start()
     {
         Initialize();
@@ -43,6 +44,8 @@ public class TileManager : MonoBehaviour
 
     void Initialize()
     {
+        map = FindAnyObjectByType<GeneratorMap>();
+
         // 맵 초기화
         allTiles = new TileInfo[MAP_SIZE_Y, MAP_SIZE_X];
 
@@ -61,7 +64,6 @@ public class TileManager : MonoBehaviour
         SinglePathGenerator.Instance.GeneratePath();
 
         //타일 맵 생성
-        GeneratorMap map = FindAnyObjectByType<GeneratorMap>();
         if (map != null)
         {
             map.Generator();
