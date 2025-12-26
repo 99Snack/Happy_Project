@@ -11,12 +11,6 @@ public class KnightTower : MeleeTower , IAreaAttack
         IdleState = new IdleState(this);
         AttackStopState = new AttackStopState(this);
 
-        if (Soldier != null)
-        {
-            IsRotate = true;
-            animator.applyRootMotion = true;
-        }
-
         ChangeState(IdleState);
     }
 

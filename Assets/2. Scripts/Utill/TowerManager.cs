@@ -80,7 +80,8 @@ public class TowerManager : MonoBehaviour
 
                 allTowers.Add(tower);
 
-                if (tower == null) return;
+                //todo : 뽑은 후 증강데이터 적용하기
+                //tower.ApplyAugment();
 
                 if (tower.Data?.Grade != 3)
                 {
@@ -91,7 +92,6 @@ public class TowerManager : MonoBehaviour
                         CheckUpgrade(tower);
                     }
                 }
-
                 return;
             }
         }

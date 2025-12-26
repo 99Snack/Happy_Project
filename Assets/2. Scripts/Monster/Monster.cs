@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEditor.Analytics;
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
 /// </summary>
@@ -150,13 +151,14 @@ public class Monster : MonoBehaviour
     }
 
     // 몬스터 죽을 때 호출 
+    //처형 증강 있을 때 이거 불러오기
     public void Die()
     {
         if (isDead) return; // 중복 사망 방지 
         isDead = true; // 사망 처리
+        currentHp = 0;
 
-
-        Debug.Log(gameObject.name + " 몬스터 사망!");
+        Debug.Log($"체력 : {currentHp}, {gameObject.name} 몬스터 사망!");
 
         // 스폰 매니저에 알리기
         SpawnManager spawnManager = FindAnyObjectByType<SpawnManager>();

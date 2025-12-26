@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -35,6 +36,11 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     //코루틴 관련
     Coroutine CoSearch;
 
+    //증강 관련
+    private List<IOnHitAugment> onHitAugs = new List<IOnHitAugment>();
+    private List<IOnKillAugment> onKillAugs = new List<IOnKillAugment>();
+    private List<IStatusCheckAugment> statusAugs = new List<IStatusCheckAugment>();
+
     public void Setup(int towerId, TileInteractor tile)
     {
         MyTile = tile;
@@ -50,13 +56,11 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     protected virtual void Start()
     {
-        //towerTile = tilemap.WorldToCell(transform.position);
-        //Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
-        //if (shooter == null)
-        //{
-        //    shooter = GetComponent<TowerShooter>();
-        //}
-        //ChangeState(new IdleState(this));
+        if (Soldier != null)
+        {
+            IsRotate = true;
+            animator.applyRootMotion = true;
+        }
     }
 
     protected virtual void Update()
@@ -92,7 +96,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public void OnSold()
     {
         //연결된 이펙트나 사운드 제거
-        //옵젝 제거하거나 풀링반환
+        //todo : 옵젝 제거하거나 풀링반환
         GameManager.Instance.Gold += Data.price;
         Destroy(gameObject);
     }
@@ -130,6 +134,18 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public bool CanAttack() => attackCooldown <= 0f ? true : false;
     public void ResetCooldown(float interval) => attackCooldown = interval;
+
+    public void ApplyAugment()
+    {
+        foreach (var augment in AugmentManager.Instance.activeAugments)
+        {
+
+        }
+    }
+
+    protected virtual void test(){
+
+    }
 
     public virtual void Attack()
     {

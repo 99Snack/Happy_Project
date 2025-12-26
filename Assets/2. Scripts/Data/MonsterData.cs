@@ -1,4 +1,4 @@
-﻿[System.Serializable]
+[System.Serializable]
 public class MonsterData
 
 {
@@ -7,7 +7,7 @@ public class MonsterData
     public int MonsterRank;          // 1=1성, 2=2성
     public int AttackType;           // 1=근접, 2=원거리
     public int Hp;                   // 체력
-    public int Defense;              // 방어력(%)
+    public float Defense;              // 방어력(%)
     public int MoveSpeed;            // 이동 속도
     public int Atk;                  // 공격력
     public int AtkInterval_ms;       // 공격 주기

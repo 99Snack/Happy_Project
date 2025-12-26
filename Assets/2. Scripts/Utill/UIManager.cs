@@ -1,12 +1,8 @@
 using TMPro;
 using System.Collections;
-using System.Threading;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Android;
-using UnityEngine.Tilemaps;
-
 
 public class UIManager : MonoBehaviour
 {
@@ -41,6 +37,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject transitionFailedToast;
     //타워 배치 실패 메시지 
     [SerializeField] private GameObject attachToastMessage;
+    //성공 토스트 메시지 
+    [SerializeField] private GameObject succeedToastMessage;
+    //실패 토스트 메시지 
+    [SerializeField] private GameObject failedToastMessage;
+    [SerializeField] private GameObject AugmentPanel;
 
     //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
@@ -75,6 +76,30 @@ public class UIManager : MonoBehaviour
             //Debug.Log(towerid);
         }
     }
+
+    public void OpenAugmentPanel(int stage)
+    {
+        //현재 스테이지의 정보르 토대로 증강 가져오기
+        //AugmentManager.Instance.GetGeneratorRandomAugment(stage);
+        var augments = AugmentManager.Instance.GetGeneratorRandomAugment(stage);
+
+        //증강패널의 자식들 가져오기
+        AugmentItem[] items = AugmentPanel.GetComponentsInChildren<AugmentItem>();
+        //자식들의 카드 컴포넌트 가져와서 셋업진행
+        for (int i = 0; i < augments.Count; i++)
+        {
+            items[i].Setup(augments[i]);
+        }
+
+        //증강패널 열기
+        AugmentPanel.SetActive(true);
+    }
+
+    public void OnClickAugment(AugmentData augment){
+        AugmentManager.Instance.ActivateAugment(augment);
+    }
+
+    public void CloseAugmentPanel() => AugmentPanel.SetActive(false);
 
     public void OpenTowerInfo(Tower SelectTower)
     {
@@ -233,16 +258,30 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public void UpdateGold(int gold)
-    {
-        goldText.text = $"Gold : {gold}";
-    }
+    public void UpdateGold(int gold) => goldText.text = $"Gold : {gold}";
 
     private void Update()
     {
         if (Pointer.current != null && Pointer.current.press.wasPressedThisFrame)
         {
             HandleGlobalInput();
+        }
+
+        if(Keyboard.current !=null &&
+        Keyboard.current.f10Key.wasPressedThisFrame){
+            OpenAugmentPanel(1);
+        }
+
+        if (Keyboard.current != null &&
+       Keyboard.current.f11Key.wasPressedThisFrame)
+        {
+            OpenAugmentPanel(4);
+        }
+
+        if (Keyboard.current != null &&
+      Keyboard.current.f12Key.wasPressedThisFrame)
+        {
+            OpenAugmentPanel(9);
         }
     }
 

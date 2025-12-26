@@ -1,3 +1,4 @@
+using UnityEngine;
 
 
 public class SpearTower : MeleeTower
@@ -9,8 +10,14 @@ public class SpearTower : MeleeTower
         IdleState = new IdleState(this);
         AttackStopState = new AttackStopState(this);
 
-        if (Soldier != null) IsRotate = true;
-
         ChangeState(IdleState);
+
+    }
+
+    protected override void test()
+    {
+        base.test();
+
+        Debug.Log("Spear");
     }
 }
