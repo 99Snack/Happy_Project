@@ -28,7 +28,7 @@ public class Stage : MonoBehaviour
         button.onClick.AddListener(OnStageButtonClicked);
     }
 
-    void RefreshUI()
+    public void RefreshUI()
     {
         // 버튼 클릭 가능 여부
         button.interactable = (stageState != StageState.Locked);
