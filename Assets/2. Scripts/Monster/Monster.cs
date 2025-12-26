@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.UI;
@@ -45,7 +45,7 @@ public class Monster : MonoBehaviour
    
     void Start()
     {
-        currentHp = (Data != null) ? Data.Hp : 100; // 시작 시 현재 체력 = 최대 체력 
+        currentHp = 10; // 시작 시 현재 체력 = 최대 체력 
         
         // 몬스터 HP UI 
         GameObject hpBarPrefab = Resources.Load<GameObject>("Prefab/Monster/MonsterHpBar");
