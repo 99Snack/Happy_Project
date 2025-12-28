@@ -1,14 +1,11 @@
 using UnityEngine;
 
-public class KnightTower : MeleeTower , IAreaAttack
+public class KnightTower : MeleeTower, IAreaAttack
 {
-
     protected override void Start()
     {
         base.Start();
-
         SetState(this);
-
         ChangeState(IdleState);
     }
 
@@ -17,25 +14,18 @@ public class KnightTower : MeleeTower , IAreaAttack
         return Data.Attack * Data.HitCount;
     }
 
-    public override void Attack()
+    // 애니메이션 이벤트에서 호출될 실제 데미지 처리
+    public override void ExecuteDamage()
     {
         if (currentTarget == null) return;
-
-        //광역 공격
         AreaAttack();
-
-        if (CanAttack())
-        {
-            ResetCooldown(Data.AttackInterval);
-            animator.SetTrigger(hashAttack);
-        }
-
     }
 
     public void AreaAttack()
     {
         Vector3 center = currentTarget.transform.position;
         Collider[] cols = Physics.OverlapSphere(center, Data.AtkScale, monsterLayer);
+
         if (cols.Length > 0)
         {
             foreach (var target in cols)
@@ -43,7 +33,7 @@ public class KnightTower : MeleeTower , IAreaAttack
                 Monster m = target.GetComponent<Monster>();
                 if (m != null)
                 {
-                    m.TakeDamage(atkPower.finalStat,this);
+                    m.TakeDamage(atkPower.finalStat, this);
                 }
             }
         }

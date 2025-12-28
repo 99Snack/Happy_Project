@@ -13,11 +13,17 @@ public class SearchingState : ITowerState
 
     public void Enter()
     {
-        //Debug.Log("search ->");
+        tower.state = statetest.search;
 
         searchDelay = new WaitForSeconds(0.1f);
 
+        // Search 상태 활성화
         tower.animator.SetBool(tower.hashIsReady, true);
+        tower.animator.SetBool(tower.hashIsAttacking, false);
+        tower.animator.SetBool(tower.hashIsCooldown, false);
+
+        //새 타겟 발견 시 즉시 공격
+        tower.attackCooldown = 0f;
 
         tower.SearchingCoroutine(FindNearestEnemyInRange());
     }
@@ -31,8 +37,6 @@ public class SearchingState : ITowerState
                tower.Data.Range,
                TileManager.Instance.allyBasePosition
             );
-
-            //Debug.Log(tower.currentTarget);
 
             yield return searchDelay;
         }
@@ -48,7 +52,6 @@ public class SearchingState : ITowerState
     public void Exit()
     {
         tower.animator.SetBool(tower.hashIsReady, false);
-
         tower.SearchingStopCoroutine();
     }
 }

@@ -2,14 +2,10 @@ using UnityEngine;
 
 public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
 {
-    private int finalAttackPower;
-
     protected override void Start()
     {
         base.Start();
-
         SetState(this);
-
         ChangeState(IdleState);
     }
 
@@ -18,28 +14,19 @@ public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
         return Mathf.FloorToInt(Data.Attack * 0.8f);
     }
 
-    public override void Attack()
+    public override void ExecuteDamage()
     {
         if (currentTarget == null) return;
 
-        //광역 공격
         AreaAttack();
-
         HitEffect();
-
-        if (CanAttack())
-        {
-            ResetCooldown(Data.AttackInterval);
-            animator.SetTrigger(hashAttack);
-        }
-
     }
-
 
     public void AreaAttack()
     {
         Vector3 center = currentTarget.transform.position;
         Collider[] cols = Physics.OverlapSphere(center, Data.AtkScale, monsterLayer);
+
         if (cols.Length > 0)
         {
             foreach (var target in cols)
@@ -47,11 +34,13 @@ public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
                 Monster m = target.GetComponent<Monster>();
                 if (m != null)
                 {
-                    //공격
-                    m.TakeDamage(atkPower.finalStat,this);
-                    //디버프
+                    m.TakeDamage(atkPower.finalStat, this);
+
                     DebuffData debuff = DataManager.Instance.DebuffData[Data.DebuffID];
-                    m.TakeDebuff(debuff);
+                    if (debuff != null)
+                    {
+                        m.TakeDebuff(debuff);
+                    }
                 }
             }
         }
@@ -71,6 +60,9 @@ public class IceMageTower : RangeTower, IAreaAttack, IHitEffect
 
     public void HitEffect()
     {
-        ObjectPoolManager.Instance.SpawnFromPool("icemage", currentTarget.transform.position, Quaternion.identity);
+        if (currentTarget != null)
+        {
+            ObjectPoolManager.Instance.SpawnFromPool("icemage", currentTarget.transform.position, Quaternion.identity);
+        }
     }
 }

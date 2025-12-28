@@ -3,7 +3,7 @@ using UnityEngine;
 public class AttackStopState : ITowerState
 {
     private Tower tower;
-    AnimatorStateInfo StateInfo;
+    private AnimatorStateInfo stateInfo;
 
     public AttackStopState(Tower tower)
     {
@@ -12,25 +12,25 @@ public class AttackStopState : ITowerState
 
     public void Enter()
     {
-        //Debug.Log("attackStop ->");
+        tower.state = statetest.attackstop;
 
-
+        // Attack 상태 종료, Cooldown 상태 활성화
+        tower.animator.SetBool(tower.hashIsAttacking, false);
         tower.animator.SetBool(tower.hashIsCooldown, true);
+
+        // 타겟 초기화
+        tower.currentTarget = null;
     }
 
     public void Update()
     {
-        StateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
+        stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
 
-        if (tower.IsTargetInRange())
+        // 애니메이션이 완료되면 Search 상태로 전환
+        if (stateInfo.normalizedTime >= 0.95f)
         {
-            tower.ChangeState(tower.AttackingState);
-            return;
+            tower.ChangeState(tower.SearchingState);
         }
-
-        if (StateInfo.normalizedTime < 1.0f) return;
-
-        tower.ChangeState(tower.SearchingState);
     }
 
     public void Exit()

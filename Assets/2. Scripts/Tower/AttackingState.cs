@@ -4,9 +4,7 @@ using UnityEngine;
 public class AttackingState : ITowerState
 {
     private Tower tower;
-    private float nextAttackTime = 0f;
-    private bool isFirstAttack = true;
-    private float currentAnimLength = 0f;
+    private bool waitingForAnimation = false;
 
     public AttackingState(Tower tower)
     {
@@ -15,9 +13,13 @@ public class AttackingState : ITowerState
 
     public void Enter()
     {
+        tower.state = statetest.attack;
         tower.animator.SetBool(tower.hashIsAttacking, true);
-        isFirstAttack = true;
-        nextAttackTime = 0f;
+        tower.animator.SetBool(tower.hashIsCooldown, false);
+        waitingForAnimation = false;
+
+        // 애니메이션 속도 조정
+        AdjustAnimationSpeed();
     }
 
     public void Update()
@@ -26,21 +28,21 @@ public class AttackingState : ITowerState
         if (tower.currentTarget == null || !tower.currentTarget.gameObject.activeInHierarchy)
         {
             tower.currentTarget = null;
-            tower.ChangeState(tower.SearchingState);
+            tower.ChangeState(tower.AttackStopState);
             return;
         }
 
         // 사거리 체크
         if (!tower.IsTargetInRange())
         {
-            tower.ChangeState(tower.SearchingState);
+            tower.ChangeState(tower.AttackStopState);
             return;
         }
 
-        // 회전 처리 (방향 수정)
+        // 회전 처리
         if (tower.IsRotate)
         {
-            Vector3 direction = tower.Soldier.position- tower.currentTarget.transform.position;
+            Vector3 direction = tower.Soldier.position - tower.currentTarget.transform.position;
             direction.y = 0;
 
             if (direction != Vector3.zero)
@@ -49,54 +51,68 @@ public class AttackingState : ITowerState
                 tower.Soldier.rotation = Quaternion.Slerp(
                     tower.Soldier.rotation,
                     lookTarget,
-                    Time.deltaTime * 10f
+                    Time.deltaTime * 30f
                 );
             }
         }
 
-        // 공격 타이밍 체크
-        if (Time.time >= nextAttackTime)
+        // 쿨다운이 끝나고 애니메이션 대기 중이 아닐 때만 공격 시작
+        if (tower.CanAttack() && !waitingForAnimation)
         {
-            if (tower.currentTarget != null)
-            {
-                PerformAttack();
-            }
+            PerformAttack();
         }
     }
 
     private void PerformAttack()
     {
+        waitingForAnimation = true;
+
+        // 쿨다운 시작 (AttackInterval 보장)
+        tower.ResetCooldown(tower.Data.AttackInterval);
+
         // 애니메이션 트리거
         tower.animator.SetTrigger(tower.hashAttack);
 
-        // 현재 재생될 애니메이션 길이 가져오기
-        tower.StartCoroutine(AdjustAnimationSpeed());
-
-        // 다음 공격 시간 설정 (인터벌 보장)
-        nextAttackTime = Time.time + tower.Data.AttackInterval;
-
-        isFirstAttack = false;
+        // 애니메이션이 끝날 때까지 대기하는 코루틴 시작
+        tower.StartCoroutine(WaitForAnimationEnd());
     }
 
-     IEnumerator AdjustAnimationSpeed()
+    private IEnumerator WaitForAnimationEnd()
     {
-        // 트리거 발동 후 애니메이션이 실제로 시작될 때까지 대기
+        // 트리거 발동 후 애니메이션 전환 대기
         yield return null;
 
         AnimatorStateInfo stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
 
-        // 공격 애니메이션 State 확인 (Tag나 이름으로)
+        // Attack 태그가 있는 애니메이션이 끝날 때까지 대기
+        while (stateInfo.IsTag("Attack") && stateInfo.normalizedTime < 0.95f)
+        {
+            yield return null;
+            stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
+        }
+
+        waitingForAnimation = false;
+    }
+
+    private void AdjustAnimationSpeed()
+    {
+        tower.StartCoroutine(SetAnimationSpeed());
+    }
+
+    private IEnumerator SetAnimationSpeed()
+    {
+        yield return null;
+
+        AnimatorStateInfo stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
+
         if (stateInfo.IsTag("Attack"))
         {
-            currentAnimLength = stateInfo.length;
+            float animLength = stateInfo.length;
 
-            if (currentAnimLength > 0)
+            if (animLength > 0)
             {
-                // 애니메이션 속도 = 애니메이션 원본 길이 / 원하는 인터벌
-                // 예: 애니메이션이 2초, 인터벌이 1초면 speed = 2 (2배속)
-                // 예: 애니메이션이 0.5초, 인터벌이 1초면 speed = 0.5 (0.5배속)
-                float calculatedSpeed = currentAnimLength / tower.Data.AttackInterval;
-                tower.animator.SetFloat(tower.hashAttackInterval, calculatedSpeed);
+                float speed = animLength / tower.Data.AttackInterval;
+                tower.animator.SetFloat(tower.hashAttackInterval, speed);
             }
         }
     }
@@ -104,7 +120,7 @@ public class AttackingState : ITowerState
     public void Exit()
     {
         tower.animator.SetBool(tower.hashIsAttacking, false);
-        // 애니메이션 속도 초기화
         tower.animator.SetFloat(tower.hashAttackInterval, 1f);
+        waitingForAnimation = false;
     }
 }

@@ -8,30 +8,12 @@ public class SpearTower : MeleeTower
         ChangeState(IdleState);
     }
 
-    public override void Attack()
-    {
-        if (currentTarget == null) return;
-
-        // OnHit 증강 적용
-        if (onHitAugs.Count > 0)
-        {
-            foreach (var aug in onHitAugs)
-            {
-                aug.OnHit(this, currentTarget);
-            }
-        }
-        else
-        {
-            currentTarget.TakeDamage(atkPower.finalStat, this);
-        }
-    }
+    // ExecuteDamage는 base 클래스에서 처리됨 (단일 공격)
 
     public override void ApplyAugment(AugmentData augment)
     {
-        // Tag 체크: 0(공통), 1(근거리), 3(창병)
         if (augment.Tag != 0 && augment.Tag != 1 && augment.Tag != 3) return;
 
-        // 조건부 증강
         if (augment.Category == 3)
         {
             if (!appliedConditionAugments.Contains(augment.Index))
@@ -43,11 +25,11 @@ public class SpearTower : MeleeTower
         }
         else
         {
-            // 일반 능력치 증강
             if (augment.Category == 1)
             {
                 UpdateStatus(augment);
             }
         }
     }
+
 }

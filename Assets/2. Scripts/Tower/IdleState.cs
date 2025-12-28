@@ -13,11 +13,12 @@ public class IdleState : ITowerState
 
     public void Enter()
     {
-        //Debug.Log("idle ->");
-
-        //tower.animator.SetBool("isAttacking", false);
-        //tower.animator.SetBool("isAttackReady", false);
+        tower.state = statetest.idle;
         tower.currentTarget = null;
+
+        tower.animator.SetBool(tower.hashIsReady, false);
+        tower.animator.SetBool(tower.hashIsAttacking, false);
+        tower.animator.SetBool(tower.hashIsCooldown, false);
     }
 
     public void Update()
@@ -26,20 +27,10 @@ public class IdleState : ITowerState
         {
             tower.ChangeState(tower.SearchingState);
         }
-
-        //Vector2Int baseCampTile = TileManager.Instance.allyBasePosition;
-        //MonsterMove nearest = TowerTargetDetector.Instance.FindNearestEnemyInRange(
-        //    tower.Coord,
-        //    tower.Data.Range, // 사거리 그대로
-        //    baseCampTile
-        //);
-
-        //if (nearest != null)
-        //{
-        //    tower.currentTarget = nearest;
-        //    tower.ChangeState(new SearchingState(tower));
-        //}
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        // Idle 상태 종료 시 특별한 처리 없음
+    }
 }

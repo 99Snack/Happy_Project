@@ -49,7 +49,7 @@ public class TowerTargetDetector : MonoBehaviour
 
         foreach (Monster enemy in enemies)
         {
-            if (enemy == null) continue;
+            if (enemy == null || !enemy.gameObject.activeSelf) continue;
 
             int enemyTileX = Mathf.RoundToInt(enemy.transform.position.x);
             int enemyTileY = Mathf.RoundToInt(enemy.transform.position.z);

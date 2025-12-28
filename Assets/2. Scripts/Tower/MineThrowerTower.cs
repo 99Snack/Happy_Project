@@ -5,11 +5,8 @@ public class MineThrowerTower : RangeTower, IHitEffect
     protected override void Start()
     {
         base.Start();
-
         SetState(this);
-
         ChangeState(IdleState);
-
     }
 
     public override int CalcAttackOfficial()
@@ -17,7 +14,7 @@ public class MineThrowerTower : RangeTower, IHitEffect
         return Data.Attack * Data.HitCount;
     }
 
-    public override void Attack()
+    public override void ExecuteDamage()
     {
         if (currentTarget == null) return;
 
@@ -32,16 +29,10 @@ public class MineThrowerTower : RangeTower, IHitEffect
         }
         else
         {
-            currentTarget.TakeDamage(atkPower.finalStat,this);
+            currentTarget.TakeDamage(atkPower.finalStat, this);
         }
-
-        if (CanAttack())
-        {
-            ResetCooldown(Data.AttackInterval);
-            animator.SetTrigger(hashAttack);
-        }
-
     }
+
     public override void ApplyAugment(AugmentData augment)
     {
         base.ApplyAugment(augment);
