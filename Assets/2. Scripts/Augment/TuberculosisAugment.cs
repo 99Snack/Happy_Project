@@ -33,7 +33,7 @@ public class TuberculosisAugment : IStatusCheckAugment
 
                 Vector2Int checkPos = new Vector2Int(currentPos.x + xCoord[x], currentPos.y + yCoord[y]);
 
-                Debug.Log(checkPos);
+                //Debug.Log(checkPos);
 
                 //해당 좌표에 타워가 있는지
                 if (TileManager.Instance.map.tiles[(x,y)].isAlreadyTower)

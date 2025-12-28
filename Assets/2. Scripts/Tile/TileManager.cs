@@ -97,6 +97,8 @@ public class TileManager : MonoBehaviour
             allTiles[y, allyBaseCoordX].Type = TileInfo.TYPE.AllyBase;
             allTiles[y, allyBaseCoordX].IsTransition = false;
         }
+
+        BaseCamp.Instance.EstablishBaseObj();
     }
 
     public void SetTileInfo(int x, int y, TileInfo.TYPE type)

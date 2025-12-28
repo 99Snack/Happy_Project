@@ -125,7 +125,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        UIManager.Instance.OpenTowerInfo(this);
+        UIManager.Instance.OpenTowerInfoPanel(this);
     }
 
     public void Upgrade()

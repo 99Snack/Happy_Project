@@ -9,6 +9,18 @@ public class BaseCamp : MonoBehaviour
 
     WaveData waveData;
     public int basecampHp;
+
+    private int currentHp;
+    public int CurrentHp
+    {
+        get => currentHp;
+        set
+        {
+            currentHp = value;
+            UIManager.Instance.UpdateAllyBaseCampHp();
+        }
+    }
+
     //▼ 실제로 몬스터가 배치될 위치 값 조정용 오프셋
     public float xOffset = 0.1f;
 
@@ -76,19 +88,20 @@ public class BaseCamp : MonoBehaviour
                 basecampHp += (int)aug.CalcGrowValue(1);
             }
         }
+        currentHp = basecampHp;
     }
 
 
     //▼ baseCamp 데미지 받기 
     public void TakeDamage(int damage)
     {
-        basecampHp -= damage;
+        CurrentHp -= damage;
 
-        Debug.Log($"{basecampHp}");
+        //Debug.Log($"{currentHp}");
 
-        if (basecampHp <= 0)
+        if (currentHp <= 0)
         {
-            //todo: 패배 연결  
+            SpawnManager.Instance.OnWaveDefeat();
         }
     }
 

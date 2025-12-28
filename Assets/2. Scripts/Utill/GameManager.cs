@@ -58,7 +58,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        gold = START_GOLD;
+        Gold = START_GOLD;
     }
 
 

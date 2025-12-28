@@ -90,7 +90,7 @@ public class Monster : MonoBehaviour
             if (attackCooldown <= 0)
             {
                 Attack();
-                BaseCamp.Instance.basecampHp -= data.Atk;
+                BaseCamp.Instance.TakeDamage(data.Atk);
                 attackCooldown = Data.AtkInterval_ms;
             }
         }
@@ -224,11 +224,12 @@ public class Monster : MonoBehaviour
         SpawnManager spawnManager = FindAnyObjectByType<SpawnManager>();
         if (spawnManager != null)
         {
-            spawnManager.OnMonsterDie();
+            spawnManager.OnMonsterDie(this);
         }
 
-
-        Destroy(gameObject);
+        string monsterId = data.MonsterId.ToString();
+        ObjectPoolManager.Instance.ReturnToPool(monsterId, gameObject);
+        //Destroy(gameObject);
     }
 
     void GiveReward(Tower attacker)

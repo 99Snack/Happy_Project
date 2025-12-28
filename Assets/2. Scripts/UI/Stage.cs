@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 public enum StageState
@@ -54,6 +54,9 @@ public class Stage : MonoBehaviour
     void EnterInGameUI()
     {
         Debug.Log($"[StageButton] Stage {stageIndex} 진입");
+
+        GameManager.Instance.StageInfo = DataManager.Instance.StageData[stageIndex];
+
         SceneManager.LoadScene("InGame");
     }
 }

@@ -125,7 +125,7 @@ public static class DataParser
             }
             data.Add(item);
         }
-        Debug.Log($"{filename}파싱완료 : {data.Count}개 항목");
+        //Debug.Log($"{filename}파싱완료 : {data.Count}개 항목");
         return data;
     }
 }

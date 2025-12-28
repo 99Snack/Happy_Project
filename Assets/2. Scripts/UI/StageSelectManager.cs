@@ -39,8 +39,6 @@ public class StageSelectManager : MonoBehaviour
 
         // CSV 있을 때  실제 데이터 기반 생성
         var orderedStages = stageTable.Values.OrderBy(s => s.Index);
-        //todo : 임의로 1스테이지만 적용
-        GameManager.Instance.StageInfo = DataManager.Instance.StageData[10001];
         foreach (var stageData in orderedStages)
         {
             Stage stage = Instantiate(stagePrefab, stageParent);

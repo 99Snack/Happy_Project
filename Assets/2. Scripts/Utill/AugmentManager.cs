@@ -42,7 +42,7 @@ public class AugmentManager : MonoBehaviour
 
         activeAugments.Add(augment);
 
-        Debug.Log($"{activeAugments.Count} :{augment}");
+        //Debug.Log($"{activeAugments.Count} :{augment}");
       
         ApplyAugmentToAllTowers(augment);
     }

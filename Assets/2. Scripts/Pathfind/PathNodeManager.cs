@@ -191,6 +191,10 @@ public class PathNodeManager : MonoBehaviour
                 calculateStack.Clear();
             }    
         }
+
+        int random = UnityEngine.Random.Range(-1, 2);
+        calculatedPath.Push(new Vector2Int(TileManager.Instance.allyBasePosition.x, TileManager.Instance.allyBasePosition.y + random));
+
         calcPath = new Vector2Int[calculatedPath.Count]; 
 
         for(int i = calculatedPath.Count - 1; i >= 0; i--)

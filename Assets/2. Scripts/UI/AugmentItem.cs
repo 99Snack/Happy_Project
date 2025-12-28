@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.HableCurve;
 
 public class AugmentItem : MonoBehaviour
 {
@@ -29,6 +30,15 @@ public class AugmentItem : MonoBehaviour
     }
 
    public void SelectAugment(){
-        UIManager.Instance.OnClickAugment(data);
+        AugmentManager.Instance.ActivateAugment(data);
+
+        //경제 공용
+        if (data.Category == 2 && data.Tag == 0)
+        {
+            //자원확보1,2,3
+            GameManager.Instance.Gold += data.Value_N;
+        }
+
+        UIManager.Instance.CloseAugmentPanel();
     }
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using UnityEditor.Analytics;
 
 public class UIManager : MonoBehaviour
 {
@@ -24,9 +25,7 @@ public class UIManager : MonoBehaviour
     }
 
     [SerializeField] private TextMeshProUGUI goldText;
-    //타워 정보창
-    [SerializeField] private GameObject towerInfoPanel;
-    [SerializeField] private TextMeshProUGUI towerNameText;
+
     //타일 전환 창 
     [SerializeField] private GameObject tileTransitionPanel;
     [SerializeField] private TextMeshProUGUI currentTileText;
@@ -37,17 +36,68 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject transitionFailedToast;
     //타워 배치 실패 메시지 
     [SerializeField] private GameObject attachToastMessage;
-    [SerializeField] private GameObject AugmentPanel;
+    [SerializeField] private AugmentPanel augmentPanel;
+
+    //웨이브 결과 창
+    [SerializeField] private WaveResultPanel waveResultPanel;
+    public bool IsActiveWaveResultPanel() => waveResultPanel.gameObject.activeSelf;
+    public void OpenWaveResultPanel(int result)
+    {
+        waveResultPanel.gameObject.SetActive(true);
+        waveResultPanel.OnResultAnimation(result);
+    }
+    public void CloseWaveResultPanel() => waveResultPanel.gameObject.SetActive(false);
+
+    //스테이지 결과 창
+    [SerializeField] private StageResultPanel stageResultPanel;
+    public bool IsActiveStageResultPanel() => stageResultPanel.gameObject.activeSelf;
+    public void OpenStageResultPanel(int result)
+    {
+        stageResultPanel.Setup(result);
+
+        stageResultPanel.gameObject.SetActive(true);
+    }
+
+    //정비 시간동안 떠있어야할 패널
+    [SerializeField] private GameObject wavePreparation;
+    public void OpenWavePreparationPanel() => wavePreparation.SetActive(true);
+    public void CloseWavePreparationPanel() => wavePreparation.SetActive(false);
+
+    //베이스 캠프 패널 관련
+    [SerializeField] private AllyBaseCampPanel allyBaseCampPanel;
+    public void OpenAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(true);
+    public void UpdateAllyBaseCampHp() => allyBaseCampPanel.UpdateAllyBaseCampHp();
+    public void CloseAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(false);
 
     //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
     private Coroutine fadeOutCoroutine;
     private const float fadeOutDelay = 0.75f;
 
-
     //클릭된 타워
     Tower currentTower;
     public Tower CurrentTower { get => currentTower; private set => currentTower = value; }
+    //타워 정보창
+    [SerializeField] private TowerInfoPanel towerInfoPanel;
+    public void OpenTowerInfoPanel(Tower selectTower)
+    {
+        currentTower = selectTower;
+
+        towerInfoPanel.Setup(currentTower.Data);
+
+        towerInfoPanel.gameObject.SetActive(true);
+    }
+
+    public void CloseTowerInfo()
+    {
+        if (CurrentTower != null)
+        {
+            CurrentTower = null;
+        }
+
+        towerInfoPanel.gameObject.SetActive(false);
+    }
+
 
     //클릭된 타일 
     TileInteractor currentTile;
@@ -73,60 +123,20 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    public bool IsAugmentPanelActive => AugmentPanel.activeSelf;
     public void OpenAugmentPanel(int stage)
     {
         //현재 스테이지의 정보르 토대로 증강 가져오기
-        //AugmentManager.Instance.GetGeneratorRandomAugment(stage);
         var augments = AugmentManager.Instance.GetGeneratorRandomAugment(stage);
+        augmentPanel.Setup(augments);
 
-        //증강패널의 자식들 가져오기
-        AugmentItem[] items = AugmentPanel.GetComponentsInChildren<AugmentItem>();
-        //자식들의 카드 컴포넌트 가져와서 셋업진행
-        for (int i = 0; i < augments.Count; i++)
-        {
-            items[i].Setup(augments[i]);
-        }
-
-        //증강패널 열기
-        AugmentPanel.SetActive(true);
+        augmentPanel.gameObject.SetActive(true);
     }
+    public void CloseAugmentPanel() => augmentPanel.gameObject.SetActive(false);
 
-    public void OnClickAugment(AugmentData augment)
-    {
-        AugmentManager.Instance.ActivateAugment(augment);
 
-        //경제 공용
-        if (augment.Category == 2 && augment.Tag == 0)
-        {
-            //자원확보1,2,3
-            GameManager.Instance.Gold += augment.Value_N;
-        }
 
-        AugmentPanel.SetActive(false);
-    }
 
-    public void CloseAugmentPanel() => AugmentPanel.SetActive(false);
 
-    public void OpenTowerInfo(Tower SelectTower)
-    {
-        CurrentTower = SelectTower;
-
-        //todo : 해당 타워 정보로 갱신
-        towerInfoPanel.SetActive(true);
-        towerNameText.text = $"{SelectTower.Data.TowerID}";
-
-    }
-
-    public void CloseTowerInfo()
-    {
-        if (CurrentTower != null)
-        {
-            CurrentTower = null;
-        }
-
-        towerInfoPanel.SetActive(false);
-    }
 
     public void CloseTileTransitionPanel()
     {
@@ -314,7 +324,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (towerInfoPanel.activeSelf)
+        if (towerInfoPanel.gameObject.activeSelf)
         {
             //패널 닫기
             CloseTowerInfo();
@@ -363,4 +373,16 @@ public class UIManager : MonoBehaviour
 
     }
 
+    //스테이지 정보 창 관련
+    [SerializeField] private StageInfoPanel stageInfoPanel;
+    public void UpdateStageInfo(WaveData wave)
+    {
+        stageInfoPanel.Setup(wave);
+    }
+
+    public void UpdateWaveSlider(int current, int max)
+    {
+        //Debug.Log($"{current} : {max}");
+        stageInfoPanel.UpdateSlider(current, max);
+    }
 }
