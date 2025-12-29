@@ -45,7 +45,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 4bfcf7479bc002d4f9bcf72582998f01, type: 3}
+  m_Motion: {fileID: 7400000, guid: a6bff8e1be4935c459c00f083d7d8981, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -167,7 +167,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 536d9ed57c1b86749a012b44a739f34b, type: 3}
+  m_Motion: {fileID: 7400000, guid: 09f69d89b41405e4f99994778327be84, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -252,7 +252,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ab47cbb433e042943aa85495a8b0c3a8, type: 3}
+  m_Motion: {fileID: 7400000, guid: 4e7edbf6367e387498b9e7a927a711f8, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -351,7 +351,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 4666636df5c7f8342915d106ad5b4740, type: 2}
+  m_Motion: {fileID: 7400000, guid: dcc886acab5cb394989b3f1381e23bb3, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -378,7 +378,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 2c7f7e9b286e3a14b842d8d90b5156cb, type: 3}
+  m_Motion: {fileID: 7400000, guid: c419eeb03a5a348419c7588fb52e158c, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -451,7 +451,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: f99ae6e309d25b84bb40acc4ee37ed3e, type: 3}
+  m_Motion: {fileID: 7400000, guid: cb30914afdfa6e0429640cc2a6de0722, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -474,7 +474,7 @@ AnimatorStateMachine:
     m_Position: {x: 180, y: 370, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5944090215025152380}
-    m_Position: {x: 220, y: 290, z: 0}
+    m_Position: {x: 200, y: 290, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1798263094781215597}
     m_Position: {x: 180, y: 480, z: 0}

@@ -1,4 +1,4 @@
-using DG.Tweening;
+﻿using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -37,6 +37,8 @@ public class Monster : MonoBehaviour
     public int SpawnNumber { get; private set; }
 
     private bool isDead = false; // 몬스터 사망 여부 // 중복 사망 방지용 
+    public bool isSpawning = false; // 몬스터 스폰 완료 여부
+    
 
     private void Awake()
     {
@@ -47,6 +49,23 @@ public class Monster : MonoBehaviour
         }
     }
 
+    // 오브젝트 풀에서 재사용할때 초기화
+    private void OnEnable()
+    {
+        isDead = false;
+        isSpawning = false;
+
+        // 애니 트리거 전부 초기화 
+        if (anim!= null)
+        {
+            anim.ResetTrigger(hashSpawn);
+            anim.ResetTrigger(hashHit);
+            anim.ResetTrigger(hashDie);
+            anim.ResetTrigger(hashTurnLeft);
+            anim.ResetTrigger(hashTurnRight);
+            anim.ResetTrigger(hashAttack);
+        }
+    }
     private void FixedUpdate()
     {
         if (attackCooldown > 0)
@@ -272,8 +291,22 @@ public class Monster : MonoBehaviour
 
     public void Spawn()
     {
+        // 애니 트리거 초기화 후 설정 (중복방지)
+        if (anim != null)
+        {
+         //   anim.ResetTrigger(hashSpawn);
+            anim.SetTrigger(hashSpawn);
+        }
+
         //스폰하는동안 이동못하게 코루틴 필요
-        if (anim != null) anim.SetTrigger(hashSpawn);
+        StartCoroutine(SpawnRoutine());
+
+    }
+    IEnumerator SpawnRoutine()
+    {
+        isSpawning = true;
+        yield return new WaitForSeconds(1.0f); // 정지
+        isSpawning = false;
     }
     #endregion
 }
