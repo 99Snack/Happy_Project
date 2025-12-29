@@ -5,6 +5,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
 public class SpawnManager : MonoBehaviour
@@ -309,14 +310,29 @@ public class SpawnManager : MonoBehaviour
         orderIndex = 0;
         spawnCount = 0;
         aliveMonsterCount = 0;
-
+        
+        AugmentManager.Instance.activeAugments.Clear();
+        TowerManager.Instance.ResetTower();
+        GameManager.Instance.Gold = GameManager.START_GOLD;
+        UIManager.Instance.ClearActivatedAugmentPanel();
+        PathNodeManager.Instance.GeneratePath();
+        
+        
+        
+        
         //todo : 리셋시 제거해야할 목록
-        //증강 제거
-        //증강 액티베이트 슬롯 제거
-        //타워 제거
-        //타워 매니저에서 제거
-        //타일도 초기화해야 되고(isAlreadyTower=true)false로
-        //골드 초기화
+        //증강 제거 AugmentManager | 완료 
+        //증강 액티베이트 슬롯 제거 ActivatedAugmentPanel | 임시로 이벤트로 연결 
+        //타워 제거 게임 내(타일,대기석) 배치된 타워도 제거해야함 | 완료 
+        //타워 매니저에서 제거 TowerManager  
+        //타일도 초기화해야 되고(isAlreadyTower=true)false로 | 완료
+        //골드 초기화 GameManager | 완료
+        //몬스터 초기화를 해야함(MonsterMove.currentIdx = 0)|goal = false를 Monstermove OnEnable()에 넣으면 된다.
+        //베이스캠프 HP 초기화 | 완료 
+        //베이스 캠프 HPUI도 초기화 | 완료
+        //스테이지 웨이브도 초기화되는지 확인 | 초기화 되긴함 
+        //그 스테이지재시작처럼 singlePath가 생성되어야함 
+        //UpdateStageUI,UpdateStageInfo
 
         //StageData stageInfo = GameManager.Instance.StageInfo;
         //todo : 임의스테이지 삽입 로비씬에서의 게임매니저와 인게임씬 안의 게임매니저가 달라서 씬정보가 넘어오지 않음
@@ -331,12 +347,15 @@ public class SpawnManager : MonoBehaviour
         }
 
         BaseCamp.Instance.SetUp(waves[waveIndex].Index);
+        UIManager.Instance.UpdateAllyBaseCampHp();
 
         TotalWaves = waves.Count;
 
         GameManager.Instance.WaveInfo = waves[waveIndex];
-
+        
         UpdateStageUI();
+        UIManager.Instance.UpdateWaveSlider(spawnCount, waves.Count);
+
         UIManager.Instance.OpenAugmentPanel(1);
     }
 

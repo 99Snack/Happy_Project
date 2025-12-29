@@ -66,6 +66,7 @@ public class UIManager : MonoBehaviour
     //타워 배치 실패 메시지 
     [SerializeField] private GameObject attachToastMessage;
     [SerializeField] private AugmentPanel augmentPanel;
+    [SerializeField] private ActivatedAugmentPanel activatedAugmentPanel;
 
     //웨이브 결과 창
     [SerializeField] private WaveResultPanel waveResultPanel;
@@ -97,6 +98,8 @@ public class UIManager : MonoBehaviour
     public void OpenAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(true);
     public void UpdateAllyBaseCampHp() => allyBaseCampPanel.UpdateAllyBaseCampHp();
     public void CloseAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(false);
+    
+    public void ClearActivatedAugmentPanel() => activatedAugmentPanel.ClearActiveAugment();
 
     //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
@@ -161,11 +164,7 @@ public class UIManager : MonoBehaviour
         augmentPanel.gameObject.SetActive(true);
     }
     public void CloseAugmentPanel() => augmentPanel.gameObject.SetActive(false);
-
-
-
-
-
+    
 
     public void CloseTileTransitionPanel()
     {
