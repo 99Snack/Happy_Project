@@ -1,9 +1,10 @@
-using TMPro;
 using System.Collections;
+using TMPro;
+using UnityEditor.Analytics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using UnityEditor.Analytics;
+using UnityEngine.SceneManagement;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,6 +24,34 @@ public class UIManager : MonoBehaviour
             instance = this;
         }
     }
+    public void GoToLobby()
+    {
+        SceneManager.LoadScene("Lobby");
+    }
+
+    public void GoToStage()
+    {
+        SceneManager.LoadScene("Stage");
+    }
+
+    public void GoToInGame()
+    {
+        SceneManager.LoadScene("InGame");
+    }
+
+    public void ExitGame()
+    {
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false; // 에디터 Play 종료
+#else
+        Application.Quit(); // 빌드 게임 종료
+#endif
+    }
+
+    //인게임 -> 로비씬 팝업
+    [SerializeField] private GameObject stageExitPanel;
+    public void OpenStageExitPanel() => stageExitPanel.SetActive(true);
+    public void CloseStageExitPanel() => stageExitPanel.SetActive(false);
 
     [SerializeField] private TextMeshProUGUI goldText;
 
