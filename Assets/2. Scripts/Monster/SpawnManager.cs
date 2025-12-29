@@ -104,6 +104,7 @@ public class SpawnManager : MonoBehaviour
 
         // 스폰 초기화
         spawnCount = 0;
+        orderIndex = 0;
 
         UIManager.Instance.UpdateWaveSlider(spawnCount, waves.Count);
 
@@ -153,77 +154,14 @@ public class SpawnManager : MonoBehaviour
 
     private void SpawnOne(int monsterID)
     {
-        //if (spawnCount >= currentSpawnCount)
-        //{
-        //    CancelInvoke("SpawnOne"); // 스폰 반복 취소
-        //    Debug.Log("모든 몬스터 스폰 완료, 몬스터 처치 대기중");
-        //    return; // 스폰 순서 끝났으면 종료
-        //}
-
-        ////int spawnValue = currentSpawnOrder[orderIndex];
-        //GameObject prefab = null;
-        //MonsterData monsterData = DataManager.Instance.MonsterData[monsterID];
-
-        //// DB에서 몬스터 데이터 찾기 (DB 우선, 없으면 기존 인스펙터 프리팹 사용)
-        //if (monsterData != null)
-        //{
-        //    // DB에서 찾음 -> MonsterResource로 프리팹 로드 
-        //    prefab = Resources.Load<GameObject>($"Prefab/Enemy/{monsterID}");
-
-        //    if (prefab == null)
-        //    {
-        //        Debug.LogError("프리팹 못찾음:" + monsterData.MonsterResource);
-        //    }
-        //    else
-        //    {
-        //        LocalizationData local = DataManager.Instance.LocalizationData[monsterData.MonsterName];
-        //        //Debug.Log("DB에서 프리팹 로드 성공: " + local.Ko);
-        //    }
-        //}
-        //// DB에서 못 찾았거나 프리팹 로드 실패 시 -> 기존 프리팹 배열 사용 
-        ////if (prefab == null)
-        ////{
-        ////    if (spawnValue >= 0 && spawnValue < MonsterPrefabs.Length)
-        ////    {
-
-        ////        prefab = MonsterPrefabs[spawnValue];
-        ////        //Debug.Log("기존 인스펙터 프리팹 사용: " + prefab.name);
-        ////    }
-        ////    else
-        ////    {
-        ////        Debug.LogError("프리팹 못찾음: " + spawnValue);
-        ////        orderIndex++;
-        ////        return; // 잘못된 인덱스면 종료
-        ////    }
-
-        ////}
-
-        ////int monsterType = currentSpawnOrder[orderIndex]; // 현재 스폰할 몬스터 타입 가져오기
-        ////GameObject prefab = MonsterPrefabs[monsterType]; // 몬스터 프리팹 선택
-
-        //// 타일매니저의 적 베이스 위치에서 월드 좌표 가져와서 스폰 위치로 사용
-        //Vector3 spawnPos = TileManager.Instance.GetWorldPosition(TileManager.Instance.enemyBasePosition);
-
-        //GameObject monster = Instantiate(prefab, spawnPos, Quaternion.identity); // 몬스터 생성
-
-        //Monster monsterScript = monster.GetComponent<Monster>();
-        ////Debug.Log($"test : {currentMonsterGropInfo.Count} : {orderIndex}");
-        //monsterScript.SetSpawnNumber(monsterData, currentMonsterGropInfo[orderIndex].SpawnOrder); // 스폰 번호 설정
-
-        ////Debug.Log("스폰 : " + prefab.name + "(번호 : " + _spawnCount + ")");
-
-        //spawnCount++;
-
-        //UIManager.Instance.UpdateWaveSlider(spawnCount, waves.Count);
-
-
-        //===================================
-        //if (spawnCount >= currentSpawnCount)
-        //{
-        //    CancelInvoke("SpawnOne");
-        //    Debug.Log("모든 몬스터 스폰 완료");
-        //    return;
-        //}
+        //101101 마녀의 거미
+        //102101 마녀의 거미 중대장
+        //103101 마녀의 거미 보스
+        //104101 변이한 닭
+        //105101 닭 중대장
+        //106101 유령
+        //107101 유령 중대장
+        //108101 최상위 유령
 
         MonsterData monsterData = DataManager.Instance.MonsterData[monsterID];
         if (monsterData == null) return;
@@ -269,8 +207,8 @@ public class SpawnManager : MonoBehaviour
 
         //Debug.Log("웨이브 승리" + (waveIndex + 1));
         OnWaveWin.Invoke();
-        //bool isLastWave = (waveIndex >= TotalWaves - 1);
-        bool isLastWave = (waveIndex >= 0);
+        bool isLastWave = (waveIndex >= TotalWaves - 1);
+        //bool isLastWave = (waveIndex >= 0);
         if (isLastWave)
         {
             //Debug.Log("모든 스테이지 클리어!");
@@ -366,7 +304,7 @@ public class SpawnManager : MonoBehaviour
         //Debug.Log("스테이지 클리어! 정비 단계로 전환");
         UIManager.Instance.OpenWavePreparationPanel();
         UIManager.Instance.CloseAllyBaseCampPanel();
-        
+
         waveIndex = 0;
         orderIndex = 0;
         spawnCount = 0;

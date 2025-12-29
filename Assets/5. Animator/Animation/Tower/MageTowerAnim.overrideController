@@ -9,11 +9,11 @@ AnimatorOverrideController:
   m_Name: MageTowerAnim
   m_Controller: {fileID: 9100000, guid: 5866367148b10424a975a3e697a0428e, type: 2}
   m_Clips:
-  - m_OriginalClip: {fileID: 7400000, guid: 642a26526e92a724ba93e126875b582b, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 390e9fa071b3a0547bfff8fb6cca93a1, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: 6319d8cd3eb1f6843aef408d5a893763, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: f6051cca6eee119489f7ff341a2ced1c, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: b8435991ef03bd24b85487d71b91a209, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 5dd3d8a1a7cd14248a3d19245ee2ae6b, type: 2}
-  - m_OriginalClip: {fileID: 7400000, guid: 1bd2745b516695b4da553c5d3b1f3e9c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: ceec58f84d3a50b4d9e83cdba256457b, type: 2}
     m_OverrideClip: {fileID: 7400000, guid: d6d50f8875e471447be2d75f32ef8911, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 168bc133691b2a848b7fa09dc973c3f7, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 390e9fa071b3a0547bfff8fb6cca93a1, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: 10a0fe79659741444b4f9cd2e6c0c605, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: f6051cca6eee119489f7ff341a2ced1c, type: 2}
+  - m_OriginalClip: {fileID: 7400000, guid: bbb5b654a9b24784d8ef276249870ebe, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 5dd3d8a1a7cd14248a3d19245ee2ae6b, type: 2}

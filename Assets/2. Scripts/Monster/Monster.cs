@@ -1,11 +1,9 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
-using System.Threading;
-using Unity.VisualScripting;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
+
 /// <summary>
 /// 몬스터 게임 로직을 관리하는 클래스 
 /// </summary>
@@ -14,7 +12,7 @@ public class Monster : MonoBehaviour
     //몬스터 스탯 데이터 
     [SerializeField] private MonsterData data;
     public MonsterData Data { get => data; set => data = value; }
-    [SerializeField] GameObject bar;
+    [SerializeField] private Slider hpBar;
 
     public Stat defense;
     public Stat moveSpeed;
@@ -45,35 +43,8 @@ public class Monster : MonoBehaviour
         anim = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
         if (anim == null)
         {
-            anim = transform.GetChild(0).GetComponent<Animator>(); // 애니메이터 컴포넌트가 자식에 있을때
+            anim = transform.GetComponentInChildren<Animator>(); // 애니메이터 컴포넌트가 자식에 있을때
         }
-    }
-
-
-
-    void Start()
-    {
-        currentHp = Data.Hp; // 시작 시 현재 체력 = 최대 체력 
-
-        // 몬스터 HP UI 
-        GameObject hpBarPrefab = Resources.Load<GameObject>("Prefab/Monster/MonsterHpBar");
-        // 디버그 확인
-        if (hpBarPrefab == null)
-        {
-            Debug.LogError("HP바 프리팹을 찾을 수 없음! 경로 확인 필요");
-        }
-        else
-        {
-            //GameObject hpBar = Instantiate(hpBarPrefab, transform);
-            GameObject hpBar = Instantiate(bar, transform);
-            hpBar.transform.localPosition = new Vector3(0, 2.5f, 0); // 몬스터 머리 위
-                                                                     //hpBar.transform.localScale = new Vector3(1, 1f, 1);
-            hpSlider = hpBar.GetComponentInChildren<Slider>();
-            //Debug.Log("HP바 생성 완료");
-        }
-        UpdateHpUI();
-
-        TowerTargetDetector.Instance.RegisterEnemy(this);
     }
 
     private void FixedUpdate()
@@ -179,6 +150,9 @@ public class Monster : MonoBehaviour
 
     void ResetStatus()
     {
+        currentHp = data.Hp;
+        isDead = false;
+
         moveSpeed.baseStat = data.MoveSpeed;
         moveSpeed.additiveStat = 0;
         moveSpeed.multiStat = 1;
@@ -188,6 +162,8 @@ public class Monster : MonoBehaviour
         defense.multiStat = 1;
 
         attackCooldown = data.AtkInterval_ms;
+
+        UpdateHpUI();
     }
 
     // 스포너에서 호출해서 번호 설정
@@ -216,9 +192,7 @@ public class Monster : MonoBehaviour
         isDead = true; // 사망 처리
         currentHp = 0;
 
-        //Debug.Log($"체력 : {currentHp}, {gameObject.name} 몬스터 사망!");
-
-        GiveReward(attacker); // 미션을 잘 완수 했으니 리워드를 받아야겠지? 
+        GiveReward(attacker);
 
         // 스폰 매니저에 알리기
         SpawnManager spawnManager = FindAnyObjectByType<SpawnManager>();
@@ -229,6 +203,7 @@ public class Monster : MonoBehaviour
 
         string monsterId = data.MonsterId.ToString();
         ObjectPoolManager.Instance.ReturnToPool(monsterId, gameObject);
+        TowerTargetDetector.Instance.UnregisterEnemy(this);
         //Destroy(gameObject);
     }
 
@@ -246,7 +221,7 @@ public class Monster : MonoBehaviour
                     {
                         case 1:
                             GameManager.Instance.Gold += groupData.RewardCount;
-                            Debug.Log($"{groupData.RewardCount} 골드 획득! (현재: {GameManager.Instance.Gold})");
+                            //Debug.Log($"{groupData.RewardCount} 골드 획득! (현재: {GameManager.Instance.Gold})");
                             break;
                     }
                 }
