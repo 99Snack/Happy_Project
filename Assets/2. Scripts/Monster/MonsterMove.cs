@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
@@ -29,6 +29,7 @@ public class MonsterMove : MonoBehaviour
     Vector2Int[] path; // 실제 이동 경로
     Vector2Int[] feedbackPoints;  // 피드백 출력할 위치 지점
     int currentIdx = 0; // 현재 경로 인덱스 
+    bool goal = false; // 목적지 도착 여부
 
     // 피드백 관련
     bool isFeedbackPaused = false; // 피드백 출력 중 일시정지 상태
@@ -65,6 +66,7 @@ public class MonsterMove : MonoBehaviour
     }
     void FixedUpdate()
     {
+        if (goal) return; // 도착하면 이동안함
         // 이동 로직
         float distance = Vector3.Distance(transform.position, TargetAnchor);
         if (distance > AttackRange)
@@ -92,9 +94,20 @@ public class MonsterMove : MonoBehaviour
             }
         }
 
+        if (goal) return; // 도착하면 이동안함
+
         // 피드백: 일시정지 상태면 이동 안 함
         if (isFeedbackPaused) return;
 
+        // 도착하면 정지
+        if (path != null && path.Length > 0)
+        {
+            if (currentIdx >= path.Length)
+            {
+                goal = true;
+                return;
+            }
+        }
 
         // 경로 따라 이동, 없으면 종료
         if (path != null && path.Length > 0)
@@ -133,14 +146,17 @@ public class MonsterMove : MonoBehaviour
 
         // 따라갈 타겟이 없으면 종료 
         if (TargetAnchor == null) return;
-       
+
 
     }
 
     void LateUpdate()
     {
         // 매 프레임 마지막에 현재 바라보는 방향으로 회전 적용 
-        transform.rotation = Quaternion.LookRotation(currentLookDir);
+        if (!isTurning) // 회전중이 아니면 
+        {
+            transform.rotation = Quaternion.LookRotation(currentLookDir);
+        }
     }
 
     // 피드백 지점인지 체크
