@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
@@ -231,6 +232,8 @@ public class SpawnManager : MonoBehaviour
             //Debug.Log("스테이지 클리어! 정비 단계로 전환");
             UIManager.Instance.OpenWavePreparationPanel();
             UIManager.Instance.CloseAllyBaseCampPanel();
+            BaseCamp.Instance.SetHealthPoint(waves[waveIndex]);
+            UIManager.Instance.UpdateAllyBaseCampHp();
             UpdateStageUI();
         }
     }
@@ -276,7 +279,9 @@ public class SpawnManager : MonoBehaviour
 
         UIManager.Instance.OpenStageResultPanel(0);
         yield return new WaitWhile(() => UIManager.Instance.IsActiveStageResultPanel());
-        ResetStage();
+        //ResetStage();
+        SceneManager.LoadScene("InGame");
+        //todo: 맵을 재생성 
     }
 
     public void RecallAllMonsters()
@@ -317,9 +322,6 @@ public class SpawnManager : MonoBehaviour
         UIManager.Instance.ClearActivatedAugmentPanel();
         PathNodeManager.Instance.GeneratePath();
         
-        
-        
-        
         //todo : 리셋시 제거해야할 목록
         //증강 제거 AugmentManager | 완료 
         //증강 액티베이트 슬롯 제거 ActivatedAugmentPanel | 임시로 이벤트로 연결 
@@ -331,7 +333,7 @@ public class SpawnManager : MonoBehaviour
         //베이스캠프 HP 초기화 | 완료 
         //베이스 캠프 HPUI도 초기화 | 완료
         //스테이지 웨이브도 초기화되는지 확인 | 초기화 되긴함 
-        //그 스테이지재시작처럼 singlePath가 생성되어야함 
+        //스테이지 재시작처럼 singlePath가 생성되어야함 
         //UpdateStageUI,UpdateStageInfo
 
         //StageData stageInfo = GameManager.Instance.StageInfo;
@@ -346,7 +348,7 @@ public class SpawnManager : MonoBehaviour
             .OrderBy(x => x.WaveOrder).ToList();
         }
 
-        BaseCamp.Instance.SetUp(waves[waveIndex].Index);
+        BaseCamp.Instance.SetHealthPoint(waves[waveIndex]);
         UIManager.Instance.UpdateAllyBaseCampHp();
 
         TotalWaves = waves.Count;

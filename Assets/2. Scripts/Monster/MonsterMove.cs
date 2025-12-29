@@ -42,16 +42,14 @@ public class MonsterMove : MonoBehaviour
     void OnEnable()
     {
         currentLookDir = transform.forward; // 초기 방향 설정
-    }
+        goal = false;
 
-    void Start()
-    {
         // PathNodeManager에서 경로 및 피드백 좌표 지점 가져오기
         int spawnNum = monster.GetSpawnNumber(); // 몬스터의 스폰 번호 가져오기
 
         if (PathNodeManager.Instance != null)
         {
-            path = PathNodeManager.Instance.GetPathNode(spawnNum, deadEndMoveLimit, out feedbackPoints);
+            path = PathNodeManager.Instance.GetPathAndFeedBack(spawnNum, deadEndMoveLimit, out feedbackPoints);
             //Debug.Log("몬스터 스폰 번호: " + spawnNum + ", 경로 길이: " + path.Length + ", 피드백 좌표 개수: " + feedbackPoints.Length);
         }
 
@@ -63,7 +61,9 @@ public class MonsterMove : MonoBehaviour
         }
 
         monster.Spawn();  // 스폰 될때 스폰 애니 재생 
+    
     }
+
     void FixedUpdate()
     {
         if (goal) return; // 도착하면 이동안함
