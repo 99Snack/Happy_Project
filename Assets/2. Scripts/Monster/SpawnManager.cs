@@ -311,12 +311,15 @@ public class SpawnManager : MonoBehaviour
         aliveMonsterCount = 0;
 
         //todo : 리셋시 제거해야할 목록
-        //증강 제거
-        //증강 액티베이트 슬롯 제거
-        //타워 제거
-        //타워 매니저에서 제거
+        //증강 제거 AugmentManager
+        //증강 액티베이트 슬롯 제거 ActivatedAugmentPanel 
+        //타워 제거 게임 내(타일,대기석) 배치된 타워도 제거해야함
+        //타워 매니저에서 제거 TowerManager 
         //타일도 초기화해야 되고(isAlreadyTower=true)false로
-        //골드 초기화
+        //골드 초기화 GameManager
+        //몬스터 초기화를 해야함(MonsterMove.currentIdx = 0)
+        //베이스캠프 HP 초기화
+        //스테이지 웨이브도 초기화되는지 확인
 
         //StageData stageInfo = GameManager.Instance.StageInfo;
         //todo : 임의스테이지 삽입 로비씬에서의 게임매니저와 인게임씬 안의 게임매니저가 달라서 씬정보가 넘어오지 않음
