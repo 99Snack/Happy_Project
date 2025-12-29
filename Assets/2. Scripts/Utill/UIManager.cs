@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEditor.Analytics;
 using UnityEngine;
@@ -46,6 +46,18 @@ public class UIManager : MonoBehaviour
 #else
         Application.Quit(); // 빌드 게임 종료
 #endif
+    }
+
+    //로비씬 Exit 팝업
+    public GameObject LobbyExitPopup;
+    public void ShowLobbyExitPopup()
+    {
+        LobbyExitPopup.SetActive(true);
+    }
+
+    public void CloseLobbyExitPopup()
+    {
+        LobbyExitPopup.SetActive(false);
     }
 
     //인게임 -> 로비씬 팝업
