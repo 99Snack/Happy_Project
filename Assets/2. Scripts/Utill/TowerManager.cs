@@ -224,4 +224,18 @@ public class TowerManager : MonoBehaviour
         //5. 타워 객체에도 Sell메서드 실행
         sellTower.OnSold();
     }
+
+    public void ResetTower()
+    {
+        foreach (var tower in allTowers)
+        {
+            if (tower != null)
+            {
+                tower.MyTile.isAlreadyTower = false;
+
+                Destroy(tower.gameObject);
+            }
+        }
+        allTowers.Clear();
+    }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -68,9 +69,13 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI goldText;
 
     //타일 전환 창 
+    [SerializeField] private GameObject backGroundPanel;
     [SerializeField] private GameObject tileTransitionPanel;
     [SerializeField] private TextMeshProUGUI currentTileText;
     [SerializeField] private TextMeshProUGUI toChangeTileText;
+    [SerializeField] private Button confirmBtn;  
+    [SerializeField] private TextMeshProUGUI priceText;
+
     //타일 변환 성공 토스트 메시지 
     [SerializeField] private GameObject transitionSucceedToast;
     //타일 변환 실패 토스트 메시지 
@@ -78,6 +83,7 @@ public class UIManager : MonoBehaviour
     //타워 배치 실패 메시지 
     [SerializeField] private GameObject attachToastMessage;
     [SerializeField] private AugmentPanel augmentPanel;
+    [SerializeField] private ActivatedAugmentPanel activatedAugmentPanel;
 
     //웨이브 결과 창
     [SerializeField] private WaveResultPanel waveResultPanel;
@@ -109,6 +115,9 @@ public class UIManager : MonoBehaviour
     public void OpenAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(true);
     public void UpdateAllyBaseCampHp() => allyBaseCampPanel.UpdateAllyBaseCampHp();
     public void CloseAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(false);
+    
+    //증강 패널 관련    
+     public void ClearActivatedAugmentPanel() => activatedAugmentPanel.ClearActiveAugment();
 
     //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
@@ -144,7 +153,6 @@ public class UIManager : MonoBehaviour
     TileInteractor currentTile;
     public TileInteractor CurrentTile { get => currentTile; private set => currentTile = value; }
 
-
     private void Start()
     {
         if (GameManager.Instance != null)
@@ -173,11 +181,7 @@ public class UIManager : MonoBehaviour
         augmentPanel.gameObject.SetActive(true);
     }
     public void CloseAugmentPanel() => augmentPanel.gameObject.SetActive(false);
-
-
-
-
-
+    
 
     public void CloseTileTransitionPanel()
     {
@@ -187,7 +191,7 @@ public class UIManager : MonoBehaviour
             CurrentTile.transform.GetChild(3).gameObject.SetActive(false);
             CurrentTile = null;
         }
-
+        backGroundPanel.SetActive(false);
         tileTransitionPanel.SetActive(false);
     }
 
@@ -206,6 +210,8 @@ public class UIManager : MonoBehaviour
             }
             //Toast메시지 출력 
             OpenTileToastMessage(isGenerated);
+            GameManager.Instance.Gold -= TileManager.TRANSITION_PRICE;
+
             CloseTileTransitionPanel();
         }
         else
@@ -264,18 +270,20 @@ public class UIManager : MonoBehaviour
         if (currentTile.Type != TileInfo.TYPE.Wall && currentTile.Type != TileInfo.TYPE.Road) return;
 
         tileTransitionPanel.SetActive(true);
+        backGroundPanel.SetActive(true);
         currentTileText.text = $"{SelectTile.Type}";
         toChangeTileText.text = SelectTile.Type == TileInfo.TYPE.Road ? "Wall" : "Road";
+        priceText.text = $"{TileManager.TRANSITION_PRICE}";
 
         //todo 재화 상태에 따라 버튼이 달라지는 기능
-        //if (GameManager.Instance.Gold >= TileManager.TRANSITION_PRICE)
-        //{
-        //    //체크 표시 활성화
-        //}
-        //else
-        //{
-        //    //체크 표시 비활성화
-        //}
+        if (GameManager.Instance.Gold >= TileManager.TRANSITION_PRICE)
+        {
+           confirmBtn.interactable = true;
+        }
+        else
+        {
+            confirmBtn.interactable = false;
+        }
 
         //if (CurrentTile.Type == TileInfo.TYPE.Road )
         //{

@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         get => waveInfo; set
         {
             waveInfo = value;
-            BaseCamp.Instance.SetUp(WaveInfo.Index);
+            BaseCamp.Instance.SetHealthPoint(WaveInfo);
         }
     }
 
