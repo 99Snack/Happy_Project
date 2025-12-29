@@ -636,8 +636,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318426}
-        m_TargetAssemblyTypeName: Btn_Game_Exit, Assembly-CSharp
+      - m_Target: {fileID: 485318428}
+        m_TargetAssemblyTypeName: UIButtonsController, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -695,9 +695,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 485318424}
-  - component: {fileID: 485318425}
-  - component: {fileID: 485318426}
-  - component: {fileID: 485318427}
+  - component: {fileID: 485318428}
   m_Layer: 0
   m_Name: UI_Manager
   m_TagString: Untagged
@@ -720,7 +718,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &485318425
+--- !u!114 &485318428
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -729,33 +727,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 485318423}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 548fa7560f1475742ade3d1568e99b80, type: 3}
+  m_Script: {fileID: 11500000, guid: f16d4aeb2ac40c44b9beb43e17370bcb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Btn_Stage_Start
---- !u!114 &485318426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485318423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d258d77486c24a4685f6254577303ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Btn_Game_Exit
---- !u!114 &485318427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485318423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28d06a499c2ffb7419be9a9c6cdbf941, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Btn_Exit
+  m_EditorClassIdentifier: Assembly-CSharp::UIButtonsController
   popupLayer: {fileID: 1026524891}
 --- !u!1 &613471651
 GameObject:
@@ -1220,8 +1194,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318427}
-        m_TargetAssemblyTypeName: Btn_Exit, Assembly-CSharp
+      - m_Target: {fileID: 485318428}
+        m_TargetAssemblyTypeName: UIButtonsController, Assembly-CSharp
         m_MethodName: ShowPopup
         m_Mode: 1
         m_Arguments:
@@ -1782,9 +1756,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318425}
-        m_TargetAssemblyTypeName: Btn_Stage_Start, Assembly-CSharp
-        m_MethodName: StageStart
+      - m_Target: {fileID: 485318428}
+        m_TargetAssemblyTypeName: UIButtonsController, Assembly-CSharp
+        m_MethodName: GoToStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2191,8 +2165,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318427}
-        m_TargetAssemblyTypeName: Btn_Exit, Assembly-CSharp
+      - m_Target: {fileID: 485318428}
+        m_TargetAssemblyTypeName: UIButtonsController, Assembly-CSharp
         m_MethodName: ClosePopup
         m_Mode: 1
         m_Arguments:
