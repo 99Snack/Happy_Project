@@ -3321,7 +3321,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 7897382392446432306}
         m_TargetAssemblyTypeName: AugmentPanel, Assembly-CSharp
         m_MethodName: VisiblePopup
         m_Mode: 1
