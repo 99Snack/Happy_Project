@@ -636,8 +636,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318426}
-        m_TargetAssemblyTypeName: Btn_Game_Exit, Assembly-CSharp
+      - m_Target: {fileID: 640609534}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
         m_Arguments:
@@ -686,77 +686,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 304281368}
   m_CullTransparentMesh: 1
---- !u!1 &485318423
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 485318424}
-  - component: {fileID: 485318425}
-  - component: {fileID: 485318426}
-  - component: {fileID: 485318427}
-  m_Layer: 0
-  m_Name: UI_Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &485318424
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485318423}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 887.3252, y: 0, z: -1134.9421}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &485318425
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485318423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 548fa7560f1475742ade3d1568e99b80, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Btn_Stage_Start
---- !u!114 &485318426
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485318423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d258d77486c24a4685f6254577303ab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Btn_Game_Exit
---- !u!114 &485318427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 485318423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 28d06a499c2ffb7419be9a9c6cdbf941, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Btn_Exit
-  popupLayer: {fileID: 1026524891}
 --- !u!1 &613471651
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,6 +834,7 @@ GameObject:
   - component: {fileID: 640609532}
   - component: {fileID: 640609531}
   - component: {fileID: 640609530}
+  - component: {fileID: 640609534}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -996,6 +926,34 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &640609534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 640609529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47f4910c5fce748418fcc3f761407987, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  LobbyExitPopup: {fileID: 1026524891}
+  stageExitPanel: {fileID: 0}
+  goldText: {fileID: 0}
+  tileTransitionPanel: {fileID: 0}
+  currentTileText: {fileID: 0}
+  toChangeTileText: {fileID: 0}
+  transitionSucceedToast: {fileID: 0}
+  transitionFailedToast: {fileID: 0}
+  attachToastMessage: {fileID: 0}
+  augmentPanel: {fileID: 0}
+  waveResultPanel: {fileID: 0}
+  stageResultPanel: {fileID: 0}
+  wavePreparation: {fileID: 0}
+  allyBaseCampPanel: {fileID: 0}
+  towerInfoPanel: {fileID: 0}
+  stageInfoPanel: {fileID: 0}
 --- !u!1 &797447347
 GameObject:
   m_ObjectHideFlags: 0
@@ -1220,9 +1178,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318427}
-        m_TargetAssemblyTypeName: Btn_Exit, Assembly-CSharp
-        m_MethodName: ShowPopup
+      - m_Target: {fileID: 640609534}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: ShowLobbyExitPopup
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1782,9 +1740,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318425}
-        m_TargetAssemblyTypeName: Btn_Stage_Start, Assembly-CSharp
-        m_MethodName: StageStart
+      - m_Target: {fileID: 640609534}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: GoToStage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2191,9 +2149,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 485318427}
-        m_TargetAssemblyTypeName: Btn_Exit, Assembly-CSharp
-        m_MethodName: ClosePopup
+      - m_Target: {fileID: 640609534}
+        m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
+        m_MethodName: CloseLobbyExitPopup
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2249,4 +2207,3 @@ SceneRoots:
   - {fileID: 1071807735}
   - {fileID: 640609533}
   - {fileID: 60283716}
-  - {fileID: 485318424}
