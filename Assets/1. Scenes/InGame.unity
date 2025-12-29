@@ -6337,6 +6337,9 @@ MonoBehaviour:
   - tag: icemage
     prefab: {fileID: 8183195218952225956, guid: f59d20c951bb11548a42dd98c57e55e8, type: 3}
     size: 10
+  - tag: attacheffect
+    prefab: {fileID: 1698068915230344, guid: 232bb01a6f3e4214a92c059c25869777, type: 3}
+    size: 15
 --- !u!1 &1676686069
 GameObject:
   m_ObjectHideFlags: 0

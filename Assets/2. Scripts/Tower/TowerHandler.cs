@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -114,6 +113,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     Vector3 centerPos = TileManager.Instance.GetWorldPosition(interactor.X, interactor.Y);
                     centerPos.y = hit.point.y;
                     transform.position = centerPos;
+
+                    //타워 이펙트
+                    ObjectPoolManager.Instance.SpawnFromPool("attacheffect", centerPos, Quaternion.identity);
 
                     //타워 좌표 설정
                     tower.SetCoord(interactor.X, interactor.Y);

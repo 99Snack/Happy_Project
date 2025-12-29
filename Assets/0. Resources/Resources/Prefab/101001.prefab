@@ -229,6 +229,7 @@ MonoBehaviour:
   tileLayer:
     serializedVersion: 2
     m_Bits: 64
+  TowerAttachEffect: {fileID: 1698068915230344, guid: 232bb01a6f3e4214a92c059c25869777, type: 3}
 --- !u!65 &2979943431871966004
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -292,6 +293,7 @@ MonoBehaviour:
     baseStat: 0
     additiveStat: 0
     multiStat: 0
+  state: 0
 --- !u!1 &4528583806068672900
 GameObject:
   m_ObjectHideFlags: 0
