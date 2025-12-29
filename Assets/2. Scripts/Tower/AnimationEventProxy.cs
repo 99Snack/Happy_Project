@@ -14,7 +14,18 @@ public class AnimationEventProxy : MonoBehaviour
     {
         if (tower == null || tower.currentTarget == null) return;
 
-        // 실제 데미지 처리 로직만 실행
+        ClipName clip = tower switch
+        {
+            MineThrowerTower => ClipName.Cannon_sound,
+            MageTower => ClipName.Magic_sound,
+            IceMageTower => ClipName.Ice_sound,
+            SpearTower => ClipName.Spear_sound,
+            _ => ClipName.Knight_sound,
+        };
+
+        //todo : 타워 공격 사운드
+        //SoundManager.Instance.PlaySFX(clip);
+
         tower.ExecuteDamage();
     }
 

@@ -1629,6 +1629,7 @@ GameObject:
   - component: {fileID: 8708297842959056086}
   - component: {fileID: 6256340153315416176}
   - component: {fileID: 8693991467834030499}
+  - component: {fileID: 5082398635649644864}
   m_Layer: 5
   m_Name: Btn_Cancel_Change_Tile
   m_TagString: Untagged
@@ -1750,6 +1751,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5082398635649644864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4924424721617000205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be0683440d26144fa0b334d54b84524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundTrigger
 --- !u!1 &5410576664298192322
 GameObject:
   m_ObjectHideFlags: 0
@@ -1762,6 +1775,7 @@ GameObject:
   - component: {fileID: 2482233542868741920}
   - component: {fileID: 4110803413191871379}
   - component: {fileID: 1681071263953471885}
+  - component: {fileID: -3695929804821239467}
   m_Layer: 5
   m_Name: 'Btn_Confirm_Change_Tile '
   m_TagString: Untagged
@@ -1883,6 +1897,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &-3695929804821239467
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5410576664298192322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8be0683440d26144fa0b334d54b84524, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonSoundTrigger
 --- !u!1 &5426848657075056355
 GameObject:
   m_ObjectHideFlags: 0

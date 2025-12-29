@@ -13,8 +13,12 @@ public class TowerInfoPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI subTypeText;
     [SerializeField] private TextMeshProUGUI descriptionText;
 
-    public void Setup(TowerBaseData tower)
+    Tower currentTower;
+    public void Setup(Tower selectTower)
     {
+        currentTower = selectTower;
+        TowerBaseData tower = selectTower.Data;
+
         var localStr = DataManager.Instance.LocalizationData;
 
         nameText.text = localStr[tower.Name].Ko;
@@ -41,5 +45,16 @@ public class TowerInfoPanel : MonoBehaviour
         subTypeText.text = subStr;
 
         descriptionText.text = localStr[tower.Desc].Ko;
+    }
+
+    public void SellTower()
+    {
+        if (currentTower != null)
+        {
+            TowerManager.Instance.SellTower(currentTower);
+            currentTower = null;
+
+            gameObject.SetActive(false);
+        }
     }
 }

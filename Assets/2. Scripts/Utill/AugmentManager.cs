@@ -84,7 +84,7 @@ public class AugmentManager : MonoBehaviour
         {
             >= 9 => 3,
             >= 4 => 2,
-            _ => 3
+            _ => 1
         };
 
         //타워 분석 및 태그별 계산

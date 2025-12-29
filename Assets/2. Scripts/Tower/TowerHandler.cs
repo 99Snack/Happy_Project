@@ -41,14 +41,14 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             {
                 if(originTile.Type == TileInfo.TYPE.Wall)
                 {
-                    
-                    //isBuild = true;
+
+                    isBuild = true;
                 }   
                 else
                 {
                     isBuild = false;
-                }
                     originTile.isAlreadyTower = false;
+                }
                     
             }
         }
@@ -138,6 +138,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
                     //드래그 드랍했을때 타워정보창 닫기
                     UIManager.Instance.CloseTowerInfo();
+
+                    //todo : 타워 배치 성공 시 사운드
+                    //SoundManager.Instance.PlaySFX(ClipName.Success_sound);
 
                     return;
                 }

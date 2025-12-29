@@ -1,6 +1,5 @@
-﻿using System.Collections;
+using System.Collections;
 using TMPro;
-using UnityEditor.Analytics;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -40,6 +39,12 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene("InGame");
     }
 
+    //위에 3개 메서드 아래 메서드로 통일
+    public void GoToScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
+    }
+
     public void ExitGame()
     {
 #if UNITY_EDITOR
@@ -68,18 +73,6 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI goldText;
 
-    //타일 전환 창 
-    [SerializeField] private GameObject backGroundPanel;
-    [SerializeField] private GameObject tileTransitionPanel;
-    [SerializeField] private TextMeshProUGUI currentTileText;
-    [SerializeField] private TextMeshProUGUI toChangeTileText;
-    [SerializeField] private Button confirmBtn;  
-    [SerializeField] private TextMeshProUGUI priceText;
-
-    //타일 변환 성공 토스트 메시지 
-    [SerializeField] private GameObject transitionSucceedToast;
-    //타일 변환 실패 토스트 메시지 
-    [SerializeField] private GameObject transitionFailedToast;
     //타워 배치 실패 메시지 
     [SerializeField] private GameObject attachToastMessage;
     [SerializeField] private AugmentPanel augmentPanel;
@@ -115,9 +108,9 @@ public class UIManager : MonoBehaviour
     public void OpenAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(true);
     public void UpdateAllyBaseCampHp() => allyBaseCampPanel.UpdateAllyBaseCampHp();
     public void CloseAllyBaseCampPanel() => allyBaseCampPanel.gameObject.SetActive(false);
-    
+
     //증강 패널 관련    
-     public void ClearActivatedAugmentPanel() => activatedAugmentPanel.ClearActiveAugment();
+    public void ClearActivatedAugmentPanel() => activatedAugmentPanel.ClearActiveAugment();
 
     //페이드 아웃 관련 변수
     private GameObject fadeOutObject;
@@ -133,7 +126,7 @@ public class UIManager : MonoBehaviour
     {
         currentTower = selectTower;
 
-        towerInfoPanel.Setup(currentTower.Data);
+        towerInfoPanel.Setup(currentTower);
 
         towerInfoPanel.gameObject.SetActive(true);
     }
@@ -159,9 +152,16 @@ public class UIManager : MonoBehaviour
         {
             GameManager.Instance.OnChangedGold += UpdateGold;
         }
+
+        //Button[] allButtons = Resources.FindObjectsOfTypeAll<Button>();
+
+        //foreach (Button btn in allButtons)
+        //{
+        //    btn.AddComponent<ButtonSoundTrigger>();
+        //}
     }
 
-    public void GachaBtn()
+    public void GachaButton()
     {
         //타워 뽑기 비용 100
         if (GameManager.Instance.Gold >= TowerManager.GACHA_PRICE)
@@ -169,6 +169,11 @@ public class UIManager : MonoBehaviour
             GameManager.Instance.Gold -= TowerManager.GACHA_PRICE;
             int towerid = TowerManager.Instance.Gacha();
             //Debug.Log(towerid);
+        }
+        else
+        {
+            //todo : 실패 사운드
+            //SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
         }
     }
 
@@ -181,68 +186,7 @@ public class UIManager : MonoBehaviour
         augmentPanel.gameObject.SetActive(true);
     }
     public void CloseAugmentPanel() => augmentPanel.gameObject.SetActive(false);
-    
 
-    public void CloseTileTransitionPanel()
-    {
-        //하이라이트 제거 
-        if (CurrentTile != null)
-        {
-            CurrentTile.transform.GetChild(3).gameObject.SetActive(false);
-            CurrentTile = null;
-        }
-        backGroundPanel.SetActive(false);
-        tileTransitionPanel.SetActive(false);
-    }
-
-    public void ConfirmTileTransition()
-    {
-        if (CurrentTile != null)
-        {
-            //유효성 검사를 위한 임시 변경
-            currentTile.ChangeTileType();
-
-            bool isGenerated = PathNodeManager.Instance.GeneratePath();
-
-            if (!isGenerated)
-            {
-                currentTile.ChangeTileType();
-            }
-            //Toast메시지 출력 
-            OpenTileToastMessage(isGenerated);
-            GameManager.Instance.Gold -= TileManager.TRANSITION_PRICE;
-
-            CloseTileTransitionPanel();
-        }
-        else
-            return;
-    }
-
-    /// <summary>
-    /// 타일 변환 성공 여부를 받아 해당하는 토스트 메시지를 출력 
-    /// </summary>
-    public void OpenTileToastMessage(bool isSuccess)
-    {
-        if (fadeOutCoroutine != null)
-        {
-            StopCoroutine(fadeOutCoroutine);
-            fadeOutObject.SetActive(false);
-        }
-
-        if (isSuccess)
-        {
-            transitionSucceedToast.SetActive(true);
-            fadeOutObject = transitionSucceedToast;
-            fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(fadeOutObject, 0.5f, fadeOutDelay));
-
-        }
-        else
-        {
-            transitionFailedToast.SetActive(true);
-            fadeOutObject = transitionFailedToast;
-            fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(transitionFailedToast, 0.5f, fadeOutDelay));
-        }
-    }
     public void OpenAttachToastMessage()
     {
         if (fadeOutCoroutine != null)
@@ -257,48 +201,14 @@ public class UIManager : MonoBehaviour
     }
 
     //타일 전환 창
+    [SerializeField] private TileTransitionPanel tileTransitionPanel;
     public void OpenTileTransitionPanel(TileInteractor SelectTile)
     {
-        //하이라이트 끄기 
-        if (CurrentTile != null)
-        {
-            CurrentTile.transform.GetChild(3).gameObject.SetActive(false);
-            CurrentTile = null;
-        }
-        CurrentTile = SelectTile;
+        tileTransitionPanel.Setup(SelectTile);
 
-        if (currentTile.Type != TileInfo.TYPE.Wall && currentTile.Type != TileInfo.TYPE.Road) return;
-
-        tileTransitionPanel.SetActive(true);
-        backGroundPanel.SetActive(true);
-        currentTileText.text = $"{SelectTile.Type}";
-        toChangeTileText.text = SelectTile.Type == TileInfo.TYPE.Road ? "Wall" : "Road";
-        priceText.text = $"{TileManager.TRANSITION_PRICE}";
-
-        //todo 재화 상태에 따라 버튼이 달라지는 기능
-        if (GameManager.Instance.Gold >= TileManager.TRANSITION_PRICE)
-        {
-           confirmBtn.interactable = true;
-        }
-        else
-        {
-            confirmBtn.interactable = false;
-        }
-
-        //if (CurrentTile.Type == TileInfo.TYPE.Road )
-        //{
-        //    tileTransitionPanel.SetActive(true);
-        //    currentTileText.text = $"{SelectTile.Type}";
-        //    toChangeTileText.text = $"Wall";
-
-        //}
-        //else if(CurrentTile.Type == TileInfo.TYPE.Wall)
-        //{
-        //    tileTransitionPanel.SetActive(true);
-        //    currentTileText.text = $"{SelectTile.Type}";
-        //    toChangeTileText.text = $"Road";
-        //}
+        tileTransitionPanel.gameObject.SetActive(true);
     }
+
 
     public void TurnOnHighlightTile(TileInteractor tileInteractor, bool isValid)
     {
@@ -313,15 +223,6 @@ public class UIManager : MonoBehaviour
         // 모든 하이라이트 비활성화  
         tileInteractor.gameObject.transform.GetChild(5).gameObject.SetActive(false);
         tileInteractor.gameObject.transform.GetChild(6).gameObject.SetActive(false);
-    }
-
-    public void SellTower()
-    {
-        if (CurrentTower != null)
-        {
-            TowerManager.Instance.SellTower(CurrentTower);
-            CurrentTower = null;
-        }
     }
 
     public void UpdateGold(int gold) => goldText.text = $"Gold : {gold}";
@@ -378,13 +279,6 @@ public class UIManager : MonoBehaviour
             //패널 닫기
             CloseTowerInfo();
         }
-
-        if (tileTransitionPanel.activeSelf)
-        {
-            //패널 닫기 
-            CloseTileTransitionPanel();
-        }
-
     }
 
     private IEnumerator FadeOutCanvasGroup(GameObject fadeOutObject, float waitTime, float fadeOutTime)

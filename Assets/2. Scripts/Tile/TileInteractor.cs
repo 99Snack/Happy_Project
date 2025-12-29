@@ -26,7 +26,7 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick(PointerEventData eventData)
     {
         //타일 건설 불가 상태면 무시 
-        //if (SpawnManager.Instance != null && !SpawnManager.Instance.CanBuild) return;
+        if (SpawnManager.Instance != null && !SpawnManager.Instance.CanMaintain) return;
     
         //유효한 좌표가 아니면
         if (!TileManager.Instance.IsValidCoordinate(X, Y)) return;

@@ -36,9 +36,15 @@ public class TowerManager : MonoBehaviour
 
         if (waitTowerCount >= waitingSeat.Count)
         {
+            //todo : 실패 사운드
+            //SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
+
             Debug.Log($"대기석이 꽉 찼습니다. 대기석에 있는 타워 수 : {waitTowerCount}");
             return -1;
         }
+
+        //todo : 성공 사운드
+        //SoundManager.Instance.PlaySFX(ClipName.Success_sound);
 
         int basicIdx = DataManager.Instance.GachaData.Keys.ElementAt(0);
         int towerId = DataManager.Instance.GachaData[basicIdx].TowerID;
