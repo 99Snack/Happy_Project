@@ -1,3 +1,5 @@
+
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -202,6 +204,7 @@ public class SpawnManager : MonoBehaviour
             Monster monsterScript = monster.GetComponent<Monster>();
 
             monsterScript.SetSpawnNumber(monsterData, currentMonsterGropInfo[orderIndex].SpawnOrder);
+             monsterScript.Spawn(); // 스폰 애니 재생 
             activeMonsterList.Add(monsterScript);
 
             spawnCount++;
@@ -289,7 +292,7 @@ public class SpawnManager : MonoBehaviour
             spawnRoutine = null;
         }
 
-        Debug.Log("스테이지 패배!");
+        //Debug.Log("스테이지 패배!");
 
         RecallAllMonsters();
 
