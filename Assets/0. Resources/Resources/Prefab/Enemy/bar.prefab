@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5968244337325378968}
   - component: {fileID: 7577685390035078929}
   - component: {fileID: 980543074429575773}
+  - component: {fileID: 630720782357652117}
   m_Layer: 5
   m_Name: bar
   m_TagString: Untagged
@@ -84,7 +85,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &980543074429575773
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -102,6 +103,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &630720782357652117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5511850869898041271}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc757baddfe78a24bb957829ff6d5f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Billboard
 --- !u!1001 &5237243632099965245
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -156,11 +169,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 429491977448149253, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071068
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 429491977448149253, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.7071068
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 429491977448149253, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
       propertyPath: m_LocalRotation.y
@@ -180,7 +193,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 429491977448149253, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 429491977448149253, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -205,6 +218,10 @@ PrefabInstance:
     - target: {fileID: 6205890943855647944, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
       propertyPath: m_Name
       value: hpBar
+      objectReference: {fileID: 0}
+    - target: {fileID: 8819775309676166482, guid: ed8013b421a0a52478e9759276bd050b, type: 3}
+      propertyPath: m_Color.a
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

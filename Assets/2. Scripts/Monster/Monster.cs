@@ -31,14 +31,14 @@ public class Monster : MonoBehaviour
     Dictionary<int, (DebuffData, Coroutine)> activeDebuffs = new Dictionary<int, (DebuffData, Coroutine)>();
 
     public int currentHp; // 현재 체력 (DB에 없어서 여기에 선언)
-    private Slider hpSlider; // 몹 hp ui 
+  
 
     // 스폰 번호(순서) 길찾기에서 사용용
     public int SpawnNumber { get; private set; }
 
     private bool isDead = false; // 몬스터 사망 여부 // 중복 사망 방지용 
     public bool isSpawning = false; // 몬스터 스폰 완료 여부
-    
+
 
     private void Awake()
     {
@@ -47,8 +47,11 @@ public class Monster : MonoBehaviour
         {
             anim = transform.GetComponentInChildren<Animator>(); // 애니메이터 컴포넌트가 자식에 있을때
         }
+        if (hpBar == null)
+        {
+            hpBar = GetComponentInChildren<Slider>();
+        }
     }
-
     // 오브젝트 풀에서 재사용할때 초기화
     private void OnEnable()
     {
@@ -88,11 +91,11 @@ public class Monster : MonoBehaviour
 
     void UpdateHpUI()
     {
-        if (hpSlider != null)
+        if (hpBar != null)
         {
             //int maxHp = (Data != null) ? currentHp : 100;
             float current = (float)currentHp / Data.Hp;
-            hpSlider.DOValue(current, 0.25f).SetEase(Ease.Linear);
+            hpBar.DOValue(current, 0.25f).SetEase(Ease.Linear);
         }
     }
 

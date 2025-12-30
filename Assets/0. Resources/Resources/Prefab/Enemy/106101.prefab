@@ -185,6 +185,7 @@ MonoBehaviour:
     multiStat: 0
   attackCooldown: 0
   currentHp: 0
+  isSpawning: 0
 --- !u!136 &956987655686452790
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1414,7 +1415,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5428283706972861241, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 5428283706972861241, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1432,6 +1433,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: bar
       objectReference: {fileID: 0}
+    - target: {fileID: 5574244644001409080, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574244644001409080, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5574244644001409080, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7577685390035078929, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
       propertyPath: m_PresetInfoIsWorld
       value: 1
@@ -1439,7 +1452,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5511850869898041271, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6608404283579065439}
   m_SourcePrefab: {fileID: 100100000, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
 --- !u!114 &3310343658324586833 stripped
 MonoBehaviour:
@@ -1452,6 +1468,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!1 &7506080179914486626 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5511850869898041271, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
+  m_PrefabInstance: {fileID: 2617984526346118357}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6608404283579065439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7506080179914486626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fc757baddfe78a24bb957829ff6d5f12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Billboard
 --- !u!224 &7998903434641938412 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5428283706972861241, guid: 4d7da1cbda63f0047823ede1813672d8, type: 3}
