@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
 
 public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
@@ -10,6 +12,13 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private Tower tower;
     private TileInteractor originTile;
     private TileInteractor previousTile;
+    private int towerRange; 
+
+    private List<Vector2Int> currentHighLight;
+    private List<Vector2Int> previousHighLight;
+
+
+
     private bool isBuild;
 
     private void Awake()
@@ -26,6 +35,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         initPosition = transform.position;
 
         tower = GetComponent<Tower>();
+        towerRange = tower.Data.Range;
+        currentHighLight = new List<Vector2Int>();
+        previousHighLight = new List<Vector2Int>();
     }
 
     //드래그 시작
@@ -61,6 +73,8 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if(isBuild) return;
         
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
+        
+       
     
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
         {
@@ -70,20 +84,40 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             
             transform.position = colPos;
 
-
             if(interactor != null)
             {
-                if(previousTile != null && previousTile != interactor)
+                if(interactor.Type == TileInfo.TYPE.Wall || interactor.Type == TileInfo.TYPE.Road)
                 {
-                    UIManager.Instance.TurnOffHighlightTile(previousTile);     
+                    if(currentHighLight.Count > 0)
+                    {      
+                        List<Vector2Int> temp = previousHighLight;
+                        previousHighLight = currentHighLight;
+                        currentHighLight  = temp;
+                    }
+                    currentHighLight.Clear();
+                    GetRangeTile(new Vector2Int(interactor.X,interactor.Y),currentHighLight);
+
+                    foreach(var coor in currentHighLight)
+                    {
+                        //현재에는 있지만 이전에는 없었던 타일 켜기 
+                        if(!previousHighLight.Contains(coor))
+                        {
+                            TileInteractor coortile = TileManager.Instance.map.tiles[(coor.x,coor.y)];
+                            UIManager.Instance.TurnOnHighlightTile(coortile,coortile.isAlreadyTower);
+                        }
+                    }
+
+                    foreach(var coor in previousHighLight)
+                    {
+                        if(!currentHighLight.Contains(coor))
+                        {
+                            //이전에는 있었지만 현재에는 없는 타일 끄기 
+                            TileInteractor coortile = TileManager.Instance.map.tiles[(coor.x,coor.y)];
+                            UIManager.Instance.TurnOffHighlightTile(coortile);
+                        }
+                    }
                 }
-                if(interactor.Type == TileInfo.TYPE.Wall)
-                {
-                    UIManager.Instance.TurnOnHighlightTile(interactor, interactor.isAlreadyTower);
-                    previousTile = interactor;
-                }
-            }
-            
+            } 
         }
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -94,17 +128,15 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
         {
             TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
-            
-            if(interactor.Type == TileInfo.TYPE.Wall)
+            if(currentHighLight.Count > 0)
             {
-                UIManager.Instance.TurnOffHighlightTile(interactor); 
+                foreach(var coor in currentHighLight)
+                {
+                    TileInteractor coortile = TileManager.Instance.map.tiles[(coor.x,coor.y)];
+                    UIManager.Instance.TurnOffHighlightTile(coortile);
+                }    
             }
             
-            if(previousTile != null && interactor != previousTile && previousTile.Type == TileInfo.TYPE.Wall)
-            {
-                UIManager.Instance.TurnOffHighlightTile(previousTile);
-            }   
-
             if (interactor != null && !interactor.isAlreadyTower)
             {
                 if (interactor.Type == TileInfo.TYPE.Wall || interactor.Type == TileInfo.TYPE.Wait)
@@ -164,5 +196,28 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         }
     }
 
+    void GetRangeTile(Vector2Int center, List<Vector2Int> inRangeTIles)
+    {
+        for(int x = -towerRange; x <=  towerRange; x++ )
+        {
+            for(int y = -towerRange; y <= towerRange; y++ )
+            {
+                Vector2Int temp = new Vector2Int(center.x + x, center.y + y);
+                
+                if(!TileManager.Instance.IsValidCoordinate(temp.x,temp.y))
+                {
+                    continue;
+                }
+                
+                TileInteractor coortile = TileManager.Instance.map.tiles[(temp.x,temp.y)];
+                
+                if(coortile.Type == TileInfo.TYPE.Wait || coortile.Type == TileInfo.TYPE.EnemyBase || coortile.Type== TileInfo.TYPE.AllyBase)
+                {
+                    continue;
+                }
+                inRangeTIles.Add(temp);
+            }
+        }    
+    }
 
 }

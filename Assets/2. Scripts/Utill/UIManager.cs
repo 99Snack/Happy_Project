@@ -252,19 +252,28 @@ public class UIManager : MonoBehaviour
 
         tileTransitionPanel.gameObject.SetActive(true);
     }
+    public void CloseTileTransitionPanel()
+    {
+        if(tileTransitionPanel != null)
+        {
+            tileTransitionPanel.Cancel();
+        }
+    }
 
 
     public void TurnOnHighlightTile(TileInteractor tileInteractor, bool isValid)
     {
-        int num = isValid ? 6 : 5;
+        int num = isValid ? 5 : 4;
 
         // 하이라이트
         tileInteractor.gameObject.transform.GetChild(num).gameObject.SetActive(true);
+        tileInteractor.gameObject.transform.GetChild(6).gameObject.SetActive(true);
     }
 
     public void TurnOffHighlightTile(TileInteractor tileInteractor)
     {
         // 모든 하이라이트 비활성화  
+        tileInteractor.gameObject.transform.GetChild(4).gameObject.SetActive(false);
         tileInteractor.gameObject.transform.GetChild(5).gameObject.SetActive(false);
         tileInteractor.gameObject.transform.GetChild(6).gameObject.SetActive(false);
     }

@@ -36,7 +36,7 @@ public class TileInteractor : MonoBehaviour, IPointerClickHandler
         if (!data.IsTransition || isAlreadyTower) return;
         
         //선택된 좌표 하이라이트
-        transform.GetChild(3).gameObject.SetActive(true);
+        transform.GetChild(2).gameObject.SetActive(true);
         
         UIManager.Instance.OpenTileTransitionPanel(this);
     }

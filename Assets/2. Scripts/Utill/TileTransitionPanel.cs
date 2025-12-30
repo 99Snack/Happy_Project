@@ -66,7 +66,7 @@ public class TileTransitionPanel : MonoBehaviour
         //하이라이트 제거 
         if (currentTile != null)
         {
-            currentTile.transform.GetChild(3).gameObject.SetActive(false);
+            currentTile.transform.GetChild(2).gameObject.SetActive(false);
             currentTile = null;
         }
         gameObject.SetActive(false);
