@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -59,7 +59,7 @@ public class Monster : MonoBehaviour
         isSpawning = false;
 
         // 애니 트리거 전부 초기화 
-        if (anim!= null)
+        if (anim != null)
         {
             anim.ResetTrigger(hashSpawn);
             anim.ResetTrigger(hashHit);
@@ -126,8 +126,11 @@ public class Monster : MonoBehaviour
             if (value.Item2 != null) StopCoroutine(value.Item2);
         }
 
-        Coroutine newCoroutine = StartCoroutine(DebuffRoutine(debuff));
-        activeDebuffs[key] = (debuff, newCoroutine);
+        if (gameObject.activeSelf)
+        {
+            Coroutine newCoroutine = StartCoroutine(DebuffRoutine(debuff));
+            activeDebuffs[key] = (debuff, newCoroutine);
+        }
     }
 
     IEnumerator DebuffRoutine(DebuffData debuff)
@@ -297,7 +300,7 @@ public class Monster : MonoBehaviour
         // 애니 트리거 초기화 후 설정 (중복방지)
         if (anim != null)
         {
-         //   anim.ResetTrigger(hashSpawn);
+            //   anim.ResetTrigger(hashSpawn);
             anim.SetTrigger(hashSpawn);
         }
 

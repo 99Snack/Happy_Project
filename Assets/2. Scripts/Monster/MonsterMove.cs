@@ -78,7 +78,7 @@ public class MonsterMove : MonoBehaviour
         if (distance > AttackRange)
         {
             Vector3 moveDir = (TargetAnchor - transform.position).normalized;
-            transform.position += moveDir * monster.Data.MoveSpeed * Time.fixedDeltaTime;
+            transform.position += moveDir * monster.moveSpeed.finalStat * Time.fixedDeltaTime;
 
             if (!isTurning)
             {
