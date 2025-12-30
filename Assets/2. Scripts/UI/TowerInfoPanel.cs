@@ -30,7 +30,7 @@ public class TowerInfoPanel : MonoBehaviour
 
         string mainStr = tower.MainType switch
         {
-            1 => "원거리",
+            2 => "원거리",
             _ => "근접"
         };
         mainTypeText.text = mainStr;
