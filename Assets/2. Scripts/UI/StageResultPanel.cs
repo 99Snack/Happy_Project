@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StageResultPanel : MonoBehaviour
@@ -30,13 +29,12 @@ public class StageResultPanel : MonoBehaviour
     {
         //클릭 시 현재 스테이지를 종료하고 스테이지의 첫 웨이브 준비 시간 화면으로 즉시 전환된다.
         //SpawnManager.Instance.ResetStage();
-        gameObject.SetActive(false);
+        UIManager.Instance.GoToInGame();
     }
 
     public void ExitButton()
     {
         //클릭 시 스테이지 씬을 종료하고 로비 화면으로 이동한다.
-        SceneManager.LoadScene("Lobby");
-        gameObject.SetActive(false);
+        UIManager.Instance.GoToLobby();
     }
 }

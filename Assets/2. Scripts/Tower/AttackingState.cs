@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using UnityEngine;
 
 public class AttackingState : ITowerState
@@ -117,5 +117,7 @@ public class AttackingState : ITowerState
         waitingForAnimation = false;
     }
 
-    public void Exit() { }
+    public void Exit() {
+        tower.animator.SetBool(tower.hashIsAttacking, false);
+    }
 }

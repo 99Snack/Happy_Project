@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -152,6 +152,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public void Upgrade()
     {
         Data = DataManager.Instance.TowerBaseData[Data.TowerID + 1];
+        ResetStatus();
     }
 
     public void OnSold()
@@ -270,6 +271,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         atkPower.baseStat = CalcAttackOfficial();
         atkPower.additiveStat = 0;
         atkPower.multiStat = 1;
+
+        AugmentManager.Instance.ApplyAllActiveAugmentsToTower(this);
     }
 
     // FSM(AttackingState)에서 애니메이션 트리거를 위해 호출
@@ -313,6 +316,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
             // 모든 클립을 돌며 이름에 'attack'이 포함된 것을 찾음 
             foreach (var clip in animator.runtimeAnimatorController.animationClips)
             {
+                Debug.Log(clip.name);
                 if (clip.name.ToLower().Contains("attack"))
                 {
                     AttackClipLength = clip.length;

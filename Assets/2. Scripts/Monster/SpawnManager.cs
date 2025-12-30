@@ -314,12 +314,12 @@ public class SpawnManager : MonoBehaviour
 
 
         UIManager.Instance.OpenStageResultPanel(0);
-        yield return new WaitWhile(() => UIManager.Instance.IsActiveStageResultPanel());
-        //todo : 코드 리셋
-        //맵을 재생성 
-        //ResetStage();
-        //todo : 씬로드 리셋
-        SceneManager.LoadScene("InGame");
+        //yield return new WaitWhile(() => UIManager.Instance.IsActiveStageResultPanel());
+        ////todo : 코드 리셋
+        ////맵을 재생성 
+        ////ResetStage();
+        ////todo : 씬로드 리셋
+        //SceneManager.LoadScene("InGame");
     }
 
     public void RecallAllMonsters()
