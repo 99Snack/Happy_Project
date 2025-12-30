@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,7 +11,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private Tower tower;
     private TileInteractor originTile;
     private TileInteractor previousTile;
-    public bool isBuild;
+    private bool isBuild;
 
     private void Awake()
     {
@@ -35,21 +36,21 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if (Physics.Raycast(ray, out RaycastHit hit, 2f, tileLayer))
         {
             originTile = hit.collider.GetComponent<TileInteractor>();
-
+            
             //건설된 타워인지 확인 
-            if (originTile != null)
+            if (originTile != null) 
             {
-                if (originTile.Type == TileInfo.TYPE.Wall)
+                if(originTile.Type == TileInfo.TYPE.Wall)
                 {
 
                     isBuild = true;
-                }
+                }   
                 else
                 {
                     isBuild = false;
                     originTile.isAlreadyTower = false;
                 }
-
+                    
             }
         }
     }
@@ -57,53 +58,56 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnDrag(PointerEventData eventData)
     {
         if (mainCam == null) return;
-
-        if (isBuild) return;
-
+        
+        if(isBuild) return;
+        
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer ))
         {
             Vector3 colPos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
-
+            
             TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
-
+            
             transform.position = colPos;
 
-
-            if (interactor != null)
+            if(interactor != null)
             {
-                if (previousTile != null && previousTile != interactor)
+                if(previousTile != null && previousTile != interactor)
                 {
-                    UIManager.Instance.TurnOffHighlightTile(previousTile);
+                    UIManager.Instance.TurnOffHighlightTile(previousTile);     
                 }
-                if (interactor.Type == TileInfo.TYPE.Wall)
+                if(interactor.Type == TileInfo.TYPE.Wall)
                 {
                     UIManager.Instance.TurnOnHighlightTile(interactor, interactor.isAlreadyTower);
                     previousTile = interactor;
                 }
             }
-
+            UIManager.Instance.CloseTowerInfo();
+            
         }
+        
+
     }
     public void OnEndDrag(PointerEventData eventData)
     {
-        if (isBuild) return;
+
+        if(isBuild) return;
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
 
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
         {
             TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
-
-            if (interactor.Type == TileInfo.TYPE.Wall)
+            
+            if(interactor.Type == TileInfo.TYPE.Wall)
             {
-                UIManager.Instance.TurnOffHighlightTile(interactor);
+                UIManager.Instance.TurnOffHighlightTile(interactor); 
             }
-
-            if (previousTile != null && interactor != previousTile && previousTile.Type == TileInfo.TYPE.Wall)
+            
+            if(previousTile != null && interactor != previousTile && previousTile.Type == TileInfo.TYPE.Wall)
             {
                 UIManager.Instance.TurnOffHighlightTile(previousTile);
-            }
+            }   
 
             if (interactor != null && !interactor.isAlreadyTower)
             {
@@ -139,14 +143,8 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     //드래그 드랍했을때 타워정보창 닫기
                     UIManager.Instance.CloseTowerInfo();
 
-                    //타워 배치 성공 시 사운드
+                    //todo : 타워 배치 성공 시 사운드
                     SoundManager.Instance.PlaySFX(ClipName.Success_sound);
-
-                    //타워 설치 시 설치 시간 할당(승급조건)
-                    if (interactor.Type == TileInfo.TYPE.Wall)
-                    {
-                        tower.PlacedTime = Time.time;
-                    }
 
                     return;
                 }
@@ -155,7 +153,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     Debug.LogError($"현재 타일의 타입은 {interactor.Type}입니다");
                 }
             }
-            else if (interactor.isAlreadyTower && interactor.Type == TileInfo.TYPE.Wall)
+            else if(interactor.isAlreadyTower && interactor.Type == TileInfo.TYPE.Wall)
             {
                 CameraManager.Instance.ShakeCam();
                 UIManager.Instance.OpenAttachToastMessage();
