@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class AttackingState : ITowerState
@@ -14,94 +14,38 @@ public class AttackingState : ITowerState
     public void Enter()
     {
         tower.state = statetest.attack;
+
+        // [수정] 애니메이션 배속 설정
+        if (tower.Data.AttackInterval > 0)
+        {
+            // [수정]배속 = 애니메이션원본길이 / 원하는공격간격
+            float speedMultiplier = tower.AttackClipLength / tower.Data.AttackInterval;
+            tower.animator.SetFloat(tower.hashAttackInterval, speedMultiplier);
+        }
+        
+
         tower.animator.SetBool(tower.hashIsAttacking, true);
         tower.animator.SetBool(tower.hashIsCooldown, false);
-        waitingForAnimation = false;
-
-        // 애니메이션 속도 조정
-        AdjustAnimationSpeed();
-    }
-
-    public void Update()
-    {
-        // 타겟 유효성 검사
-        if (tower.currentTarget == null || !tower.currentTarget.gameObject.activeInHierarchy)
-        {
-            tower.currentTarget = null;
-            tower.ChangeState(tower.AttackStopState);
-            return;
-        }
-
-        // 사거리 체크
-        if (!tower.IsTargetInRange())
-        {
-            tower.ChangeState(tower.AttackStopState);
-            return;
-        }
-
-        // 회전 처리
-        if (tower.IsRotate)
-        {
-            Vector3 direction = tower.Soldier.position - tower.currentTarget.transform.position;
-            direction.y = 0;
-
-            if (direction != Vector3.zero)
-            {
-                Quaternion lookTarget = Quaternion.LookRotation(direction);
-                tower.Soldier.rotation = Quaternion.Slerp(
-                    tower.Soldier.rotation,
-                    lookTarget,
-                    Time.deltaTime * 30f
-                );
-            }
-        }
-
-        // 쿨다운이 끝나고 애니메이션 대기 중이 아닐 때만 공격 시작
-        if (tower.CanAttack() && !waitingForAnimation)
-        {
-            PerformAttack();
-        }
-    }
-
-    private void PerformAttack()
-    {
-        waitingForAnimation = true;
-
-        // 쿨다운 시작 (AttackInterval 보장)
-        tower.ResetCooldown(tower.Data.AttackInterval);
-
-        // 애니메이션 트리거
-        tower.animator.SetTrigger(tower.hashAttack);
-
-        // 애니메이션이 끝날 때까지 대기하는 코루틴 시작
-        tower.StartCoroutine(WaitForAnimationEnd());
-    }
-
-    private IEnumerator WaitForAnimationEnd()
-    {
-        // 트리거 발동 후 애니메이션 전환 대기
-        yield return null;
-
-        AnimatorStateInfo stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
-
-        // Attack 태그가 있는 애니메이션이 끝날 때까지 대기
-        while (stateInfo.IsTag("Attack") && stateInfo.normalizedTime < 0.95f)
-        {
-            yield return null;
-            stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
-        }
 
         waitingForAnimation = false;
-    }
 
-    private void AdjustAnimationSpeed()
-    {
-        tower.StartCoroutine(SetAnimationSpeed());
+        // [수정]진입하자마자 공격
+        if (tower.CanAttack())
+        {
+            ExecuteAttack();
+        }
     }
-
-    private IEnumerator SetAnimationSpeed()
+    
+    private void ApplySpeedImmediate()
     {
-        yield return null;
+        // 애니메이션 길이에 맞춰 AttackInterval 파라미터 즉시 설정
+        // 기본 배속 계산 로직 (기본 1배속 설정 후 애니메이터가 배속 적용)
+        //float animLength = 1.0f; // 기본값
+        //if (tower.animator.runtimeAnimatorController != null)
+        //{
+        //    float speed = 1.0f / tower.Data.AttackInterval;
+        //    tower.animator.SetFloat(tower.hashAttackInterval, speed);
+        //}
 
         AnimatorStateInfo stateInfo = tower.animator.GetCurrentAnimatorStateInfo(0);
 
@@ -115,12 +59,63 @@ public class AttackingState : ITowerState
                 tower.animator.SetFloat(tower.hashAttackInterval, speed);
             }
         }
+
     }
 
-    public void Exit()
+    public void Update()
     {
-        tower.animator.SetBool(tower.hashIsAttacking, false);
-        tower.animator.SetFloat(tower.hashAttackInterval, 1f);
+        if (tower.currentTarget == null || !tower.currentTarget.gameObject.activeInHierarchy)
+        {
+            tower.currentTarget = null;
+            tower.ChangeState(tower.AttackStopState);
+            return;
+        }
+
+        if (!tower.IsTargetInRange())
+        {
+            tower.ChangeState(tower.AttackStopState);
+            return;
+        }
+
+        if (tower.IsRotate)
+        {
+            // 타겟 방향 바라보기 (부드러운 회전)
+            Vector3 dir = tower.currentTarget.transform.position - tower.transform.position;
+            dir.y = 0;
+            if (dir != Vector3.zero)
+                tower.Soldier.rotation = Quaternion.Slerp(tower.Soldier.rotation, Quaternion.LookRotation(-dir), Time.deltaTime * 15f);
+        }
+
+        // 공격 가능하면 즉시 공격
+        if (tower.CanAttack() && !waitingForAnimation)
+        {
+            tower.Attack();
+            tower.attackCooldown = tower.Data.AttackInterval;
+            tower.StartCoroutine(WaitForAnimationEnd());
+        }
+    }
+
+    // [수정]
+    private void ExecuteAttack()
+    {
+        tower.Attack();
+        tower.attackCooldown = tower.Data.AttackInterval;
+
+        // 애니메이션을 0프레임부터 강제 재생하여 딜레이 체감 제거
+        tower.animator.Play("Attack", 0, 0f);
+
+        if (tower.gameObject.activeInHierarchy)
+        {
+            tower.StartCoroutine(WaitForAnimationEnd());
+        }
+    }
+
+    private IEnumerator WaitForAnimationEnd()
+    {
+        waitingForAnimation = true;
+        yield return new WaitForSeconds(tower.Data.AttackInterval * 0.9f); // 공격 간격의 90% 지점에서 해제
         waitingForAnimation = false;
     }
+
+    public void Exit() { }
 }
