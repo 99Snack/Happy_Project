@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -61,15 +62,14 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if(isBuild) return;
         
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
-    
-        if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
+
+        if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer ))
         {
             Vector3 colPos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
             
             TileInteractor interactor = hit.collider.GetComponent<TileInteractor>();
             
             transform.position = colPos;
-
 
             if(interactor != null)
             {
@@ -83,11 +83,15 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     previousTile = interactor;
                 }
             }
+            UIManager.Instance.CloseTowerInfo();
             
         }
+        
+
     }
     public void OnEndDrag(PointerEventData eventData)
     {
+
         if(isBuild) return;
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
 
