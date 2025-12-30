@@ -230,8 +230,6 @@ public class SpawnManager : MonoBehaviour
     // 웨이브 승리 처리 
     IEnumerator ProcessWaveWin()
     {
-
-
         UIManager.Instance.OpenWaveResultPanel(1);
         yield return new WaitWhile(() => UIManager.Instance.IsActiveWaveResultPanel());
 
@@ -245,9 +243,8 @@ public class SpawnManager : MonoBehaviour
             //SoundManager.Instance.PlaySFX(ClipName.Clear_sound);
 
             //Debug.Log("모든 스테이지 클리어!");
-            OnStageClear.Invoke();
-
             UIManager.Instance.OpenStageResultPanel(1);
+           //PlayerPrefs.SetInt($"StageClear_{GameManager.Instance.StageInfo.Index}", 1);  
         }
         else
         {
@@ -258,6 +255,7 @@ public class SpawnManager : MonoBehaviour
             currentState = STATE.Preparation;
 
             int nextStageNum = waveIndex + 1;
+
             if (nextStageNum == 4 || nextStageNum == 9)
             {
                 UIManager.Instance.OpenAugmentPanel(nextStageNum);
