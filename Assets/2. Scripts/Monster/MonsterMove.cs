@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
@@ -34,9 +34,11 @@ public class MonsterMove : MonoBehaviour
     // 피드백 관련
     bool isFeedbackPaused = false; // 피드백 출력 중 일시정지 상태
 
+    Animator animator;
     private void Awake()
     {
         monster = GetComponent<Monster>();    // 몬스터 스크립트 가져오기
+        animator = GetComponentInChildren<Animator>(); // 자식 오브젝트의 애니메이터 가져오기
     }
 
     void OnEnable()
@@ -89,9 +91,15 @@ public class MonsterMove : MonoBehaviour
         // 회전 처리
         if (isTurning)
         {
-            turnProgress += Time.deltaTime / turnDuration;
-
-            if (turnProgress >= 1f)
+            //turnProgress += Time.deltaTime / turnDuration;
+           AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            bool isInTurnState = state.IsName("Turn Left") || state.IsName("Turn Right");
+            if (isInTurnState)
+            {
+                turnProgress = 1f;
+            }
+            //if (turnProgress >= 1f)
+            if (turnProgress >= 0f && !isInTurnState)
             {
                 isTurning = false;
                 currentLookDir = nextDir;
@@ -242,7 +250,7 @@ public class MonsterMove : MonoBehaviour
     {
         isTurning = true;
 
-        turnProgress = 0f; // 회전 진행도 초기화
+        turnProgress = -1f; // 회전 진행도 초기화
         nextDir = targetDirection; // 회전 후 바라볼 목표 방향 설정
     }
 
