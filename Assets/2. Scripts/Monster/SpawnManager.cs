@@ -96,6 +96,9 @@ public class SpawnManager : MonoBehaviour
 
         //todo : 웨이브 시작 사운드
         SoundManager.Instance.PlaySFX(ClipName.Wave_sound);
+
+        UIManager.Instance.CloseTileTransitionPanel();
+
     }
 
     private void StartWave()
@@ -206,7 +209,7 @@ public class SpawnManager : MonoBehaviour
             Monster monsterScript = monster.GetComponent<Monster>();
 
             monsterScript.SetSpawnNumber(monsterData, currentMonsterGropInfo[orderIndex].SpawnOrder);
-             monsterScript.Spawn(); // 스폰 애니 재생 
+            monsterScript.Spawn(); // 스폰 애니 재생 
             activeMonsterList.Add(monsterScript);
 
             spawnCount++;
@@ -248,7 +251,7 @@ public class SpawnManager : MonoBehaviour
 
             //Debug.Log("모든 스테이지 클리어!");
             UIManager.Instance.OpenStageResultPanel(1);
-           PlayerPrefs.SetInt($"StageClear_{GameManager.Instance.StageInfo.Index}", 1);
+            PlayerPrefs.SetInt($"StageClear_{GameManager.Instance.StageInfo.Index}", 1);
         }
         else
         {
