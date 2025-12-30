@@ -79,6 +79,8 @@ public class SpawnManager : MonoBehaviour
     {
         if (currentState != STATE.Preparation) return;
 
+        BaseCamp.Instance.SetHealthPoint(waves[waveIndex]);
+
         //if (currentState == STATE.Preparation)
         //{
         //    StartWave();  // Idle 또는 Maintenance 상태에서만 시작 가능
@@ -385,8 +387,6 @@ public class SpawnManager : MonoBehaviour
             .OrderBy(x => x.WaveOrder).ToList();
         }
 
-        BaseCamp.Instance.SetHealthPoint(waves[waveIndex]);
-        UIManager.Instance.UpdateAllyBaseCampHp();
 
         TotalWaves = waves.Count;
 

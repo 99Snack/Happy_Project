@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections;
 using UnityEngine;
+using UnityEditor.Build.Content;
 
 public class BaseCamp : MonoBehaviour
 {
@@ -62,10 +63,11 @@ public class BaseCamp : MonoBehaviour
         {
             if (aug.Tag == 0 && aug.Category == 1)
             {
-                basecampHp += (int)aug.CalcGrowValue(1);
+                int stage = GameManager.Instance.StageInfo.Index - 10000;
+                basecampHp += aug.Value_N * (int)aug.CalcGrowValue(stage);
             }
         }
-        currentHp = basecampHp;
+        CurrentHp = basecampHp;
     }
 
 

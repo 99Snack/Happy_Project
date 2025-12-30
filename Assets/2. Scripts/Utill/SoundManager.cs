@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Unity.VisualScripting.Member;
 
 public enum ClipName
 {
@@ -50,6 +51,7 @@ public class SoundManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    public bool isMute = true;
     [SerializeField] private AudioSource bgmPlayer;
 
     [SerializeField] private int poolSizePerSound = 5;
@@ -98,6 +100,7 @@ public class SoundManager : MonoBehaviour
 
         source.clip = audioClipDic[name];
         source.gameObject.SetActive(true);
+        source.volume = isMute ? 0 : 1;
         source.Play();
 
         StartCoroutine(ReturnToPool(name, source, audioClipDic[name].length));
@@ -112,6 +115,7 @@ public class SoundManager : MonoBehaviour
 
         bgmPlayer.clip = audioClipDic[name];
         bgmPlayer.loop = loop;
+        bgmPlayer.volume = isMute ? 0 : 1;
         bgmPlayer.Play();
     }
 

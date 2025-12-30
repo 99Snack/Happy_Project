@@ -36,10 +36,7 @@ public class UIManager : MonoBehaviour
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnChangedGold += UpdateGold;
-        }
+        GameManager.Instance.OnChangedGold += UpdateGold;
     }
 
     //현재 생성된 UI 루트 오브젝트를 저장할 변수

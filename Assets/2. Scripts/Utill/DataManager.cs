@@ -19,6 +19,7 @@ public class DataManager : MonoBehaviour
         else
         {
             instance = this;
+            DontDestroyOnLoad(gameObject);
         }
 
         DataParse();
@@ -76,9 +77,9 @@ public class DataManager : MonoBehaviour
         AddToDictionary(debuffData, DataParser.Parse<DebuffData>("debuff"), d => d.DebuffId);
 
         // 증강
-        AddToDictionary(augmentData, DataParser.Parse<AugmentData>("augment"), d=> d.Index);
+        AddToDictionary(augmentData, DataParser.Parse<AugmentData>("augment"), d => d.Index);
 
-        AddToDictionary(localizationData, DataParser.Parse<LocalizationData>("localization"), d=> d.Index);
+        AddToDictionary(localizationData, DataParser.Parse<LocalizationData>("localization"), d => d.Index);
 
         Debug.Log("모든 데이터 파싱 완료");
     }
