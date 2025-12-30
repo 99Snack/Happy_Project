@@ -74,13 +74,13 @@ public class AugmentManager : MonoBehaviour
         }
     }
 
-    public List<AugmentData> GetGeneratorRandomAugment(int stage = 1)
+    public List<AugmentData> GetGeneratorRandomAugment(int wave = 1)
     {
-        return GetAugmentByTier(stage);
+        return GetAugmentByTier(wave);
     }
-    private List<AugmentData> GetAugmentByTier(int stage)
+    private List<AugmentData> GetAugmentByTier(int wave)
     {
-        int targetTier = stage switch
+        int targetTier = wave switch
         {
             >= 9 => 3,
             >= 4 => 2,

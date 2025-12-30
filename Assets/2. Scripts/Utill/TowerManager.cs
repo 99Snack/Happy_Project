@@ -29,6 +29,8 @@ public class TowerManager : MonoBehaviour
     public List<Tower> allTowers = new List<Tower>();
 
     private bool isMerge = false;
+    public bool IsMerge { get => isMerge; set => isMerge = value; }
+
 
     public int Gacha()
     {
@@ -37,14 +39,14 @@ public class TowerManager : MonoBehaviour
         if (waitTowerCount >= waitingSeat.Count)
         {
             //todo : 실패 사운드
-            //SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
-
+            SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
+            UIManager.Instance.OpenGachaFailedToast();
             Debug.Log($"대기석이 꽉 찼습니다. 대기석에 있는 타워 수 : {waitTowerCount}");
             return -1;
         }
 
         //todo : 성공 사운드
-        //SoundManager.Instance.PlaySFX(ClipName.Success_sound);
+        SoundManager.Instance.PlaySFX(ClipName.Success_sound);
 
         int basicIdx = DataManager.Instance.GachaData.Keys.ElementAt(0);
         int towerId = DataManager.Instance.GachaData[basicIdx].TowerID;
@@ -62,6 +64,8 @@ public class TowerManager : MonoBehaviour
                 break;
             }
         }
+
+        GameManager.Instance.Gold -= GACHA_PRICE;
 
         GeneratorTower(towerId);
 
@@ -86,7 +90,6 @@ public class TowerManager : MonoBehaviour
 
                 allTowers.Add(tower);
 
-                //todo : 뽑은 후 증강데이터 적용하기
                 AugmentManager.Instance.ApplyAllActiveAugmentsToTower(tower);
 
                 if (tower.Data?.Grade != 3)
@@ -107,7 +110,7 @@ public class TowerManager : MonoBehaviour
 
         if (matches.Count >= 3)
         {
-            if (isMerge) return;
+            if (IsMerge) return;
 
             var sortedMatches = matches
                                 //1. 타일 위 여부
@@ -145,7 +148,7 @@ public class TowerManager : MonoBehaviour
     IEnumerator MergeEffect(Tower target, List<Tower> removeTowers)
     {
         Time.timeScale = 0;
-        isMerge = true;
+        IsMerge = true;
 
         yield return new WaitForSecondsRealtime(0.3f);
 
@@ -195,7 +198,7 @@ public class TowerManager : MonoBehaviour
         target.Upgrade();
 
         Time.timeScale = 1f;
-        isMerge = false;
+        IsMerge = false;
         CheckUpgrade(target);
     }
 

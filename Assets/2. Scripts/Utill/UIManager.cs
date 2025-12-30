@@ -92,7 +92,8 @@ public class UIManager : MonoBehaviour
             this.stageExitPanel = container.stageBackButton;
             this.wavePreparation = container.WavePreparation;
             this.goldText = container.GoldText;
-            this.attachTowerToast = container.AttachToastMessage;
+            this.attachTowerToast = container.attachTowerFaildToast;
+            this.gachaFailedToast = container.gachaFaildToast;
             this.augmentPanel = container.AugmentPanel;
             this.activatedAugmentPanel = container.ActivatedAugmentPanel;
             this.waveResultPanel = container.WaveResultPanel;
@@ -225,10 +226,10 @@ public class UIManager : MonoBehaviour
     TileInteractor currentTile;
     public TileInteractor CurrentTile { get => currentTile; private set => currentTile = value; }
 
-    public void OpenAugmentPanel(int stage)
+    public void OpenAugmentPanel(int wave)
     {
         //현재 스테이지의 정보르 토대로 증강 가져오기
-        var augments = AugmentManager.Instance.GetGeneratorRandomAugment(stage);
+        var augments = AugmentManager.Instance.GetGeneratorRandomAugment(wave);
         augmentPanel.Setup(augments);
 
         augmentPanel.gameObject.SetActive(true);
@@ -238,10 +239,23 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CanvasGroup attachTowerToast;
     public void OpenAttachToastMessage()
     {
+        attachTowerToast.DOKill();
+
         attachTowerToast.alpha = 1f;
         attachTowerToast.gameObject.SetActive(true);
 
         attachTowerToast.DOFade(0f, 1.25f).SetEase(Ease.Linear).OnComplete(() => attachTowerToast.gameObject.SetActive(false));
+    }
+
+    [SerializeField] private CanvasGroup gachaFailedToast;
+    public void OpenGachaFailedToast()
+    {
+        gachaFailedToast.DOKill();
+
+        gachaFailedToast.alpha = 1f;
+        gachaFailedToast.gameObject.SetActive(true);
+
+        gachaFailedToast.DOFade(0f, 1.25f).SetEase(Ease.Linear).OnComplete(() => gachaFailedToast.gameObject.SetActive(false));
     }
 
     //타일 전환 창

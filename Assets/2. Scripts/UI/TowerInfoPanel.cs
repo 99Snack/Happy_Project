@@ -23,7 +23,7 @@ public class TowerInfoPanel : MonoBehaviour
 
         nameText.text = localStr[tower.Name].Ko;
         rangeText.text = $"{tower.Range} 칸";
-        attackText.text = $"공격력 {tower.Attack}";
+        attackText.text = $"공격력 {selectTower.atkPower.finalStat}";
         attackIntervalText.text = $"공격 주기 {tower.AttackInterval}";
         sellText.text = $"판매 ({tower.price}골드)";
         gradeText.text = $"{tower.Grade} 성";

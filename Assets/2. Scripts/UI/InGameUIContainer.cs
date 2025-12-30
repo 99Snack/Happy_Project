@@ -6,7 +6,8 @@ public class InGameUIContainer : MonoBehaviour
     public GameObject WavePreparation;
     public GameObject stageBackButton;
     public TextMeshProUGUI GoldText;
-    public CanvasGroup AttachToastMessage;
+    public CanvasGroup attachTowerFaildToast;
+    public CanvasGroup gachaFaildToast;
     public AugmentPanel AugmentPanel;
     public ActivatedAugmentPanel ActivatedAugmentPanel;
     public WaveResultPanel WaveResultPanel;
@@ -15,4 +16,5 @@ public class InGameUIContainer : MonoBehaviour
     public TowerInfoPanel TowerInfoPanel;
     public TileTransitionPanel TileTransitionPanel;
     public StageInfoPanel StageInfoPanel;
+
 }

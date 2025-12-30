@@ -907,6 +907,7 @@ MonoBehaviour:
   allyBaseCampPanel: {fileID: 0}
   towerInfoPanel: {fileID: 0}
   attachTowerToast: {fileID: 0}
+  gachaFailedToast: {fileID: 0}
   tileTransitionPanel: {fileID: 0}
   stageInfoPanel: {fileID: 0}
 --- !u!1 &1708103914
@@ -1157,7 +1158,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa47229810ee9f4fa7dcf744b7ba058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  isMute: 0
+  isMute: 1
   bgmPlayer: {fileID: 5851831072610443753}
   poolSizePerSound: 5
 --- !u!82 &5851831072610443753

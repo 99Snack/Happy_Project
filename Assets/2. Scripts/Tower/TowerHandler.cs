@@ -139,8 +139,11 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     //드래그 드랍했을때 타워정보창 닫기
                     UIManager.Instance.CloseTowerInfo();
 
-                    //todo : 타워 배치 성공 시 사운드
+                    //타워 배치 성공 시 사운드
                     SoundManager.Instance.PlaySFX(ClipName.Success_sound);
+
+                    //타워 설치 시 설치 시간 할당(승급조건)
+                    tower.PlacedTime = Time.time;
 
                     return;
                 }
