@@ -22,7 +22,7 @@ public class GameManager : MonoBehaviour
     }
 
     //초기 재화 300골드 지급
-    public static readonly int START_GOLD = 300;
+    public static readonly int START_GOLD = 10000;
 
     #region 재화
     public event Action<int> OnChangedGold;

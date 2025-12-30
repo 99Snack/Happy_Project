@@ -1157,7 +1157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa47229810ee9f4fa7dcf744b7ba058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
-  isMute: 1
+  isMute: 0
   bgmPlayer: {fileID: 5851831072610443753}
   poolSizePerSound: 5
 --- !u!82 &5851831072610443753
