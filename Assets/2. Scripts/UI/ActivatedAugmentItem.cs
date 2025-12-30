@@ -12,8 +12,9 @@ public class ActivatedAugmentItem : MonoBehaviour
 
         Color color = augment.Tier switch
         {
-            1 => Color.orange,
-            2 => Color.skyBlue,
+            1 => Color.gray,
+            2 => Color.orange,
+            3 => Color.skyBlue,
             _ => Color.gray
         };
 

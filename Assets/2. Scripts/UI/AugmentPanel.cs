@@ -5,7 +5,22 @@ using UnityEngine;
 public class AugmentPanel : MonoBehaviour
 {
     [SerializeField] private GameObject AugmentPopup;
-    public AugmentItem[] items;
+
+    [SerializeField] private GameObject silverAugment;
+    [SerializeField] private GameObject goldAugment;
+    [SerializeField] private GameObject prismAugment;
+
+    [SerializeField] private Transform augmentItemParent;
+
+    List<Vector3> pos = new List<Vector3>
+    {
+    new Vector3(-400, 65, 0),
+    new Vector3(0, 65, 0),
+    new Vector3(400, 65, 0)
+    };
+
+    List<GameObject> augmentItems = new List<GameObject>();
+
     public TextMeshProUGUI skipText;
     private bool isVisible = true;
     private int tier = 1;
@@ -18,12 +33,38 @@ public class AugmentPanel : MonoBehaviour
 
     public void Setup(List<AugmentData> augments)
     {
+        ListClear();
+
         tier = augments[0].Tier;
+        GameObject prefab = tier switch
+        {
+            1 => silverAugment,
+            2 => goldAugment,
+            3 => prismAugment,
+            _ => silverAugment
+        };
+
         for (int i = 0; i < augments.Count; i++)
         {
-            items[i].Setup(augments[i]);
+            GameObject obj = Instantiate(prefab);
+            obj.transform.SetParent(augmentItemParent);
+            obj.GetComponent<RectTransform>().anchoredPosition = new Vector2(pos[i].x, pos[i].y);
+            augmentItems.Add(obj);
+            AugmentItem item = obj.GetComponent<AugmentItem>();
+            item.Setup(augments[i]);
         }
         UpdateSkipGoldText();
+    }
+
+    private void ListClear()
+    {
+
+        foreach (var item in augmentItems)
+        {
+            Destroy(item);
+        }
+
+        augmentItems.Clear();
     }
 
     public void VisiblePopup()

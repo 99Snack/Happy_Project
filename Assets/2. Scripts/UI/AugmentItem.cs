@@ -1,13 +1,13 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static UnityEngine.Rendering.HableCurve;
 
 public class AugmentItem : MonoBehaviour
 {
     private AugmentData data;
 
     [SerializeField] private Image icon;
+    [SerializeField] private Image backgroundImg;
     [SerializeField] private TextMeshProUGUI augmentName;
     [SerializeField] private TextMeshProUGUI description;
 
@@ -16,6 +16,8 @@ public class AugmentItem : MonoBehaviour
     {
         this.data = data;
         //icon = Resources.Load<Image>($"Icon/{data.Icon_Resource}");
+        string resource = "ItemFrame_Square_01_";
+        //Gray, Yellow, Purple
 
         string name = DataManager.Instance.LocalizationData[data.Name_STR].Ko;
         string desc = DataManager.Instance.LocalizationData[data.Desc_STR].Ko;
