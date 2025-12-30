@@ -91,12 +91,7 @@ public class TowerManager : MonoBehaviour
 
                 if (tower.Data?.Grade != 3)
                 {
-                    //임시 제한
-                    if (tower.Data.TowerID == 101001 ||
-                    tower.Data.TowerID == 101002)
-                    {
-                        CheckUpgrade(tower);
-                    }
+                    CheckUpgrade(tower);
                 }
                 return;
             }
