@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +41,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public Stat atkPower = new Stat();
 
-    // FSM
+    // FSM - 올려주신 개별 상태 클래스들과 연결
     private ITowerState currentState;
     public IdleState IdleState;
     public AttackStopState AttackStopState;
@@ -69,12 +69,22 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     protected List<IOnKillAugment> onKillAugs = new List<IOnKillAugment>();
     protected List<IStatusCheckAugment> onStatusAugs = new List<IStatusCheckAugment>();
 
+    public float AttackClipLength { get; private set; } = 1.0f; // [수정] 기본값
+
     public void Setup(int towerId, TileInteractor tile)
     {
         MyTile = tile;
         Data = DataManager.Instance.TowerBaseData[towerId];
+
+        //추가: 애니메이션 길이를 미리 계산해서 저장
+        SetAttackClipLength();
+
         ResetCooldown(data.AttackInterval);
         ResetStatus();
+
+        // FSM 인스턴스 생성 및 초기 상태 설정
+        SetState(this);
+        ChangeState(IdleState);
     }
 
     public void SetMyTile(TileInteractor tile) => MyTile = tile;
@@ -87,11 +97,18 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
             IsRotate = true;
             animator.applyRootMotion = true;
         }
+
+        // Setup이 외부에서 호출되지 않았을 경우를 대비한 방어 로직
+        if (currentState == null && MyTile != null)
+        {
+            SetState(this);
+            ChangeState(IdleState);
+        }
     }
 
     private void FixedUpdate()
     {
-        if (MyTile.Type == TileInfo.TYPE.Wait) return;
+        if (MyTile == null || MyTile.Type == TileInfo.TYPE.Wait) return;
 
         // 쿨다운 감소
         if (attackCooldown > 0f)
@@ -112,12 +129,16 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     protected virtual void Update()
     {
-        if (MyTile.Type == TileInfo.TYPE.Wait) return;
+        if (MyTile == null || MyTile.Type == TileInfo.TYPE.Wait) return;
+
+        // 현재 FSM 상태 업데이트 실행
         currentState?.Update();
     }
 
     public void ChangeState(ITowerState newState)
     {
+        if (newState == null) return;
+
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
@@ -143,8 +164,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     {
         if (currentTarget == null) return false;
 
-        int enemyX = Mathf.FloorToInt(currentTarget.transform.position.x);
-        int enemyY = Mathf.FloorToInt(currentTarget.transform.position.z);
+        int enemyX = Mathf.RoundToInt(currentTarget.transform.position.x);
+        int enemyY = Mathf.RoundToInt(currentTarget.transform.position.z);
 
         int dx = Mathf.Abs(enemyX - Coord.x);
         int dy = Mathf.Abs(enemyY - Coord.y);
@@ -251,14 +272,13 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         atkPower.multiStat = 1;
     }
 
-    // FSM에서 호출하는 메서드 (애니메이션 트리거만 발동)
+    // FSM(AttackingState)에서 애니메이션 트리거를 위해 호출
     public virtual void Attack()
     {
-        // 이 메서드는 더 이상 직접 데미지를 주지 않음
-        // AttackingState에서 애니메이션 트리거만 발동
+        animator.SetTrigger(hashAttack);
     }
 
-    // 애니메이션 이벤트에서 호출하는 실제 데미지 처리
+    // AnimationEventProxy의 OnAttack()에 의해 최종 호출됨
     public virtual void ExecuteDamage()
     {
         if (currentTarget == null) return;
@@ -283,4 +303,22 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public int CalcStageStat(AugmentData augment) =>
         Mathf.FloorToInt((augment.Value_N + augment.CalcGrowValue()));
+
+
+    // [수정]
+    protected void SetAttackClipLength()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            // 모든 클립을 돌며 이름에 'attack'이 포함된 것을 찾음 
+            foreach (var clip in animator.runtimeAnimatorController.animationClips)
+            {
+                if (clip.name.ToLower().Contains("attack"))
+                {
+                    AttackClipLength = clip.length;
+                    return; // 찾으면 종료
+                }
+            }
+        }
+    }
 }
