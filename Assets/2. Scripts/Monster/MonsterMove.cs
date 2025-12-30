@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
@@ -42,7 +42,11 @@ public class MonsterMove : MonoBehaviour
     void OnEnable()
     {
         currentLookDir = transform.forward; // 초기 방향 설정
+     //  currentLookDir = Vector3.forward; // 초기 방향 설정
+     //   currentIdx = 0; // 경로 초기화 
         goal = false;
+        isFeedbackPaused = false;
+        isTurning = false;
 
         // PathNodeManager에서 경로 및 피드백 좌표 지점 가져오기
         int spawnNum = monster.GetSpawnNumber(); // 몬스터의 스폰 번호 가져오기
@@ -60,13 +64,13 @@ public class MonsterMove : MonoBehaviour
             currentLookDir = (TargetAnchor - transform.position).normalized;
         }
 
-        monster.Spawn();  // 스폰 될때 스폰 애니 재생 
-    
+      //  monster.Spawn();  // 스폰 될때 스폰 애니 재생 
     }
 
     void FixedUpdate()
     {
         if (goal) return; // 도착하면 이동안함
+        if (monster.isSpawning) return; // 스폰중이면 이동안함
         // 이동 로직
         float distance = Vector3.Distance(transform.position, TargetAnchor);
         if (distance > AttackRange)
@@ -95,6 +99,7 @@ public class MonsterMove : MonoBehaviour
         }
 
         if (goal) return; // 도착하면 이동안함
+        if (monster.isSpawning) return; // 스폰중이면 이동안함
 
         // 피드백: 일시정지 상태면 이동 안 함
         if (isFeedbackPaused) return;
@@ -153,7 +158,7 @@ public class MonsterMove : MonoBehaviour
     void LateUpdate()
     {
         // 매 프레임 마지막에 현재 바라보는 방향으로 회전 적용 
-        if (!isTurning) // 회전중이 아니면 
+        if (!isTurning && currentLookDir != Vector3.zero) // 회전중이 아니면 앞 바라보기
         {
             transform.rotation = Quaternion.LookRotation(currentLookDir);
         }
