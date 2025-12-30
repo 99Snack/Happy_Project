@@ -6,6 +6,7 @@ public class LobbyPanel : MonoBehaviour
 
     public void OpenGameExitPopup()
     {
+        SoundManager.Instance.PlaySFX(ClipName.Btn_sound);
         gameExitPopup.SetActive(true);
     }
 

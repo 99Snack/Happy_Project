@@ -23,8 +23,7 @@ public class AnimationEventProxy : MonoBehaviour
             _ => ClipName.Knight_sound,
         };
 
-        //todo : 타워 공격 사운드
-        //SoundManager.Instance.PlaySFX(clip);
+        SoundManager.Instance.PlaySFX(clip);
 
         tower.ExecuteDamage();
     }

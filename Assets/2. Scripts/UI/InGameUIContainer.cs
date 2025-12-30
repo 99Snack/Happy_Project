@@ -6,7 +6,7 @@ public class InGameUIContainer : MonoBehaviour
     public GameObject WavePreparation;
     public GameObject stageBackButton;
     public TextMeshProUGUI GoldText;
-    public GameObject AttachToastMessage;
+    public CanvasGroup AttachToastMessage;
     public AugmentPanel AugmentPanel;
     public ActivatedAugmentPanel ActivatedAugmentPanel;
     public WaveResultPanel WaveResultPanel;

@@ -44,6 +44,10 @@ public class SoundManager : MonoBehaviour
         {
             instance = this;
         }
+
+        LoadAllSounds();
+
+        DontDestroyOnLoad(gameObject);
     }
 
     [SerializeField] private AudioSource bgmPlayer;
@@ -55,6 +59,11 @@ public class SoundManager : MonoBehaviour
     private Dictionary<ClipName, Queue<AudioSource>> soundPoolDict = new Dictionary<ClipName, Queue<AudioSource>>();
 
     private void Start()
+    {
+        PlayBGM(ClipName.Main_bgm);
+    }
+
+    private void LoadAllSounds()
     {
         string[] enumNames = System.Enum.GetNames(typeof(ClipName));
 
@@ -78,9 +87,6 @@ public class SoundManager : MonoBehaviour
                 Debug.LogWarning($"사운드 파일 없음: Resources/Sounds/{name} 파일을 확인하세요.");
             }
         }
-
-        //초기 BGM 재생 테스트 (파일이 로드된 후에 실행)
-        PlayBGM(ClipName.Main_bgm);
     }
 
     //효과음 재생 (2D/기본)
@@ -100,6 +106,8 @@ public class SoundManager : MonoBehaviour
     //배경음 재생 (ClipName 사용 버전)
     public void PlayBGM(ClipName name, bool loop = true)
     {
+        //Debug.Log($"{name} : {audioClipDic.ContainsKey(name)}");
+
         if (!audioClipDic.ContainsKey(name)) return;
 
         bgmPlayer.clip = audioClipDic[name];

@@ -19,7 +19,7 @@ public class Stage : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log($"[Stage] index={stageIndex}, state={stageState}");
+        //Debug.Log($"[Stage] index={stageIndex}, state={stageState}");
 
         if (button == null)
             button = GetComponent<Button>();
@@ -48,12 +48,13 @@ public class Stage : MonoBehaviour
         if (stageState == StageState.Locked)
             return;
 
+        SoundManager.Instance.PlaySFX(ClipName.Btn_sound);
         EnterInGameUI();
     }
 
     void EnterInGameUI()
     {
-        Debug.Log($"[StageButton] Stage {stageIndex} 진입");
+        //Debug.Log($"[StageButton] Stage {stageIndex} 진입");
 
         GameManager.Instance.StageInfo = DataManager.Instance.StageData[stageIndex];
 

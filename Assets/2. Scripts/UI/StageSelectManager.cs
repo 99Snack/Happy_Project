@@ -61,14 +61,14 @@ public class StageSelectManager : MonoBehaviour
             stage.stageState = GetStageState(stageData.Index, true); // CSV 있음
             stage.RefreshUI();
 
-            if (stage.stageIndex == 1)
-            {
-                Debug.Log("[StageSelectManager] 첫 스테이지 확인: StageIndex=1, State=" + stage.stageState);
-            }
-            else
-            {
-                Debug.Log("[StageSelectManager] Stage 생성: StageIndex=" + stage.stageIndex + ", State=" + stage.stageState);
-            }
+            //if (stage.stageIndex == 1)
+            //{
+            //    Debug.Log("[StageSelectManager] 첫 스테이지 확인: StageIndex=1, State=" + stage.stageState);
+            //}
+            //else
+            //{
+            //    Debug.Log("[StageSelectManager] Stage 생성: StageIndex=" + stage.stageIndex + ", State=" + stage.stageState);
+            //}
 
         }
     }

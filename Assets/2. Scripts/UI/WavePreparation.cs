@@ -14,7 +14,7 @@ public class WavePreparation : MonoBehaviour
         else
         {
             //todo : 실패 사운드
-            //SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
+            SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
         }
     }
 

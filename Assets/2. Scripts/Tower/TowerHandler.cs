@@ -140,7 +140,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     UIManager.Instance.CloseTowerInfo();
 
                     //todo : 타워 배치 성공 시 사운드
-                    //SoundManager.Instance.PlaySFX(ClipName.Success_sound);
+                    SoundManager.Instance.PlaySFX(ClipName.Success_sound);
 
                     return;
                 }

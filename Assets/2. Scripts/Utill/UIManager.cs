@@ -1,3 +1,5 @@
+using DG.Tweening;
+using Mono.Cecil.Cil;
 using System;
 using System.Collections;
 using System.Linq;
@@ -63,7 +65,7 @@ public class UIManager : MonoBehaviour
         GameObject sceneUI = null;
         GameObject prefab = Resources.Load<GameObject>($"Prefab/UI/{sceneName}");
 
-        Debug.Log($"Prefab/UI/{sceneName}");
+        //Debug.Log($"Prefab/UI/{sceneName}");
         if (prefab != null)
         {
             sceneUI = Instantiate(prefab, transform);
@@ -71,11 +73,13 @@ public class UIManager : MonoBehaviour
             if (sceneName.Equals("InGameUI"))
             {
                 SetupInGameReferences(sceneUI);
+                SoundManager.Instance.PlayBGM(ClipName.Ingame_bgm);
             }
             else if (sceneName.Equals("LobbyUI"))
             {
                 stageTrans = sceneUI.GetComponent<LobbyUiContainer>().stageTrans;
                 OnUIInitialized?.Invoke();
+                SoundManager.Instance.PlayBGM(ClipName.Main_bgm);
             }
         }
 
@@ -91,7 +95,7 @@ public class UIManager : MonoBehaviour
             this.stageExitPanel = container.stageBackButton;
             this.wavePreparation = container.WavePreparation;
             this.goldText = container.GoldText;
-            this.attachToastMessage = container.AttachToastMessage;
+            this.attachTowerToast = container.AttachToastMessage;
             this.augmentPanel = container.AugmentPanel;
             this.activatedAugmentPanel = container.ActivatedAugmentPanel;
             this.waveResultPanel = container.WaveResultPanel;
@@ -153,7 +157,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI goldText;
 
     //타워 배치 실패 메시지 
-    [SerializeField] private GameObject attachToastMessage;
     [SerializeField] private AugmentPanel augmentPanel;
     [SerializeField] private ActivatedAugmentPanel activatedAugmentPanel;
 
@@ -235,17 +238,13 @@ public class UIManager : MonoBehaviour
     }
     public void CloseAugmentPanel() => augmentPanel.gameObject.SetActive(false);
 
+    [SerializeField] private CanvasGroup attachTowerToast;
     public void OpenAttachToastMessage()
     {
-        if (fadeOutCoroutine != null)
-        {
-            StopCoroutine(fadeOutCoroutine);
-            fadeOutObject.SetActive(false);
-        }
+        attachTowerToast.alpha = 1f;
+        attachTowerToast.gameObject.SetActive(true);
 
-        attachToastMessage.SetActive(true);
-        fadeOutObject = attachToastMessage;
-        fadeOutCoroutine = StartCoroutine(FadeOutCanvasGroup(attachToastMessage, 0.5f, fadeOutDelay));
+        attachTowerToast.DOFade(0f, 1.25f).SetEase(Ease.Linear).OnComplete(() => attachTowerToast.gameObject.SetActive(false));
     }
 
     //타일 전환 창
@@ -289,23 +288,23 @@ public class UIManager : MonoBehaviour
             HandleGlobalInput();
         }
 
-      //  if (Keyboard.current != null &&
-      //  Keyboard.current.f10Key.wasPressedThisFrame)
-      //  {
-      //      OpenAugmentPanel(1);
-      //  }
+        //  if (Keyboard.current != null &&
+        //  Keyboard.current.f10Key.wasPressedThisFrame)
+        //  {
+        //      OpenAugmentPanel(1);
+        //  }
 
-      //  if (Keyboard.current != null &&
-      // Keyboard.current.f11Key.wasPressedThisFrame)
-      //  {
-      //      OpenAugmentPanel(4);
-      //  }
+        //  if (Keyboard.current != null &&
+        // Keyboard.current.f11Key.wasPressedThisFrame)
+        //  {
+        //      OpenAugmentPanel(4);
+        //  }
 
-      //  if (Keyboard.current != null &&
-      //Keyboard.current.f12Key.wasPressedThisFrame)
-      //  {
-      //      OpenAugmentPanel(9);
-      //  }
+        //  if (Keyboard.current != null &&
+        //Keyboard.current.f12Key.wasPressedThisFrame)
+        //  {
+        //      OpenAugmentPanel(9);
+        //  }
     }
 
     private void HandleGlobalInput()

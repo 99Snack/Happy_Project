@@ -93,7 +93,7 @@ public class SpawnManager : MonoBehaviour
         StartWave();
 
         //todo : 웨이브 시작 사운드
-        //SoundManager.Instance.PlaySFX(ClipName.Wave_sound);
+        SoundManager.Instance.PlaySFX(ClipName.Wave_sound);
     }
 
     private void StartWave()
@@ -159,7 +159,7 @@ public class SpawnManager : MonoBehaviour
     private void SpawnOne(int monsterID)
     {
         //todo : 몬스터 스폰 사운드
-        //SoundManager.Instance.PlaySFX(ClipName.Spawn_sound);
+        SoundManager.Instance.PlaySFX(ClipName.Spawn_sound);
 
         //101101 마녀의 거미
         //102101 마녀의 거미 중대장
@@ -230,6 +230,7 @@ public class SpawnManager : MonoBehaviour
     // 웨이브 승리 처리 
     IEnumerator ProcessWaveWin()
     {
+        SoundManager.Instance.PlaySFX(ClipName.Win_sound);
 
 
         UIManager.Instance.OpenWaveResultPanel(1);
@@ -237,12 +238,12 @@ public class SpawnManager : MonoBehaviour
 
         //Debug.Log("웨이브 승리" + (waveIndex + 1));
         OnWaveWin.Invoke();
-        bool isLastWave = (waveIndex >= TotalWaves - 1);
-        //bool isLastWave = (waveIndex >= 0);
+        //bool isLastWave = (waveIndex >= TotalWaves - 1);
+        bool isLastWave = (waveIndex >= 0);
         if (isLastWave)
         {
             //todo : 스테이지 클리어 사운드
-            //SoundManager.Instance.PlaySFX(ClipName.Clear_sound);
+            SoundManager.Instance.PlaySFX(ClipName.Clear_sound);
 
             //Debug.Log("모든 스테이지 클리어!");
             OnStageClear.Invoke();
@@ -251,9 +252,6 @@ public class SpawnManager : MonoBehaviour
         }
         else
         {
-            //todo : 웨이브 승리 사운드
-            //SoundManager.Instance.PlaySFX(ClipName.Win_sound);
-
             waveIndex++;
             currentState = STATE.Preparation;
 
@@ -307,7 +305,7 @@ public class SpawnManager : MonoBehaviour
     IEnumerator ProcessWaveLoss()
     {
         //todo : 웨이브 패배 사운드
-        //SoundManager.Instance.PlaySFX(ClipName.Lose_sound);
+        SoundManager.Instance.PlaySFX(ClipName.Lose_sound);
 
         UIManager.Instance.OpenWaveResultPanel(0);
 

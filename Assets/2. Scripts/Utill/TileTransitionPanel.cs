@@ -86,13 +86,13 @@ public class TileTransitionPanel : MonoBehaviour
             {
                 currentTile.ChangeTileType();
                 //todo : 실패 피드백 사운드
-                //SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
+                SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
             }
             else
             {
                 GameManager.Instance.Gold -= TileManager.TRANSITION_PRICE;
                 //todo : 성공 피드백 사운드
-                //SoundManager.Instance.PlaySFX(ClipName.Success_sound)
+                SoundManager.Instance.PlaySFX(ClipName.Success_sound);
             }
 
             //Toast메시지 출력 

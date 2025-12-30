@@ -899,7 +899,6 @@ MonoBehaviour:
   LobbyExitPopup: {fileID: 0}
   stageExitPanel: {fileID: 0}
   goldText: {fileID: 0}
-  attachToastMessage: {fileID: 0}
   augmentPanel: {fileID: 0}
   activatedAugmentPanel: {fileID: 0}
   waveResultPanel: {fileID: 0}
@@ -907,6 +906,7 @@ MonoBehaviour:
   wavePreparation: {fileID: 0}
   allyBaseCampPanel: {fileID: 0}
   towerInfoPanel: {fileID: 0}
+  attachTowerToast: {fileID: 0}
   tileTransitionPanel: {fileID: 0}
   stageInfoPanel: {fileID: 0}
 --- !u!1 &1708103914
@@ -1125,7 +1125,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 8313471432926383451}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1792602796584596681
 GameObject:
@@ -1351,7 +1351,6 @@ Transform:
   m_Children:
   - {fileID: 6842350138079594161}
   - {fileID: 7847183916230444609}
-  - {fileID: 1650143524145129229}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8924194543802481738
@@ -1372,6 +1371,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 146890409}
   - {fileID: 1025016972}
+  - {fileID: 1650143524145129229}
   - {fileID: 8313471432926383451}
   - {fileID: 1878095842}
   - {fileID: 1594427129}
