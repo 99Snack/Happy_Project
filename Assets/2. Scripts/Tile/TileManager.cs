@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
@@ -37,6 +38,8 @@ public class TileManager : MonoBehaviour
     public Vector2Int allyBasePosition { get; private set; }
 
     public GeneratorMap map;
+
+    public System.Action OnTileComplete;
     private void Start()
     {
         Initialize();
@@ -68,6 +71,7 @@ public class TileManager : MonoBehaviour
         {
             map.Generator();
         }
+        OnTileComplete?.Invoke();
     }
 
     void RandomBaseCamp()

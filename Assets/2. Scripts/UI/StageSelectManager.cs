@@ -14,7 +14,22 @@ public class StageSelectManager : MonoBehaviour
 
     void Start()
     {
+        if (UIManager.Instance.stageTrans != null)
+        {
+            Initialize();
+        }
+        else
+        {
+            UIManager.Instance.OnUIInitialized += Initialize;
+        }
+    }
+
+    void Initialize()
+    {
+        UIManager.Instance.OnUIInitialized -= Initialize;
+        stageParent = UIManager.Instance.stageTrans;
         CreateStages();
+
     }
 
     void CreateStages()

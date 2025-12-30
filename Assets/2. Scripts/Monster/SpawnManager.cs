@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class SpawnManager : MonoBehaviour
 {
+    public bool isTest = false;
     // Preparation : 웨이브 준비 상태
     // InProgress : 웨이브 진행 상태 
     public enum STATE { Preparation, InProgress }
@@ -68,7 +69,7 @@ public class SpawnManager : MonoBehaviour
     }
     private void Start()
     {
-        ResetStage();
+        TileManager.Instance.OnTileComplete += ResetStage;
     }
 
     // UI 버튼에서 호출할 메서드 
@@ -167,6 +168,26 @@ public class SpawnManager : MonoBehaviour
         //107101 유령 중대장
         //108101 최상위 유령
 
+        int id = monsterID;
+        if (isTest)
+        {
+            id = (spawnCount % 8 + 1) switch
+            {
+                1 => 101101,
+                2 => 102101,
+                3 => 103101,
+                4 => 104101,
+                5 => 105101,
+                6 => 106101,
+                7 => 107101,
+                8 => 108101,
+                _ => 101101
+            };
+        }
+
+        monsterID = isTest ? id : monsterID;
+
+
         MonsterData monsterData = DataManager.Instance.MonsterData[monsterID];
         if (monsterData == null) return;
 
@@ -206,7 +227,7 @@ public class SpawnManager : MonoBehaviour
     // 웨이브 승리 처리 
     IEnumerator ProcessWaveWin()
     {
-      
+
 
         UIManager.Instance.OpenWaveResultPanel(1);
         yield return new WaitWhile(() => UIManager.Instance.IsActiveWaveResultPanel());
@@ -330,13 +351,13 @@ public class SpawnManager : MonoBehaviour
         orderIndex = 0;
         spawnCount = 0;
         aliveMonsterCount = 0;
-        
+
         AugmentManager.Instance.activeAugments.Clear();
         TowerManager.Instance.ResetTower();
         GameManager.Instance.Gold = GameManager.START_GOLD;
         UIManager.Instance.ClearActivatedAugmentPanel();
         PathNodeManager.Instance.GeneratePath();
-        
+
         //todo : 리셋시 제거해야할 목록
         //증강 제거 AugmentManager | 완료 
         //증강 액티베이트 슬롯 제거 ActivatedAugmentPanel | 임시로 이벤트로 연결 
@@ -369,7 +390,7 @@ public class SpawnManager : MonoBehaviour
         TotalWaves = waves.Count;
 
         GameManager.Instance.WaveInfo = waves[waveIndex];
-        
+
         UpdateStageUI();
         UIManager.Instance.UpdateWaveSlider(spawnCount, waves.Count);
 

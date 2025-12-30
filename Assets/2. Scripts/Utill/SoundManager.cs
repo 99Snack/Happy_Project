@@ -49,24 +49,38 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource bgmPlayer;
 
     [SerializeField] private int poolSizePerSound = 5;
-    [SerializeField] private List<ClipInfo> list = new List<ClipInfo>();
+    //[SerializeField] private List<ClipInfo> list = new List<ClipInfo>();
 
     private Dictionary<ClipName, AudioClip> audioClipDic = new Dictionary<ClipName, AudioClip>();
     private Dictionary<ClipName, Queue<AudioSource>> soundPoolDict = new Dictionary<ClipName, Queue<AudioSource>>();
 
     private void Start()
     {
-        foreach (var item in list)
+        string[] enumNames = System.Enum.GetNames(typeof(ClipName));
+
+        foreach (string name in enumNames)
         {
-            if (!audioClipDic.ContainsKey(item.name))
+            AudioClip clip = Resources.Load<AudioClip>($"Sound/{name}");
+
+            if (clip != null)
             {
-                audioClipDic.Add(item.name, item.source);
-                CreatePool(item.name);
+                ClipName clipEnum = (ClipName)System.Enum.Parse(typeof(ClipName), name);
+
+                if (!audioClipDic.ContainsKey(clipEnum))
+                {
+                    audioClipDic.Add(clipEnum, clip);
+                    CreatePool(clipEnum);
+                }
+            }
+            else
+            {
+                //파일이 없는 경우 경고 출력
+                Debug.LogWarning($"사운드 파일 없음: Resources/Sounds/{name} 파일을 확인하세요.");
             }
         }
 
-        //todo : 첫 타이틀에서 bgm 실행 (로비, 인게임도 동일) 다 돌아가도록
-        //PlayBGM(ClipName.Main_bgm);
+        //초기 BGM 재생 테스트 (파일이 로드된 후에 실행)
+        PlayBGM(ClipName.Main_bgm);
     }
 
     //효과음 재생 (2D/기본)

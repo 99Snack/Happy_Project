@@ -1,10 +1,11 @@
+using System;
 using System.Collections;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -23,7 +24,85 @@ public class UIManager : MonoBehaviour
         {
             instance = this;
         }
+
+        DontDestroyOnLoad(gameObject);
     }
+
+    public Action OnUIInitialized;
+
+    private void Start()
+    {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnChangedGold += UpdateGold;
+        }
+    }
+
+    //현재 생성된 UI 루트 오브젝트를 저장할 변수
+    [SerializeField] private GameObject currentSceneUI;
+    public Transform stageTrans;
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        //기존 씬의 UI가 남아있다면 삭제
+        if (currentSceneUI != null)
+        {
+            Destroy(currentSceneUI);
+        }
+
+        //새 씬 이름에 맞는 UI 프리팹 생성
+        currentSceneUI = OpenSceneUI($"{scene.name}UI");
+
+        //SetupInGameReferences(currentSceneUI);
+    }
+
+    private GameObject OpenSceneUI(string sceneName)
+    {
+        GameObject sceneUI = null;
+        GameObject prefab = Resources.Load<GameObject>($"Prefab/UI/{sceneName}");
+
+        Debug.Log($"Prefab/UI/{sceneName}");
+        if (prefab != null)
+        {
+            sceneUI = Instantiate(prefab, transform);
+
+            if (sceneName.Equals("InGameUI"))
+            {
+                SetupInGameReferences(sceneUI);
+            }
+            else if (sceneName.Equals("LobbyUI"))
+            {
+                stageTrans = sceneUI.GetComponent<LobbyUiContainer>().stageTrans;
+                OnUIInitialized?.Invoke();
+            }
+        }
+
+
+        return sceneUI;
+    }
+
+    private void SetupInGameReferences(GameObject root)
+    {
+        var container = root.GetComponent<InGameUIContainer>();
+        if (container != null)
+        {
+            this.stageExitPanel = container.stageBackButton;
+            this.wavePreparation = container.WavePreparation;
+            this.goldText = container.GoldText;
+            this.attachToastMessage = container.AttachToastMessage;
+            this.augmentPanel = container.AugmentPanel;
+            this.activatedAugmentPanel = container.ActivatedAugmentPanel;
+            this.waveResultPanel = container.WaveResultPanel;
+            this.stageResultPanel = container.StageResultPanel;
+            this.allyBaseCampPanel = container.AllyBaseCampPanel;
+            this.towerInfoPanel = container.TowerInfoPanel;
+            this.tileTransitionPanel = container.TileTransitionPanel;
+            this.stageInfoPanel = container.StageInfoPanel;
+        }
+    }
+
     public void GoToLobby()
     {
         SceneManager.LoadScene("Lobby");
@@ -146,37 +225,6 @@ public class UIManager : MonoBehaviour
     TileInteractor currentTile;
     public TileInteractor CurrentTile { get => currentTile; private set => currentTile = value; }
 
-    private void Start()
-    {
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.OnChangedGold += UpdateGold;
-        }
-
-        //Button[] allButtons = Resources.FindObjectsOfTypeAll<Button>();
-
-        //foreach (Button btn in allButtons)
-        //{
-        //    btn.AddComponent<ButtonSoundTrigger>();
-        //}
-    }
-
-    public void GachaButton()
-    {
-        //타워 뽑기 비용 100
-        if (GameManager.Instance.Gold >= TowerManager.GACHA_PRICE)
-        {
-            GameManager.Instance.Gold -= TowerManager.GACHA_PRICE;
-            int towerid = TowerManager.Instance.Gacha();
-            //Debug.Log(towerid);
-        }
-        else
-        {
-            //todo : 실패 사운드
-            //SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
-        }
-    }
-
     public void OpenAugmentPanel(int stage)
     {
         //현재 스테이지의 정보르 토대로 증강 가져오기
@@ -225,7 +273,14 @@ public class UIManager : MonoBehaviour
         tileInteractor.gameObject.transform.GetChild(6).gameObject.SetActive(false);
     }
 
-    public void UpdateGold(int gold) => goldText.text = $"Gold : {gold}";
+    public void UpdateGold(int gold)
+    {
+        if (goldText != null)
+        {
+            goldText.text = $"Gold : {gold}";
+        }
+    }
+
 
     private void Update()
     {
@@ -234,23 +289,23 @@ public class UIManager : MonoBehaviour
             HandleGlobalInput();
         }
 
-        if (Keyboard.current != null &&
-        Keyboard.current.f10Key.wasPressedThisFrame)
-        {
-            OpenAugmentPanel(1);
-        }
+      //  if (Keyboard.current != null &&
+      //  Keyboard.current.f10Key.wasPressedThisFrame)
+      //  {
+      //      OpenAugmentPanel(1);
+      //  }
 
-        if (Keyboard.current != null &&
-       Keyboard.current.f11Key.wasPressedThisFrame)
-        {
-            OpenAugmentPanel(4);
-        }
+      //  if (Keyboard.current != null &&
+      // Keyboard.current.f11Key.wasPressedThisFrame)
+      //  {
+      //      OpenAugmentPanel(4);
+      //  }
 
-        if (Keyboard.current != null &&
-      Keyboard.current.f12Key.wasPressedThisFrame)
-        {
-            OpenAugmentPanel(9);
-        }
+      //  if (Keyboard.current != null &&
+      //Keyboard.current.f12Key.wasPressedThisFrame)
+      //  {
+      //      OpenAugmentPanel(9);
+      //  }
     }
 
     private void HandleGlobalInput()
@@ -274,7 +329,7 @@ public class UIManager : MonoBehaviour
             }
         }
 
-        if (towerInfoPanel.gameObject.activeSelf)
+        if (towerInfoPanel != null && towerInfoPanel.gameObject.activeSelf)
         {
             //패널 닫기
             CloseTowerInfo();

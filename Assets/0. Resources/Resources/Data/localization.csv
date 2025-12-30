@@ -2,6 +2,7 @@
 index,ko,en
 string,string,string
 stage_name_10001,스테이지 1,stage 1
+stage_name_10002,스테이지 2,stage 2
 wave_name_100101,웨이브 1,wave 1
 wave_name_100102,웨이브 2,wave 2
 wave_name_100103,웨이브 3,wave 3
@@ -33,7 +34,7 @@ Tower_name_103001,혈기사,Blood Knight
 Tower_name_201001,박격포,Cannon
 Tower_name_202001,마법사,Mage
 Tower_name_203001,얼음 수정탑,Ice Crystal Tower
-Tower_Desc_101001,근거리에서 단일 적에게 강한 타워 ,a tower strong against a single enemy at close range
+Tower_Desc_101001,근거리에서 단일 적에게 강한 타워,a tower strong against a single enemy at close range
 Tower_Desc_102001,근거리에서 범위내에 강한 피해를 주는 타워,a tower that causes strong damage in a narrow range
 Tower_Desc_103001,근거리에서 방어력을 감소시키는 타워,Towers that reduce defense
 Tower_Desc_201001,원거리에서 단일 적에게 피해를 주는 타워,a tower that damages a single enemy at a distance
