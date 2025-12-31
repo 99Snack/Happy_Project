@@ -65,6 +65,7 @@ public class TileManager : MonoBehaviour
 
         //단일 경로 생성
         SinglePathGenerator.Instance.GeneratePath();
+        PathNodeManager.Instance.GeneratePath();
 
         //타일 맵 생성
         if (map != null)

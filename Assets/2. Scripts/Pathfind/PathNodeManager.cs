@@ -3,6 +3,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 public class PathNodeManager : MonoBehaviour
@@ -84,7 +85,6 @@ public class PathNodeManager : MonoBehaviour
         {
             //todo: 실패했을 떄 수행할 행동 
             Debug.LogError("경로 없음");
-            
         }
         return IsGenerated;
     }
@@ -100,7 +100,7 @@ public class PathNodeManager : MonoBehaviour
     /// <returns>계산된 경로</returns>
     public Vector2Int[] GetPathAndFeedBack (int spawnNum, int deadEndMoveLimit , out Vector2Int[] feedBack)
     {
-        
+
         Vector2Int[] basePath = GetBasePath(spawnNum);//기본 경로 
         Vector2Int[] calcPath ;//계산된 경로 
         Vector2Int targetVector = new Vector2Int(-1, -1); //찾아야하는 벡터 
