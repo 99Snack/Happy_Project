@@ -72,8 +72,6 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         TileManager.Instance.OnTileComplete += ResetStage;
-        ResetStage();
-        
     }
 
     // UI 버튼에서 호출할 메서드 
@@ -115,7 +113,6 @@ public class SpawnManager : MonoBehaviour
     {
         if (waveIndex >= DataManager.Instance.WaveData.Count)
         {
-            Debug.Log("모든 스테이지를 클리어하여 더 이상 진행할 수 없습니다.");
             return;
         }
 

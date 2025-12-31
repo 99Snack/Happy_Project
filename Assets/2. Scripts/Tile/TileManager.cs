@@ -40,12 +40,12 @@ public class TileManager : MonoBehaviour
     public GeneratorMap map;
 
     public System.Action OnTileComplete;
-    private void Start()
-    {
-        Initialize();
-    }
+    //private void Start()
+    //{
+    //    Initialize();
+    //}
 
-    void Initialize()
+    public void Initialize()
     {
         map = FindAnyObjectByType<GeneratorMap>();
 

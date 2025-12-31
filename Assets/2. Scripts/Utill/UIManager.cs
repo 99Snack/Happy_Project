@@ -69,6 +69,8 @@ public class UIManager : MonoBehaviour
             {
                 SetupInGameReferences(sceneUI);
                 SoundManager.Instance.PlayBGM(ClipName.Ingame_bgm);
+                TileManager.Instance.Initialize();
+                GameManager.Instance.Gold = GameManager.START_GOLD;
             }
             else if (sceneName.Equals("LobbyUI"))
             {
@@ -369,7 +371,7 @@ public class UIManager : MonoBehaviour
 
         if (!isSucceed)
         {
-            Debug.LogError("It has not have canvasGroup");
+            //Debug.LogError("It has not have canvasGroup");
             yield break;
         }
 

@@ -305,7 +305,7 @@ public class PlayPathGenerator
                 }
                 else
                 {
-                    Debug.LogError("Unvaliable BackTracking Direction");
+                    //Debug.LogError("Unvaliable BackTracking Direction");
                     selected = DIRECTION.None;
                 }
                 pathNodes[calY,calX].ChangeOpenStatus(selected, CLOSED);

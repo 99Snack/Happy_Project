@@ -23,7 +23,7 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         mainCam = Camera.main;
         if (mainCam == null)
         {
-            Debug.LogError("메인 카메라가 없습니다.");
+            //Debug.LogError("메인 카메라가 없습니다.");
         }
     }
 

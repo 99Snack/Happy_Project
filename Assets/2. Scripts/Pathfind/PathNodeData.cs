@@ -182,7 +182,7 @@ public class PathNodeData
                case DIRECTION.North:
                     return 3;
                default:
-                    Debug.LogError("Unvaliable Direction");
+                    //Debug.LogError("Unvaliable Direction");
                     return -1;
           }
       }
@@ -204,7 +204,7 @@ public class PathNodeData
                case 3:
                     return DIRECTION.North;
                default:
-                    Debug.LogError("Unvaliable Index");
+                    //Debug.LogError("Unvaliable Index");
                     return DIRECTION.None; 
           }
      }

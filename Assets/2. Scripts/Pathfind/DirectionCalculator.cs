@@ -30,7 +30,7 @@ public class DirectionCalculator
             default:
                 break;
         }
-        Debug.LogError("Not valiable direction to find opposite direction");
+        //Debug.LogError("Not valiable direction to find opposite direction");
         return DIRECTION.None;
     }
 }

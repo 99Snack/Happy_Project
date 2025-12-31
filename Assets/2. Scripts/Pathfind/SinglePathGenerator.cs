@@ -382,12 +382,12 @@ public class SinglePathGenerator : MonoBehaviour
                 {
                     if (steps.Count <= 0)
                     {
-                        Debug.LogError("InfiniteLoop");
+                        //Debug.LogError("InfiniteLoop");
                         break;
                     }
                     if(AddDirection.Count - 1 < 0)
                     {
-                        Debug.LogError("Too Low Count");
+                        //Debug.LogError("Too Low Count");
                         break;
                     }
 

@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class MonsterMove : MonoBehaviour
@@ -11,7 +11,7 @@ public class MonsterMove : MonoBehaviour
     public float AttackRange = 1f; // 공격 범위 (DB에 없어서 여기서 선언함)
 
     [Header("막다른 길 감지 거리 설정")]
-    [SerializeField] int deadEndMoveLimit = 2; // 막다른 길에서 뒤로 물러날 거리
+    [SerializeField] int deadEndMoveLimit = 8; // 막다른 길에서 뒤로 물러날 거리
 
     [Header("피드백 UI 프리팹")]
     public GameObject FeedbackUIPrefab; // 피드백 UI 프리팹 (피격 시 느낌표!)

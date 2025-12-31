@@ -270,7 +270,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public void UpdateStatus(AugmentData augment)
     {
-        Debug.Log(1);
+        //Debug.Log(1);
 
         switch (augment.Plus_Factor)
         {

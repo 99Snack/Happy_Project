@@ -52,7 +52,7 @@ public class ObjectPoolManager : MonoBehaviour
             GameObject prefab = request.asset as GameObject;
             if (prefab == null)
             {
-                Debug.LogWarning($"[ObjectPool] 프리팹 로드 실패: Prefab/Enemy/{monsterID}");
+                //Debug.LogWarning($"[ObjectPool] 프리팹 로드 실패: Prefab/Enemy/{monsterID}");
                 continue;
             }
 
@@ -62,7 +62,7 @@ public class ObjectPoolManager : MonoBehaviour
             yield return StartCoroutine(CreatePoolRoutine(tag, prefab, poolSize));
         }
 
-        Debug.Log("모든 오브젝트 풀 생성 완료");
+        //Debug.Log("모든 오브젝트 풀 생성 완료");
     }
 
     private IEnumerator CreatePoolRoutine(string tag, GameObject prefab, int size)

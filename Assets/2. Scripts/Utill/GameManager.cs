@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
     }
 
     //초기 재화 300골드 지급
-    public static readonly int START_GOLD = 10000;
+    public static readonly int START_GOLD = 500;
 
     #region 재화
     public event Action<int> OnChangedGold;

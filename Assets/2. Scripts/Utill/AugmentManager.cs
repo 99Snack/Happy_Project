@@ -61,7 +61,7 @@ public class AugmentManager : MonoBehaviour
                 }
 
                 tower.ApplyAugment(augment);
-                Debug.Log(DataManager.Instance.LocalizationData[augment.Name_STR]);
+                //Debug.Log(DataManager.Instance.LocalizationData[augment.Name_STR]);
             }
         }
     }

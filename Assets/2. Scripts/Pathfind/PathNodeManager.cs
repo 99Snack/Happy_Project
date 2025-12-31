@@ -58,7 +58,7 @@ public class PathNodeManager : MonoBehaviour
         }
         else
         {
-            Debug.LogError("경로 없음");
+            //Debug.LogError("경로 없음");
             return Array.Empty<Vector2Int>();
         }
     }
@@ -84,7 +84,7 @@ public class PathNodeManager : MonoBehaviour
         else
         {
             //todo: 실패했을 떄 수행할 행동 
-            Debug.LogError("경로 없음");
+            //Debug.LogError("경로 없음");
         }
         return IsGenerated;
     }
@@ -295,7 +295,8 @@ public class PathNodeManager : MonoBehaviour
     /// </summary>
     private void GenerateRestPath()
     {
-        for(int i = 1; i < 4; i++)
+        //todo : 최대 경로 4 -> 3으로 변경
+        for(int i = 1; i < 3; i++)
         {
             Vector2Int[] outTemp;
             pathGenerator.GetPath(pathNodeTiles, i, out outTemp);
@@ -311,10 +312,10 @@ public class PathNodeManager : MonoBehaviour
     /// <returns>규칙 번호</returns>
     private int ChangeSpawnNumToRuleNum(int spawnNum)
     {
-        int ruleNumber = spawnNum % 4 - 1;
+        int ruleNumber = spawnNum % 3 - 1;
         if(ruleNumber == -1)
         {
-            ruleNumber = 3;
+            ruleNumber = 2;
         }
 
         return ruleNumber;

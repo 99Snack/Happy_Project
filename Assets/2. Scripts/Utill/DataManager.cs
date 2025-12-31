@@ -81,7 +81,7 @@ public class DataManager : MonoBehaviour
 
         AddToDictionary(localizationData, DataParser.Parse<LocalizationData>("localization"), d => d.Index);
 
-        Debug.Log("모든 데이터 파싱 완료");
+        //Debug.Log("모든 데이터 파싱 완료");
     }
 
     private void AddToDictionary<TKey, TValue>(Dictionary<TKey, TValue> dict, List<TValue> list, System.Func<TValue, TKey> keySelector)
@@ -97,7 +97,7 @@ public class DataManager : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning($"중복된 키 발견: {key} in {typeof(TValue).Name}");
+                //Debug.LogWarning($"중복된 키 발견: {key} in {typeof(TValue).Name}");
             }
         }
     }

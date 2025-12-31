@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -40,7 +40,7 @@ public class TowerManager : MonoBehaviour
         {
             SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
             UIManager.Instance.OpenGachaFailedToast();
-            Debug.Log($"대기석이 꽉 찼습니다. 대기석에 있는 타워 수 : {waitTowerCount}");
+            //Debug.Log($"대기석이 꽉 찼습니다. 대기석에 있는 타워 수 : {waitTowerCount}");
             return -1;
         }
 

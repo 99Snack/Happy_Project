@@ -19,7 +19,7 @@ public static class DataParser
         TextAsset csv = Resources.Load<TextAsset>($"Data/{filename}");
         if (csv == null)
         {
-            Debug.LogWarning($"csv 파일이 없습니다. Data/{filename}");
+            //Debug.LogWarning($"csv 파일이 없습니다. Data/{filename}");
             return null;
         }
 
@@ -43,7 +43,7 @@ public static class DataParser
         string[] rows = csv.text.Trim().Split(new string[] { "\r\n", "\r", "\n" }, System.StringSplitOptions.None);
         if (rows.Length < DATA_START_IDX)
         {
-            Debug.LogWarning($"데이터가 없습니다.");
+            //Debug.LogWarning($"데이터가 없습니다.");
             return data;
         }
 
@@ -115,7 +115,7 @@ public static class DataParser
                         }
                         catch (Exception ex)
                         {
-                            Debug.LogWarning($"{header} 필드 형변환 실패: {value} (Error: {ex.Message})");
+                            //Debug.LogWarning($"{header} 필드 형변환 실패: {value} (Error: {ex.Message})");
                             continue;
                         }
                     }
