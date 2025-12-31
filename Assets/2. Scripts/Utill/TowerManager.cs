@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -38,20 +38,17 @@ public class TowerManager : MonoBehaviour
 
         if (waitTowerCount >= waitingSeat.Count)
         {
-            //todo : 실패 사운드
             SoundManager.Instance.PlaySFX(ClipName.Fail_sound);
             UIManager.Instance.OpenGachaFailedToast();
             Debug.Log($"대기석이 꽉 찼습니다. 대기석에 있는 타워 수 : {waitTowerCount}");
             return -1;
         }
 
-        //todo : 성공 사운드
         SoundManager.Instance.PlaySFX(ClipName.Success_sound);
 
         int basicIdx = DataManager.Instance.GachaData.Keys.ElementAt(0);
         int towerId = DataManager.Instance.GachaData[basicIdx].TowerID;
 
-        //0 ~ 1.0 랜덤값 뽑음
         float randomValue = Random.value;
         float cumulative = 0;
 
@@ -85,7 +82,6 @@ public class TowerManager : MonoBehaviour
                 tile.isAlreadyTower = true;
 
                 Tower tower = towerObj.transform.GetComponent<Tower>();
-                //Debug.Log(towerId);
                 tower?.Setup(towerId, tile);
 
                 allTowers.Add(tower);
@@ -102,20 +98,23 @@ public class TowerManager : MonoBehaviour
 
     }
 
+    // --- [수정된 부분] 성급 매칭 로직 ---
     void CheckUpgrade(Tower tower)
     {
         if (tower.Data.Grade == 3) return;
 
-        var matches = allTowers.Where(t => t.Data.TowerID == tower.Data.TowerID).ToList();
+        // ID뿐만 아니라 현재 데이터의 Grade도 같은 것들끼리만 합칩니다.
+        var matches = allTowers.Where(t =>
+            t.Data.TowerID == tower.Data.TowerID &&
+            t.Data.Grade == tower.Data.Grade
+        ).ToList();
 
         if (matches.Count >= 3)
         {
             if (IsMerge) return;
 
             var sortedMatches = matches
-                                //1. 타일 위 여부
                                 .OrderByDescending(t => t.MyTile.Type == TileInfo.TYPE.Wall)
-                                //2. 먼저 배치된 순서
                                 .ThenBy(t => t.PlacedTime)
                                 .ToList();
 
@@ -125,7 +124,6 @@ public class TowerManager : MonoBehaviour
 
     void TowerUpgrade(List<Tower> towers)
     {
-        //기준 타워    
         Tower standardTower = towers[0];
 
         List<Tower> removeTowers = new List<Tower>();
@@ -133,7 +131,6 @@ public class TowerManager : MonoBehaviour
         {
             removeTowers.Add(towers[i]);
 
-            //정보 창이 열려있다면 닫기
             if (towers[i] == UIManager.Instance.CurrentTower)
             {
                 UIManager.Instance.CloseTowerInfo();
@@ -185,15 +182,9 @@ public class TowerManager : MonoBehaviour
             if (remove != null)
             {
                 remove.MyTile.isAlreadyTower = false;
-
                 Destroy(remove.gameObject);
             }
         }
-
-        //성급 이펙트 구현
-        //if(gradeEffect !=null){
-        //    Instantiate(gradeEffect, targetPos + Vector3.up * 0.5f, Quaternion.identity);
-        //}
 
         target.Upgrade();
 
@@ -216,16 +207,8 @@ public class TowerManager : MonoBehaviour
 
     public void SellTower(Tower sellTower)
     {
-        //1. 리스트에서 제거
         allTowers.Remove(sellTower);
-        //2. 판매한 재화 게임매니저에서 제어
-        //3. 타일 isAlreadyTower =false 변경
         sellTower.MyTile.isAlreadyTower = false;
-        //TileInteractor interactor = sellTower.transform.parent.GetComponent<TileInteractor>();
-        //interactor.isAlreadyTower = false;
-
-        //4. currentTower= null 변경
-        //5. 타워 객체에도 Sell메서드 실행
         sellTower.OnSold();
     }
 
@@ -236,7 +219,6 @@ public class TowerManager : MonoBehaviour
             if (tower != null)
             {
                 tower.MyTile.isAlreadyTower = false;
-
                 Destroy(tower.gameObject);
             }
         }
