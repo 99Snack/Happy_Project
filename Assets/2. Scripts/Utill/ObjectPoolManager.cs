@@ -117,7 +117,7 @@ public class ObjectPoolManager : MonoBehaviour
     {
         if (!poolDictionary.ContainsKey(tag)) return;
 
-        Debug.Log($"{tag}반환");
+        //Debug.Log($"{tag}반환");
         obj.SetActive(false);
         obj.transform.SetParent(transform); // 다시 매니저 밑으로 정렬
         poolDictionary[tag].Enqueue(obj);

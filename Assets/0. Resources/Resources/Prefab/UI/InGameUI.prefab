@@ -1931,6 +1931,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AugmentPanel
       objectReference: {fileID: 0}
+    - target: {fileID: 6415509660999201411, guid: 999c1009f48281a4eb44f86335c16f9a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6759067234549745338, guid: 999c1009f48281a4eb44f86335c16f9a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

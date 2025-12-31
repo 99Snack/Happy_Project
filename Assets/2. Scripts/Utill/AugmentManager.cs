@@ -82,9 +82,9 @@ public class AugmentManager : MonoBehaviour
     {
         int targetTier = wave switch
         {
-            >= 9 => 3,
-            >= 4 => 2,
-            _ => 1
+            >= 3 => 3,
+            >= 2 => 3,
+            _ => 3
         };
 
         //타워 분석 및 태그별 계산

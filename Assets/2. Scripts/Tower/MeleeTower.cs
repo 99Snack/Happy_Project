@@ -3,8 +3,10 @@ public class MeleeTower : Tower
 {
     public override void ApplyAugment(AugmentData augment)
     {
+        base.ApplyAugment(augment);
+
         // Tag 체크를 먼저
-        if (augment.Tag != 0 && augment.Tag != 1) return;
+        if (augment.Tag != 1) return;
 
         // 조건부 증강
         if (augment.Category == 3)

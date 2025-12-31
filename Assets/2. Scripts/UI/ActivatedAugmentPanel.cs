@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -31,9 +30,9 @@ public class ActivatedAugmentPanel : MonoBehaviour
 
     public void VisibleButton()
     {
-        if (items.Count <= 0) return;
-
         UpdateActivatedAugment();
+       
+        if (items.Count <= 0) return;
        
         isVisible = !isVisible;
 

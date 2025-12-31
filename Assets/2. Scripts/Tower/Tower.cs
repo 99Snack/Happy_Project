@@ -228,6 +228,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public void UpdateConditionAugment()
     {
+        if (MyTile.Type == TileInfo.TYPE.Wait) return;
+
         foreach (var aug in onStatusAugs)
         {
             aug.UpdateStatus(this);
@@ -248,6 +250,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public void UpdateStatus(AugmentData augment)
     {
+        Debug.Log(1);
+
         switch (augment.Plus_Factor)
         {
             case 1:
@@ -304,8 +308,12 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         return 1;
     }
 
-    public int CalcStageStat(AugmentData augment) =>
-        Mathf.FloorToInt((augment.Value_N + augment.CalcGrowValue()));
+    public int CalcStageStat(AugmentData augment)
+    {
+        int stage = GameManager.Instance.StageInfo.Index - 10000;
+        Debug.Log($"{augment.Value_N} : {augment.Grow_Value} : { augment.CalcGrowValue(stage)} : tag{augment.Tag}, category{augment.Category}");
+        return Mathf.FloorToInt((augment.Value_N * augment.CalcGrowValue(stage)));
+    }
 
 
     // [수정]

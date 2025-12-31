@@ -1,7 +1,5 @@
 using System.Collections.Generic;
-using System.Collections;
 using UnityEngine;
-using UnityEditor.Build.Content;
 
 public class BaseCamp : MonoBehaviour
 {
@@ -61,7 +59,7 @@ public class BaseCamp : MonoBehaviour
         basecampHp = waveData.BasecampHp;
         foreach (var aug in AugmentManager.Instance.activeAugments)
         {
-            if (aug.Tag == 0 && aug.Category == 1)
+            if (aug.Tag == 0 && aug.Category == 1 && aug.Plus_Factor==2)
             {
                 int stage = GameManager.Instance.StageInfo.Index - 10000;
                 basecampHp += aug.Value_N * (int)aug.CalcGrowValue(stage);

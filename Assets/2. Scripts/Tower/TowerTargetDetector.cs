@@ -64,8 +64,8 @@ public class TowerTargetDetector : MonoBehaviour
             if (dx <= range && dy <= range)
             {
                 bestTarget = enemy;
-                //// Manhattan 거리 (본진과의 거리 - 가장 멀리 온 적 우선 타겟팅 시 유리)
-                //// 본진에 가장 가까운 적을 찾으려면 현재 로직(min)이 맞습니다.
+                // Manhattan 거리 (본진과의 거리 - 가장 멀리 온 적 우선 타겟팅 시 유리)
+                // 본진에 가장 가까운 적을 찾으려면 현재 로직(min)이 맞습니다.
                 //int baseDistance = Mathf.Abs(ex - baseCampTile.x) + Mathf.Abs(ey - baseCampTile.y);
 
                 //if (baseDistance < minBaseDistance)

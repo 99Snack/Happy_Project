@@ -1,45 +1,39 @@
-
-using System.Xml.XPath;
 using UnityEngine;
 
 public class TuberculosisAugment : IStatusCheckAugment
 {
     private bool isApplied = false;
+    private int lastAppliedStat = 0; //적용했던 수치를 저장하여 안전하게 해제
     private AugmentData data;
 
-    public TuberculosisAugment(AugmentData data){
+    public TuberculosisAugment(AugmentData data)
+    {
         this.data = data;
+        this.isApplied = false;
     }
 
     public void UpdateStatus(Tower owner)
     {
-        Debug.Log(123);
-        //본인 좌표 가져오기
         Vector2Int currentPos = owner.Coord;
 
-        //다른 타워들이 있는지
         bool isAnyTowerExist = false;
 
-        //(0,0)은 자기 위치이므로 제외
-        int[] xCoord = { -1,0, 1 };
-        int[] yCoord = { -1,0, 1 };
-
-        //8방향 탐색
-        for (int x = 0; x < xCoord.Length; x++)
+        // 8방향 탐색 (-1, 0, 1 오프셋 사용)
+        for (int x = -1; x <= 1; x++)
         {
-            for (int y = 0; y < yCoord.Length; y++)
+            for (int y = -1; y <= 1; y++)
             {
-                if (x == 0 && y == 0) continue;
+                if (x == 0 && y == 0) continue; 
 
-                Vector2Int checkPos = new Vector2Int(currentPos.x + xCoord[x], currentPos.y + yCoord[y]);
+                Vector2Int checkPos = new Vector2Int(currentPos.x + x, currentPos.y + y);
 
-                //Debug.Log(checkPos);
-
-                //해당 좌표에 타워가 있는지
-                if (TileManager.Instance.map.tiles[(x,y)].isAlreadyTower)
+                if (TileManager.Instance.map.tiles.ContainsKey((checkPos.x, checkPos.y)))
                 {
-                    isAnyTowerExist = true;
-                    break; 
+                    if (TileManager.Instance.map.tiles[(checkPos.x, checkPos.y)].isAlreadyTower)
+                    {
+                        isAnyTowerExist = true;
+                        break;
+                    }
                 }
             }
             if (isAnyTowerExist) break;
@@ -47,17 +41,26 @@ public class TuberculosisAugment : IStatusCheckAugment
 
         bool lonely = !isAnyTowerExist;
 
+        //주변에 아무도 없고, 아직 버프가 적용되지 않은 경우
         if (lonely && !isApplied)
         {
-            owner.UpdateStatus(data);
+            //나중에 해제할 때를 대비해 현재 시점의 증가량을 저장
+            lastAppliedStat = owner.CalcStageStat(data);
+
+            owner.atkPower.additiveStat += lastAppliedStat;
             isApplied = true;
-            Debug.Log($"{owner.name}: {owner.CalcStageStat(data)} 결벽증");
+
+            Debug.Log($"{owner.name}: {lastAppliedStat} 결벽증 발동 (고립됨)");
         }
+        //주변에 누군가 생겼고, 현재 버프가 적용 중인 경우
         else if (!lonely && isApplied)
         {
-            owner.atkPower.additiveStat -= owner.CalcStageStat(data);
+            //저장해두었던 수치만큼 정확히 차감
+            owner.atkPower.additiveStat -= lastAppliedStat;
             isApplied = false;
-            Debug.Log($"{owner.name}: 결벽증 해제.");
+            lastAppliedStat = 0;
+
+            Debug.Log($"{owner.name}: 결벽증 해제 (이웃 발생)");
         }
     }
 }

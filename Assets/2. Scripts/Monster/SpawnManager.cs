@@ -258,11 +258,16 @@ public class SpawnManager : MonoBehaviour
             waveIndex++;
             currentState = STATE.Preparation;
 
-            int nextStageNum = waveIndex + 1;
+            int nextWaveNum = waveIndex + 1;
 
-            if (nextStageNum == 4 || nextStageNum == 9)
+            //if (nextWaveNum == 4 || nextWaveNum == 9)
+            //{
+            //    UIManager.Instance.OpenAugmentPanel(nextWaveNum);
+            //}
+
+            if (nextWaveNum == 2 || nextWaveNum == 3)
             {
-                UIManager.Instance.OpenAugmentPanel(nextStageNum);
+                UIManager.Instance.OpenAugmentPanel(nextWaveNum);
             }
 
             //Debug.Log("스테이지 클리어! 정비 단계로 전환");

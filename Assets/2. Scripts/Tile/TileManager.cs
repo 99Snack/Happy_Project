@@ -153,10 +153,10 @@ public class TileManager : MonoBehaviour
         {
             return true;
         }
-        else
-        {
-            Debug.LogError($"유효하지 않은 좌표입니다({x},{y})");
-        }
+        //else
+        //{
+        //    Debug.LogError($"유효하지 않은 좌표입니다({x},{y})");
+        //}
 
         return false;
     }

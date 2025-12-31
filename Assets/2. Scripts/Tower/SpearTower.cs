@@ -12,7 +12,9 @@ public class SpearTower : MeleeTower
 
     public override void ApplyAugment(AugmentData augment)
     {
-        if (augment.Tag != 0 && augment.Tag != 1 && augment.Tag != 3) return;
+        base.ApplyAugment(augment);
+
+        if (augment.Tag != 3) return;
 
         if (augment.Category == 3)
         {

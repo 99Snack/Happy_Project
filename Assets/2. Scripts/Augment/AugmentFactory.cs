@@ -3,7 +3,7 @@ public static class AugmentFactory
 {
     public static object CreateInstance(AugmentData augment)
     {
-        Debug.Log(augment.Index);
+        //Debug.Log(augment.Index);
         return augment.Index switch
         {
             300004 => new TuberculosisAugment(augment),

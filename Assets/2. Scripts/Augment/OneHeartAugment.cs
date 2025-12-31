@@ -1,65 +1,77 @@
-
 using UnityEngine;
 
 public class OneHeartAugment : IStatusCheckAugment
 {
     private bool isApplied = false;
-    private int nearTower;
+    private int currentNearTowerCount = 0; //현재 적용된 버프 기준 타워 수
+    private int lastAppliedStat = 0;       //마지막으로 추가했던 스탯 값 저장
     private AugmentData data;
+
     public OneHeartAugment(AugmentData data)
     {
         this.data = data;
+        this.isApplied = false;
+        this.currentNearTowerCount = 0;
+        this.lastAppliedStat = 0;
     }
+
     public void UpdateStatus(Tower owner)
     {
-        nearTower = 0;
-        //본인 좌표 가져오기
+        int detectedTowers = 0;
         Vector2Int currentPos = owner.Coord;
 
-        //다른 타워들이 있는지
-        bool isAnyTowerExist = false;
-
-        //(0,0)은 자기 위치이므로 제외
-        int[] xCoord = { -1, 0, 1 };
-        int[] yCoord = { -1, 0, 1 };
-
         //8방향 탐색
-        for (int x = 0; x < xCoord.Length; x++)
+        for (int x = -1; x <= 1; x++)
         {
-            for (int y = 0; y < yCoord.Length; y++)
+            for (int y = -1; y <= 1; y++)
             {
-                if (x == 0 & y == 0) continue;
+                if (x == 0 && y == 0) continue; // 자기 자신 제외
 
-                Vector2Int checkPos = new Vector2Int(currentPos.x + xCoord[x], currentPos.y + yCoord[y]);
-                Debug.Log(checkPos);
+                Vector2Int checkPos = new Vector2Int(currentPos.x + x, currentPos.y + y);
 
-                //해당 좌표에 타워가 있는지
-                if (TileManager.Instance.map.tiles[(x, y)].isAlreadyTower)
+                if (TileManager.Instance.map.tiles.ContainsKey((checkPos.x, checkPos.y)))
                 {
-                    isAnyTowerExist = true;
-                    nearTower++;
+                    if (TileManager.Instance.map.tiles[(checkPos.x, checkPos.y)].isAlreadyTower)
+                    {
+                        detectedTowers++;
+                    }
                 }
             }
         }
 
-        bool lonely = !isAnyTowerExist;
+        if (detectedTowers != currentNearTowerCount)
+        {
+            //기존에 적용된 버프가 있다면 먼저 제거
+            if (isApplied)
+            {
+                owner.atkPower.additiveStat -= lastAppliedStat;
+                isApplied = false;
+            }
 
-        if (lonely && isApplied)
-        {
-            owner.atkPower.additiveStat -= owner.CalcStageStat(data);
-            isApplied = false;
-            Debug.Log($"{owner.name}: 하나된 마음 해제");
-        }
-        else if (!lonely && !isApplied)
-        {
-            owner.atkPower.additiveStat += CalcAdditiveStat(data);
-            isApplied = true;
-            Debug.Log($"{owner.name}: {CalcAdditiveStat(data)} 하나된 마음.");
+            //새로운 타워 개수가 0보다 크면 버프 적용
+            if (detectedTowers > 0)
+            {
+                currentNearTowerCount = detectedTowers;
+                lastAppliedStat = CalcAdditiveStat(data, detectedTowers);
+
+                owner.atkPower.additiveStat += lastAppliedStat;
+                isApplied = true;
+
+                Debug.Log($"{owner.name}: 주변 타워 {detectedTowers}개 감지. 공격력 {lastAppliedStat} 증가.");
+            }
+            else
+            {
+                //주변에 타워가 없으면 카운트 초기화
+                currentNearTowerCount = 0;
+                lastAppliedStat = 0;
+                Debug.Log($"{owner.name}: 주변에 타워가 없어 버프가 해제되었습니다.");
+            }
         }
     }
 
-    int CalcAdditiveStat(AugmentData augment)
+    //nearTower를 인자로 받아 유연하게 계산하도록 변경
+    int CalcAdditiveStat(AugmentData augment, int towerCount)
     {
-        return Mathf.FloorToInt(augment.CalcGrowValue() * nearTower);
+        return Mathf.FloorToInt(augment.CalcGrowValue() * towerCount);
     }
 }
