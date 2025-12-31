@@ -265,7 +265,7 @@ public class SpawnManager : MonoBehaviour
             //    UIManager.Instance.OpenAugmentPanel(nextWaveNum);
             //}
 
-            if (nextWaveNum == 2 || nextWaveNum == 3)
+            if (nextWaveNum == 4 || nextWaveNum == 9)
             {
                 UIManager.Instance.OpenAugmentPanel(nextWaveNum);
             }
