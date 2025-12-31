@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Mono.Cecil.Cil;
 using System;
 using System.Collections;
 using System.Linq;
@@ -201,13 +200,17 @@ public class UIManager : MonoBehaviour
     public Tower CurrentTower { get => currentTower; private set => currentTower = value; }
     //타워 정보창
     [SerializeField] private TowerInfoPanel towerInfoPanel;
+    TowerRangeHighlight towerRange = new TowerRangeHighlight();
     public void OpenTowerInfoPanel(Tower selectTower)
     {
         currentTower = selectTower;
 
         towerInfoPanel.Setup(currentTower);
 
+        towerRange.Setup(currentTower);
+        
         towerInfoPanel.gameObject.SetActive(true);
+        
     }
 
     public void CloseTowerInfo()
@@ -216,11 +219,12 @@ public class UIManager : MonoBehaviour
         {
             CurrentTower = null;
         }
-
+        
+        towerRange.TurnOff();
+           
         towerInfoPanel.gameObject.SetActive(false);
     }
-
-
+    
     //클릭된 타일 
     TileInteractor currentTile;
     public TileInteractor CurrentTile { get => currentTile; private set => currentTile = value; }

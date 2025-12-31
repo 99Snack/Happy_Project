@@ -11,13 +11,10 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public LayerMask tileLayer;
     private Tower tower;
     private TileInteractor originTile;
-    private TileInteractor previousTile;
     private int towerRange; 
 
     private List<Vector2Int> currentHighLight;
     private List<Vector2Int> previousHighLight;
-
-
 
     private bool isBuild;
 
@@ -71,11 +68,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if (mainCam == null) return;
         
         if(isBuild) return;
-        
+
         Ray ray = mainCam.ScreenPointToRay(eventData.position);
         
-       
-    
         if (Physics.Raycast(ray, out RaycastHit hit, 100f, tileLayer))
         {
             Vector3 colPos = new Vector3(hit.point.x, hit.point.y, hit.point.z);
@@ -86,7 +81,8 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
             if(interactor != null)
             {
-                if(interactor.Type == TileInfo.TYPE.Wall || interactor.Type == TileInfo.TYPE.Road)
+               
+                if(interactor.Type == TileInfo.TYPE.Wall || interactor.Type == TileInfo.TYPE.Road  )
                 {
                     if(currentHighLight.Count > 0)
                     {      
@@ -117,7 +113,17 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                         }
                     }
                 }
-            } 
+                else if (currentHighLight.Count> 0)
+                {
+                    foreach(var coor in currentHighLight)
+                    {
+                        TileInteractor coortile = TileManager.Instance.map.tiles[(coor.x,coor.y)];
+                        UIManager.Instance.TurnOnHighlightTile(coortile,coortile.isAlreadyTower);
+              
+                    }
+                }
+            }
+            UIManager.Instance.CloseTowerInfo(); 
         }
     }
     public void OnEndDrag(PointerEventData eventData)
@@ -135,8 +141,17 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                     TileInteractor coortile = TileManager.Instance.map.tiles[(coor.x,coor.y)];
                     UIManager.Instance.TurnOffHighlightTile(coortile);
                 }    
+                currentHighLight.Clear();
             }
-            
+             if(previousHighLight.Count > 0)
+            {
+                foreach(var coor in previousHighLight)
+                {
+                    TileInteractor coortile = TileManager.Instance.map.tiles[(coor.x,coor.y)];
+                    UIManager.Instance.TurnOffHighlightTile(coortile);
+                }   
+                previousHighLight.Clear();
+            }
             if (interactor != null && !interactor.isAlreadyTower)
             {
                 if (interactor.Type == TileInfo.TYPE.Wall || interactor.Type == TileInfo.TYPE.Wait)
@@ -186,8 +201,9 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                 CameraManager.Instance.ShakeCam();
                 UIManager.Instance.OpenAttachToastMessage();
             }
+            
         }
-
+        
         transform.position = initPosition;
 
         if (originTile != null)
@@ -219,5 +235,8 @@ public class TowerHandler : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
             }
         }    
     }
+
+    
+    
 
 }

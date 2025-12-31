@@ -1,6 +1,5 @@
 using TMPro;
 using UnityEngine;
-
 public class TowerInfoPanel : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI nameText;
@@ -14,6 +13,7 @@ public class TowerInfoPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI descriptionText;
 
     Tower currentTower;
+    
     public void Setup(Tower selectTower)
     {
         currentTower = selectTower;
@@ -45,6 +45,7 @@ public class TowerInfoPanel : MonoBehaviour
         subTypeText.text = subStr;
 
         descriptionText.text = localStr[tower.Desc].Ko;
+        HighlightRangeTile(true);
     }
 
     public void SellTower()
@@ -56,5 +57,32 @@ public class TowerInfoPanel : MonoBehaviour
 
             gameObject.SetActive(false);
         }
+    }
+    
+    public void HighlightRangeTile(bool isHighlight)
+    {
+        Vector2Int center = new Vector2Int(currentTower.MyTile.X,currentTower.MyTile.Y);
+
+        int towerRange = currentTower.Data.Range;
+        
+        for(int x = -towerRange; x <=  towerRange; x++ )
+        {
+            for(int y = -towerRange; y <= towerRange; y++ )
+            {
+                Vector2Int temp = new Vector2Int(center.x + x, center.y + y);
+                
+                if(!TileManager.Instance.IsValidCoordinate(temp.x,temp.y)) continue;
+                
+                TileInteractor coortile = TileManager.Instance.map.tiles[(temp.x,temp.y)];
+                
+                if(coortile.Type == TileInfo.TYPE.Wait || coortile.Type == TileInfo.TYPE.EnemyBase || coortile.Type== TileInfo.TYPE.AllyBase) 
+                    continue;
+                
+                if(isHighlight)
+                    UIManager.Instance.TurnOnHighlightTile(coortile, false);
+                else
+                    UIManager.Instance.TurnOffHighlightTile(coortile);
+            }
+        }    
     }
 }
