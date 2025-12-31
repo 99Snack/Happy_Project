@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,7 +41,25 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public Stat atkPower = new Stat();
 
-    // FSM - 올려주신 개별 상태 클래스들과 연결
+    // --- [추가된 부분: 별 표시 기능] ---
+    [Header("Grade Visuals")]
+    public GameObject[] stars; // 인스펙터에서 별 3개를 연결하세요.
+
+    public void UpdateGradeVisual()
+    {
+        if (stars == null || stars.Length == 0) return;
+
+        for (int i = 0; i < stars.Length; i++)
+        {
+            if (stars[i] != null)
+            {
+                // 데이터의 Grade(1, 2, 3)에 따라 별을 켭니다.
+                stars[i].SetActive(i < Data.Grade);
+            }
+        }
+    }
+    // --------------------------------
+
     private ITowerState currentState;
     public IdleState IdleState;
     public AttackStopState AttackStopState;
@@ -69,20 +87,20 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     protected List<IOnKillAugment> onKillAugs = new List<IOnKillAugment>();
     protected List<IStatusCheckAugment> onStatusAugs = new List<IStatusCheckAugment>();
 
-    public float AttackClipLength { get; private set; } = 1.0f; // [수정] 기본값
+    public float AttackClipLength { get; private set; } = 1.0f;
 
     public void Setup(int towerId, TileInteractor tile)
     {
         MyTile = tile;
         Data = DataManager.Instance.TowerBaseData[towerId];
 
-        //추가: 애니메이션 길이를 미리 계산해서 저장
         SetAttackClipLength();
-
         ResetCooldown(data.AttackInterval);
         ResetStatus();
 
-        // FSM 인스턴스 생성 및 초기 상태 설정
+        // [추가] 초기 생성 시 별 표시
+        UpdateGradeVisual();
+
         SetState(this);
         ChangeState(IdleState);
     }
@@ -98,7 +116,6 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
             animator.applyRootMotion = true;
         }
 
-        // Setup이 외부에서 호출되지 않았을 경우를 대비한 방어 로직
         if (currentState == null && MyTile != null)
         {
             SetState(this);
@@ -110,13 +127,11 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     {
         if (MyTile == null || MyTile.Type == TileInfo.TYPE.Wait) return;
 
-        // 쿨다운 감소
         if (attackCooldown > 0f)
         {
             attackCooldown -= Time.fixedDeltaTime;
         }
 
-        // 상태 체크 최적화
         statusTimer += Time.fixedDeltaTime;
         if (statusTimer >= 0.5f)
         {
@@ -130,15 +145,12 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     protected virtual void Update()
     {
         if (MyTile == null || MyTile.Type == TileInfo.TYPE.Wait) return;
-
-        // 현재 FSM 상태 업데이트 실행
         currentState?.Update();
     }
 
     public void ChangeState(ITowerState newState)
     {
         if (newState == null) return;
-
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
@@ -152,6 +164,10 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public void Upgrade()
     {
         Data = DataManager.Instance.TowerBaseData[Data.TowerID + 1];
+
+        // [추가] 승급 시 별 표시 갱신
+        UpdateGradeVisual();
+
         ResetStatus();
     }
 
@@ -254,14 +270,8 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
                 atkPower.additiveStat += CalcStageStat(augment);
                 break;
             case 3:
-                if (augment.Tag == 1)
-                {
-                    GameManager.Instance.MeleeBonusGold = augment.Value_N;
-                }
-                else if (augment.Tag == 2)
-                {
-                    GameManager.Instance.RangeBonusGold = augment.Value_N;
-                }
+                if (augment.Tag == 1) GameManager.Instance.MeleeBonusGold = augment.Value_N;
+                else if (augment.Tag == 2) GameManager.Instance.RangeBonusGold = augment.Value_N;
                 break;
         }
     }
@@ -275,23 +285,18 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         AugmentManager.Instance.ApplyAllActiveAugmentsToTower(this);
     }
 
-    // FSM(AttackingState)에서 애니메이션 트리거를 위해 호출
     public virtual void Attack()
     {
         animator.SetTrigger(hashAttack);
     }
 
-    // AnimationEventProxy의 OnAttack()에 의해 최종 호출됨
     public virtual void ExecuteDamage()
     {
         if (currentTarget == null) return;
 
         if (onHitAugs.Count > 0)
         {
-            foreach (var aug in onHitAugs)
-            {
-                aug.OnHit(this, currentTarget);
-            }
+            foreach (var aug in onHitAugs) aug.OnHit(this, currentTarget);
         }
         else
         {
@@ -299,28 +304,21 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    public virtual int CalcAttackOfficial()
-    {
-        return 1;
-    }
+    public virtual int CalcAttackOfficial() => 1;
 
     public int CalcStageStat(AugmentData augment) =>
         Mathf.FloorToInt((augment.Value_N + augment.CalcGrowValue()));
 
-
-    // [수정]
     protected void SetAttackClipLength()
     {
         if (animator != null && animator.runtimeAnimatorController != null)
         {
-            // 모든 클립을 돌며 이름에 'attack'이 포함된 것을 찾음 
             foreach (var clip in animator.runtimeAnimatorController.animationClips)
             {
-                Debug.Log(clip.name);
                 if (clip.name.ToLower().Contains("attack"))
                 {
                     AttackClipLength = clip.length;
-                    return; // 찾으면 종료
+                    return;
                 }
             }
         }
