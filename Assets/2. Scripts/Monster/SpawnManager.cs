@@ -72,12 +72,21 @@ public class SpawnManager : MonoBehaviour
     private void Start()
     {
         TileManager.Instance.OnTileComplete += ResetStage;
+        ResetStage();
+        
     }
 
     // UI 버튼에서 호출할 메서드 
     public void OnStartButtonClick()
     {
         if (currentState != STATE.Preparation) return;
+        
+        if (waves.Count == 0)
+        {
+            waves = DataManager.Instance.WaveData.Values
+            .Where(x => x.WaveGroup.Equals(GameManager.Instance.StageInfo.WaveGroup))
+            .OrderBy(x => x.WaveOrder).ToList();
+        }
 
         BaseCamp.Instance.SetHealthPoint(waves[waveIndex]);
 
@@ -85,6 +94,7 @@ public class SpawnManager : MonoBehaviour
         //{
         //    StartWave();  // Idle 또는 Maintenance 상태에서만 시작 가능
         //}
+
 
         //정비 패널 닫기
         UIManager.Instance.CloseWavePreparationPanel();
