@@ -44,8 +44,8 @@ public class MonsterMove : MonoBehaviour
     void OnEnable()
     {
         currentLookDir = transform.forward; // 초기 방향 설정
-     //  currentLookDir = Vector3.forward; // 초기 방향 설정
-     //   currentIdx = 0; // 경로 초기화 
+                                            //  currentLookDir = Vector3.forward; // 초기 방향 설정
+                                            //   currentIdx = 0; // 경로 초기화 
         goal = false;
         isFeedbackPaused = false;
         isTurning = false;
@@ -63,10 +63,24 @@ public class MonsterMove : MonoBehaviour
         {
             currentIdx = 0;
             TargetAnchor = TileManager.Instance.GetWorldPosition(path[0]);
-            currentLookDir = (TargetAnchor - transform.position).normalized;
+
+            if (path.Length > 1)  // path[1]이 있으면 그 방향을 바라보게
+            {
+                Vector3 nextTarget = TileManager.Instance.GetWorldPosition(path[1]);
+                currentLookDir = (nextTarget - TargetAnchor).normalized; // 초기 방향 설정
+            }
+            else
+            {
+                currentLookDir = (TargetAnchor - transform.position).normalized; // 방향이 결정되는 부분
+            }
+            // 기본값 y90 오른쪽 바라보게 
+            if (currentLookDir.sqrMagnitude < 0.01f)
+            {
+                currentLookDir = Vector3.right; // Y=90
+            }
         }
 
-      //  monster.Spawn();  // 스폰 될때 스폰 애니 재생 
+        //  monster.Spawn();  // 스폰 될때 스폰 애니 재생 
     }
 
     void FixedUpdate()
@@ -92,7 +106,7 @@ public class MonsterMove : MonoBehaviour
         if (isTurning)
         {
             //turnProgress += Time.deltaTime / turnDuration;
-           AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
             bool isInTurnState = state.IsName("Turn Left") || state.IsName("Turn Right");
             if (isInTurnState)
             {
