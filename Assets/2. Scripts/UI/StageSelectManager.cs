@@ -29,7 +29,10 @@ public class StageSelectManager : MonoBehaviour
         UIManager.Instance.OnUIInitialized -= Initialize;
         stageParent = UIManager.Instance.stageTrans;
         CreateStages();
-
+        foreach (var data in DataManager.Instance.StageData.Values)
+        {
+            PlayerPrefs.SetInt($"StageClear_{data.Index}", 0);
+        }
     }
 
     void CreateStages()

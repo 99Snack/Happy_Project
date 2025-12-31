@@ -454,7 +454,6 @@ MonoBehaviour:
   LobbyExitPopup: {fileID: 0}
   stageExitPanel: {fileID: 0}
   goldText: {fileID: 0}
-  attachToastMessage: {fileID: 0}
   augmentPanel: {fileID: 0}
   activatedAugmentPanel: {fileID: 0}
   waveResultPanel: {fileID: 0}
@@ -462,6 +461,8 @@ MonoBehaviour:
   wavePreparation: {fileID: 0}
   allyBaseCampPanel: {fileID: 0}
   towerInfoPanel: {fileID: 0}
+  attachTowerToast: {fileID: 0}
+  gachaFailedToast: {fileID: 0}
   tileTransitionPanel: {fileID: 0}
   stageInfoPanel: {fileID: 0}
 --- !u!1 &1071807733
@@ -860,6 +861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7fa47229810ee9f4fa7dcf744b7ba058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  isMute: 1
   bgmPlayer: {fileID: 8372568179675309476}
   poolSizePerSound: 5
 --- !u!114 &8986704329267549362
@@ -881,6 +883,6 @@ SceneRoots:
   - {fileID: 250216713}
   - {fileID: 1071807735}
   - {fileID: 8372568179675309475}
-  - {fileID: 640609533}
   - {fileID: 60283716}
   - {fileID: 1977632447}
+  - {fileID: 640609533}

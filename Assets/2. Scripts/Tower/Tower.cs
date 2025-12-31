@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -41,24 +41,28 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
 
     public Stat atkPower = new Stat();
 
-    // --- [추가된 부분: 별 표시 기능] ---
-    [Header("Grade Visuals")]
-    public GameObject[] stars; // 인스펙터에서 별 3개를 연결하세요.
-
+    public ObjectCenterLayout stars;
     public void UpdateGradeVisual()
     {
-        if (stars == null || stars.Length == 0) return;
-
-        for (int i = 0; i < stars.Length; i++)
+        if (stars == null)
         {
-            if (stars[i] != null)
+            stars = GetComponentInChildren<ObjectCenterLayout>();
+        }
+
+        //자식이 없으면
+        if (stars.transform.childCount == 0) return;
+
+        //데이터의 Grade에 따라 자식 별들을 활성화/비활성화
+        for (int i = 0; i < stars.transform.childCount; i++)
+        {
+            GameObject starObj = stars.transform.GetChild(i).gameObject;
+            if (starObj != null)
             {
-                // 데이터의 Grade(1, 2, 3)에 따라 별을 켭니다.
-                stars[i].SetActive(i < Data.Grade);
+                starObj.SetActive(i < Data.Grade);
             }
         }
+        stars.RefreshLayout();
     }
-    // --------------------------------
 
     private ITowerState currentState;
     public IdleState IdleState;
@@ -313,7 +317,7 @@ public abstract class Tower : MonoBehaviour, IPointerClickHandler
     public int CalcStageStat(AugmentData augment)
     {
         int stage = GameManager.Instance.StageInfo.Index - 10000;
-        Debug.Log($"{augment.Value_N} : {augment.Grow_Value} : { augment.CalcGrowValue(stage)} : tag{augment.Tag}, category{augment.Category}");
+        Debug.Log($"{augment.Value_N} : {augment.Grow_Value} : {augment.CalcGrowValue(stage)} : tag{augment.Tag}, category{augment.Category}");
         return Mathf.FloorToInt((augment.Value_N * augment.CalcGrowValue(stage)));
     }
 
