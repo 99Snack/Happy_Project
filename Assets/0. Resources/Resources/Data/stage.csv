@@ -1,0 +1,5 @@
+?¤í…Œ?´ì?ID,?¨ì´ë¸?ê·¸ë£¹,ë¦¬ì›Œ??ê·¸ë£¹,?€??ê¸°ì? ë¹„ìš©,?€??ë¹„ìš© ê°€ì¤‘ì¹˜,?¤í…Œ?´ì?ëª??¤íŠ¸ë§í‚¤
+index,wavegroup,rewardgroup,tilebasecost,weight,stagename
+int,int,int,int,int,string
+10001,101,-1,200,-1,stage_name_10001
+10002,101,-1,200,-1,stage_name_10002

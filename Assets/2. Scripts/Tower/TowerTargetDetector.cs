@@ -1,16 +1,27 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 
 public class TowerTargetDetector : MonoBehaviour
 {
-    public Tilemap tilemap;   // Inspector 연결
+    private static TowerTargetDetector instance;
+    public static TowerTargetDetector Instance => instance;
 
-    private List<Enemy> enemies = new List<Enemy>();
-    private List<MoveTestCode> testEnemies = new List<MoveTestCode>();
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        else
+        {
+            instance = this;
+        }
+    }
 
-    // 적 등록
-    public void RegisterEnemy(Enemy enemy)
+    private List<Monster> enemies = new List<Monster>();
+
+    public void RegisterEnemy(Monster enemy)
     {
         if (!enemies.Contains(enemy))
         {
@@ -19,117 +30,52 @@ public class TowerTargetDetector : MonoBehaviour
         }
     }
 
-    public void RegisterEnemy(MoveTestCode enemy)
-    {
-        if (!testEnemies.Contains(enemy))
-        {
-            testEnemies.Add(enemy);
-            //Debug.Log($"[감지기] 적 등록됨 | 현재 적 수: {enemies.Count}");
-        }
-    }
-
     // 적 제거
-    public void UnregisterEnemy(Enemy enemy)
+    public void UnregisterEnemy(Monster enemy)
     {
         enemies.Remove(enemy);
         //Debug.Log($"[감지기] 적 제거됨 | 현재 적 수: {enemies.Count}");
     }
 
-  
-    public Enemy FindNearestEnemyInRange(
-        Vector3Int towerTile,
-        int range,
-        Vector3Int baseCampTile)
-    {
-        Enemy bestTarget = null;
-        int minBaseDistance = int.MaxValue;
-
-        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {enemies.Count}");
-
-        foreach (Enemy enemy in enemies)
-        {
-            if (enemy == null) continue;
-
-            Vector3Int enemyTile = tilemap.WorldToCell(enemy.transform.position);
-
-            // 타워 기준 사거리 검사 (Chebyshev)
-            int dx = Mathf.Abs(enemyTile.x - towerTile.x);
-            int dy = Mathf.Abs(enemyTile.y - towerTile.y);
-            int towerDistance = Mathf.Max(dx, dy);
-
-            if (towerDistance > range)
-            {
-                //Debug.Log($"[감지기] 사거리 OUT | 적({enemyTile.x},{enemyTile.y})");
-                continue;
-            }
-
-            // BaseCamp 기준 거리
-            int baseDistance =
-                Mathf.Abs(enemyTile.x - baseCampTile.x) +
-                Mathf.Abs(enemyTile.y - baseCampTile.y);
-
-            //Debug.Log(
-            //    $"[감지기] 사거리 IN | 적({enemyTile.x},{enemyTile.y}) " +
-            //    $"BaseCamp 거리={baseDistance}"
-            //);
-
-            // 우선순위 비교
-            if (baseDistance < minBaseDistance)
-            {
-                minBaseDistance = baseDistance;
-                bestTarget = enemy;
-            }
-        }
-
-        return bestTarget;
-    }
-
-    public MoveTestCode FindNearestEnemyInRange(
+    public Monster FindNearestEnemyInRange(
         Vector2Int towerTile,
         int range,
         Vector2Int baseCampTile)
     {
-        MoveTestCode bestTarget = null;
+        Monster bestTarget = null;
         int minBaseDistance = int.MaxValue;
 
-        //Debug.Log($"[감지기] 사거리 내 적 탐색 시작 | 전체 적 수: {enemies.Count}");
-
-        foreach (MoveTestCode enemy in testEnemies)
+        // 리스트 역순 순회 (제거 중 발생할 수 있는 오류 방지 및 성능)
+        //for (int i = enemies.Count - 1; i >= 0; i--)
+        foreach(var enemy in enemies)
         {
-            if (enemy == null) continue;
+            //Monster enemy = enemies[i];
+            if (enemy == null || !enemy.gameObject.activeInHierarchy) continue;
 
-            int enemyTileX = Mathf.RoundToInt(enemy.transform.position.x);
-            int enemyTileY = Mathf.RoundToInt(enemy.transform.position.z);
+            // 월드 좌표를 정수 좌표로 변환 (타일 기반)
+            Vector3 pos = enemy.transform.position;
+            int ex = Mathf.RoundToInt(pos.x);
+            int ey = Mathf.RoundToInt(pos.z);
 
-            // 타워 기준 사거리 검사 (Chebyshev)
-            int dx = Mathf.Abs(enemyTileX - towerTile.x);
-            int dy = Mathf.Abs(enemyTileY - towerTile.y);
-            int towerDistance = Mathf.Max(dx, dy);
+            // Chebyshev 거리 (타워 사거리 체크)
+            int dx = Mathf.Abs(ex - towerTile.x);
+            int dy = Mathf.Abs(ey - towerTile.y);
 
-            if (towerDistance > range)
+            if (dx <= range && dy <= range)
             {
-                //Debug.Log($"[감지기] 사거리 OUT | 적({enemyTile.x},{enemyTile.y})");
-                continue;
-            }
-
-            // BaseCamp 기준 거리
-            int baseDistance =
-                Mathf.Abs(enemyTileX - baseCampTile.x) +
-                Mathf.Abs(enemyTileY - baseCampTile.y);
-
-            //Debug.Log(
-            //    $"[감지기] 사거리 IN | 적({enemyTile.x},{enemyTile.y}) " +
-            //    $"BaseCamp 거리={baseDistance}"
-            //);
-
-            // 우선순위 비교
-            if (baseDistance < minBaseDistance)
-            {
-                minBaseDistance = baseDistance;
                 bestTarget = enemy;
+                // Manhattan 거리 (본진과의 거리 - 가장 멀리 온 적 우선 타겟팅 시 유리)
+                // 본진에 가장 가까운 적을 찾으려면 현재 로직(min)이 맞습니다.
+                //int baseDistance = Mathf.Abs(ex - baseCampTile.x) + Mathf.Abs(ey - baseCampTile.y);
+
+                //if (baseDistance < minBaseDistance)
+                //{
+                //    minBaseDistance = baseDistance;
+                //    bestTarget = enemy;
+                //}
+                //break;
             }
         }
-
         return bestTarget;
     }
 }

@@ -103,9 +103,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733febaa36afb8d42814441d8605df77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TileInteractor
-  x: 0
-  y: 0
-  type: 0
+  X: 0
+  Y: 0
+  Type: 1
 --- !u!65 &7776555159881517343
 BoxCollider:
   m_ObjectHideFlags: 0

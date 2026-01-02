@@ -3,12 +3,11 @@ using UnityEngine;
 
 public class GeneratorMap : MonoBehaviour
 {
-    public GameObject wallPrefab;
-    public GameObject roadPrefab;
     public GameObject enemyBasePrefab;
     public GameObject allyBasePrefab;
+    public GameObject transitionPrefab;
 
-    public Dictionary<Vector2Int, GameObject> tiles = new Dictionary<Vector2Int, GameObject>();
+    public Dictionary<(int x, int y), TileInteractor> tiles = new Dictionary<(int x, int y), TileInteractor>();
 
     public void Generator()
     {
@@ -16,25 +15,21 @@ public class GeneratorMap : MonoBehaviour
         {
             for (int j = 0; j < TileManager.MAP_SIZE_X; j++)
             {
-                TileData tile = TileManager.Instance.GetTileData(j, i);
+                TileInfo tile = TileManager.Instance.GetTileInfo(j, i);
                 int x = j * TileManager.CELL_SIZE;
                 int y = i * TileManager.CELL_SIZE;
 
                 GameObject tilePrefab = null;
                 switch (tile.Type)
                 {
-                    case TileData.TYPE.None:
-                    case TileData.TYPE.Base:
-                    case TileData.TYPE.Wall:
-                        tilePrefab = wallPrefab;
+                    case TileInfo.TYPE.Wall:
+                    case TileInfo.TYPE.Road:
+                        tilePrefab = transitionPrefab;
                         break;
-                    case TileData.TYPE.Road:
-                        tilePrefab = roadPrefab;
-                        break;
-                    case TileData.TYPE.AllyBase:
+                    case TileInfo.TYPE.AllyBase:
                         tilePrefab = allyBasePrefab;
                         break;
-                    case TileData.TYPE.EnemyBase:
+                    case TileInfo.TYPE.EnemyBase:
                         tilePrefab = enemyBasePrefab;
                         break;
                 }
@@ -44,11 +39,24 @@ public class GeneratorMap : MonoBehaviour
                 {
                     GameObject tileObject = Instantiate(tilePrefab, worldPosition, Quaternion.identity);
                     tileObject.transform.SetParent(transform);
-                    tiles.Add(new Vector2Int(j, i), tileObject);
 
-                    //todo : 에디터에서 직접 넣어줄지말지
-                    TileInteractor interactor = tileObject.AddComponent<TileInteractor>();
-                    interactor.Setup(j, i, tile.Type);
+                    TileInteractor interactor = tileObject.GetComponent<TileInteractor>();
+                    interactor.Setup(j, i,tile.Type);
+
+                    tiles.Add((j, i), interactor);
+
+                    TileInfo data = TileManager.Instance.GetTileInfo(j, i);
+
+                    //타일이 벽이나 길이라면
+                    if (data.Type == TileInfo.TYPE.Wall || data.Type == TileInfo.TYPE.Road) { 
+                        bool isWall = tile.Type == TileInfo.TYPE.Wall ? true : false;
+
+                        tileObject.transform.GetChild(0).gameObject.SetActive(isWall);
+                        tileObject.transform.GetChild(1).gameObject.SetActive(!isWall);
+
+                        data.IsTransition = true;
+                    }
+
                 }
 
             }

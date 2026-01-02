@@ -1,7 +1,12 @@
 fileFormatVersion: 2
-guid: 4c7bbd1f1d7b2da44bce769766207b32
+<<<<<<<< HEAD:Assets/2. Scripts/Pathfind.meta
+guid: 76c698b2695761942b7cc39a9a6a2169
 folderAsset: yes
 DefaultImporter:
+========
+guid: 29e60e5a5db97cf46a4180ab8ba86cd2
+PrefabImporter:
+>>>>>>>> feature/Monster(new):Assets/4. Prefabs/MonsterPrefabs/Mob/Test2.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

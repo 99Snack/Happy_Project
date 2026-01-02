@@ -1,6 +1,11 @@
 fileFormatVersion: 2
-guid: b324bfeb362166148aeacff40d954c4f
+<<<<<<<< HEAD:Assets/1. Scenes/InGame.unity.meta
+guid: 84366cd94d3db984f91557640280c27b
 DefaultImporter:
+========
+guid: 340cc0233aa8b3d4ea708f3e55a100ee
+PrefabImporter:
+>>>>>>>> feature/Monster(new):Assets/4. Prefabs/MonsterPrefabs/Mob/Test1.prefab.meta
   externalObjects: {}
   userData: 
   assetBundleName: 

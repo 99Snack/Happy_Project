@@ -1,109 +1,276 @@
 using UnityEngine;
+using System.Collections;
 
 public class MonsterMove : MonoBehaviour
 {
     Monster monster;        // 몬스터 스크립트 참조
-    Animator animator;      // 애니메이터 컴포넌트
 
     [Header("타겟 설정")]
-    public Transform TargetAnchor; // 베이스캠프 도착지 타겟 위치 (인스펙터에서 설정 가능)
-
+    public Vector3 TargetAnchor; // 베이스캠프 도착지 타겟 위치 (인스펙터에서 설정 가능)
+    [Header("공격 범위")]
     public float AttackRange = 1f; // 공격 범위 (DB에 없어서 여기서 선언함)
 
-    void Start()
+    [Header("막다른 길 감지 거리 설정")]
+    [SerializeField] int deadEndMoveLimit = 8; // 막다른 길에서 뒤로 물러날 거리
+
+    [Header("피드백 UI 프리팹")]
+    public GameObject FeedbackUIPrefab; // 피드백 UI 프리팹 (피격 시 느낌표!)
+
+    // 방향 관련 
+    Vector3 nextDir; // 회전 후 바라볼 방향 
+    Vector3 currentLookDir; // 현재 바라보는 방향
+
+    // 회전 관련 
+    public bool isTurning = false;
+    float turnProgress = 0f; // 회전 진행도 (0~1)
+    float turnDuration = 0.5f; // 회전에 걸리는 시간
+
+    // 경로 관련 
+    Vector2Int[] path; // 실제 이동 경로
+    Vector2Int[] feedbackPoints;  // 피드백 출력할 위치 지점
+    int currentIdx = 0; // 현재 경로 인덱스 
+    bool goal = false; // 목적지 도착 여부
+
+    // 피드백 관련
+    bool isFeedbackPaused = false; // 피드백 출력 중 일시정지 상태
+
+    Animator animator;
+    private void Awake()
     {
         monster = GetComponent<Monster>();    // 몬스터 스크립트 가져오기
-        animator = GetComponent<Animator>();  // 애니메이터 컴포넌트 가져오기
-                                              // animator = transform.GetChild(0).GetComponent<Animator>(); // 몬스터 모델이 자식에 있을 때
-        Spawn();  // 스폰 될때 스폰 애니 재생 
+        animator = GetComponentInChildren<Animator>(); // 자식 오브젝트의 애니메이터 가져오기
     }
 
+    void OnEnable()
+    {
+        currentLookDir = transform.forward; // 초기 방향 설정
+                                            //  currentLookDir = Vector3.forward; // 초기 방향 설정
+                                            //   currentIdx = 0; // 경로 초기화 
+        goal = false;
+        isFeedbackPaused = false;
+        isTurning = false;
+
+        // PathNodeManager에서 경로 및 피드백 좌표 지점 가져오기
+        int spawnNum = monster.GetSpawnNumber(); // 몬스터의 스폰 번호 가져오기
+
+        if (PathNodeManager.Instance != null)
+        {
+            path = PathNodeManager.Instance.GetPathAndFeedBack(spawnNum, deadEndMoveLimit, out feedbackPoints);
+            //Debug.Log("몬스터 스폰 번호: " + spawnNum + ", 경로 길이: " + path.Length + ", 피드백 좌표 개수: " + feedbackPoints.Length);
+        }
+
+        if (path != null && path.Length > 0)
+        {
+            currentIdx = 0;
+            TargetAnchor = TileManager.Instance.GetWorldPosition(path[0]);
+
+            if (path.Length > 1)  // path[1]이 있으면 그 방향을 바라보게
+            {
+                Vector3 nextTarget = TileManager.Instance.GetWorldPosition(path[1]);
+                currentLookDir = (nextTarget - TargetAnchor).normalized; // 초기 방향 설정
+            }
+            else
+            {
+                currentLookDir = (TargetAnchor - transform.position).normalized; // 방향이 결정되는 부분
+            }
+            // 기본값 y90 오른쪽 바라보게 
+            if (currentLookDir.sqrMagnitude < 0.01f)
+            {
+                currentLookDir = Vector3.right; // Y=90
+            }
+        }
+
+        //  monster.Spawn();  // 스폰 될때 스폰 애니 재생 
+    }
+
+    void FixedUpdate()
+    {
+        if (goal) return; // 도착하면 이동안함
+        if (monster.isSpawning) return; // 스폰중이면 이동안함
+        // 이동 로직
+        float distance = Vector3.Distance(transform.position, TargetAnchor);
+        if (distance > AttackRange)
+        {
+            Vector3 moveDir = (TargetAnchor - transform.position).normalized;
+            transform.position += moveDir * monster.moveSpeed.finalStat * Time.fixedDeltaTime;
+
+            if (!isTurning)
+            {
+                currentLookDir = moveDir;
+            }
+        }
+    }
     void Update()
     {
-        // 테스트용 
-        if (Input.GetKeyDown(KeyCode.Alpha1)) { OnHit(); }
-        if (Input.GetKeyDown(KeyCode.Alpha2)) { Attack(); }
-        if (Input.GetKeyDown(KeyCode.Alpha3)) { Dead(); }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) { TurnLeft(); }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) { TurnRight(); }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) { Spawn(); }
-
-        // 따라갈 타겟이 없으면 종료
-        if (TargetAnchor == null) return; 
-
-        float distance = Vector3.Distance(transform.position, TargetAnchor.position); // 타겟과의 거리 계산
-
-        if (distance > AttackRange) // 공격 범위 밖일 때 
+        // 회전 처리
+        if (isTurning)
         {
-            Vector3 direction = (TargetAnchor.position - transform.position).normalized; // 방향 벡터 계산
-
-            if (direction != Vector3.zero) // 방향이 0이 아닐 때만 회전  
+            //turnProgress += Time.deltaTime / turnDuration;
+            AnimatorStateInfo state = animator.GetCurrentAnimatorStateInfo(0);
+            bool isInTurnState = state.IsName("Turn Left") || state.IsName("Turn Right");
+            if (isInTurnState)
             {
-                transform.rotation = Quaternion.LookRotation(direction); // 몬스터가 이동방향으로 바라보게 함 방향 회전
+                turnProgress = 1f;
             }
-
-            transform.position = Vector3.MoveTowards(transform.position, TargetAnchor.position, monster.Data.MoveSpeed * Time.deltaTime); // 이동
-
+            //if (turnProgress >= 1f)
+            if (turnProgress >= 0f && !isInTurnState)
+            {
+                isTurning = false;
+                currentLookDir = nextDir;
+            }
         }
-        else // 도착하고 공격 범위 안일때 공격
+
+        if (goal) return; // 도착하면 이동안함
+        if (monster.isSpawning) return; // 스폰중이면 이동안함
+
+        // 피드백: 일시정지 상태면 이동 안 함
+        if (isFeedbackPaused) return;
+
+        // 도착하면 정지
+        if (path != null && path.Length > 0)
         {
-            Attack();
+            if (currentIdx >= path.Length)
+            {
+                goal = true;
+                return;
+            }
         }
+
+        // 경로 따라 이동, 없으면 종료
+        if (path != null && path.Length > 0)
+        {
+            if (currentIdx >= path.Length) return;
+
+            // 현재 타겟 위치 
+            TargetAnchor = TileManager.Instance.GetWorldPosition(path[currentIdx]);
+            float dist = Vector3.Distance(transform.position, TargetAnchor);
+
+            // 피드백 위치 도달 체크
+            if (dist < 0.1f)
+            {
+                // 피드백 지점인지 체크
+                if (CheckFeedbackPoint(path[currentIdx]))
+                {
+                    // 피드백 출력 코루틴 실행
+                    StartCoroutine(DoFeedbackAction());
+                    return; // 피드백 중에는 이동 멈춤
+                }
+                currentIdx++; // 다음 경로 인덱스로 이동
+
+                // 목적지 도착
+                if (currentIdx >= path.Length)
+                {
+                    //BaseCamp.Instance.MoveMonsterToAttackPos(gameObject);
+                    return; // 더 이상 이동할 경로가 없으면 종료
+                }
+
+                // 다음으로 갈 곳 방향 재설정 갱신 
+                TargetAnchor = TargetAnchor = TileManager.Instance.GetWorldPosition(path[currentIdx]);
+                Vector3 nextWaypointDir = (TargetAnchor - transform.position).normalized;
+                SetDirection(nextWaypointDir); // 방향 전환 
+            }
+        }
+
+        // 따라갈 타겟이 없으면 종료 
+        if (TargetAnchor == null) return;
+
+
+    }
+
+    void LateUpdate()
+    {
+        // 매 프레임 마지막에 현재 바라보는 방향으로 회전 적용 
+        if (!isTurning && currentLookDir != Vector3.zero) // 회전중이 아니면 앞 바라보기
+        {
+            transform.rotation = Quaternion.LookRotation(currentLookDir);
+        }
+    }
+
+    // 피드백 지점인지 체크
+    bool CheckFeedbackPoint(Vector2Int currentPos)
+    {
+        if (feedbackPoints == null) return false;
+
+        foreach (var point in feedbackPoints)
+        {
+            if (point == currentPos)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // 피드백 출력 코루틴
+    IEnumerator DoFeedbackAction()
+    {
+        isFeedbackPaused = true;
+
+        // 머리 위에 피드백 ui 생성 
+        GameObject feedbackUI = null;
+        if (FeedbackUIPrefab != null)
+        {
+            Vector3 headPos = transform.position + Vector3.up * 2f; // 머리 위 높이 조절
+            feedbackUI = Instantiate(FeedbackUIPrefab, headPos, Quaternion.identity, transform);
+        }
+
+        // 피드백 출력 중 일시정지 상태 1초
+        yield return new WaitForSeconds(1f);
+        // 피드백 UI 제거
+        if (feedbackUI != null)
+        {
+            Destroy(feedbackUI);
+        }
+        // 첫번째 90도 회전
+        Vector3 firstTurnDir = Quaternion.Euler(0, 90, 0) * currentLookDir;
+        monster.TurnRight();
+        StartTurn(firstTurnDir);
+        yield return new WaitForSeconds(0.5f); // 0.5초 대기 = 회전 애니메이션과 같음
+
+        // 두번째 180도 회전 
+        Vector3 secondTurnDir = Quaternion.Euler(0, 90, 0) * firstTurnDir;
+        monster.TurnRight();
+        StartTurn(secondTurnDir);
+        yield return new WaitForSeconds(0.5f);
+
+
+        currentIdx++; // 다음 경로 인덱스로 이동
+        isFeedbackPaused = false;
+    }
+
+    public void SetDirection(Vector3 direction)
+    {
+        if (isTurning) return; // 이미 회전 중이면 무시
+
+        float turnAngle = Vector3.SignedAngle(currentLookDir, direction, Vector3.up);
+        if (turnAngle > 45f) // 방향 전환
+        {
+            monster.TurnRight();
+            StartTurn(direction);
+        }
+        else if (turnAngle < -45f)
+        {
+            monster.TurnLeft();
+            StartTurn(direction);
+        }
+        else  // 같은 방향이면 앞 바라보게 설정
+        {
+            currentLookDir = direction;
+        }
+    }
+
+    // 회전 시작 메서드
+    void StartTurn(Vector3 targetDirection)
+    {
+        isTurning = true;
+
+        turnProgress = -1f; // 회전 진행도 초기화
+        nextDir = targetDirection; // 회전 후 바라볼 목표 방향 설정
     }
 
     // 스폰할 때 타겟 설정 (SpawnManager에서 호출)
     public void SetTarget(Transform target) // 타겟 위치 설정 메서드
     {
-        TargetAnchor = target;
-    }
-
-    // 테스트용 총알 충돌 (총알 프리팹에 태그 불렛과, 콜라이더에 Is Trigger 체크 필요)
-    void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("Bullet")) // 총알 태그와 충돌했을 때 // 
-        {
-            OnHit(); // 피격 애니메이션 호출 
-           // Destroy(other.gameObject); // 총알 파괴
-        }
-
-        // 나중에 hp도 까이게 
-    }
-   
-    public void OnHit() 
-    {
-        animator.SetTrigger("Hit");   // 피격 애니메이션 다 출력되면 다시 이동으로 바뀜. 다른 메서드도 동일 
-
-        // 타워 공격을 맞을 때 피격과 상호작용
-    }
-
-    void Attack()
-    {
-        animator.SetTrigger("Attack");
-        
-        // 아마 여기서 베이스캠프를 공격하면 피해를 입히게 할 듯
-    }
-    void Dead()
-    {
-        animator.SetTrigger("Die");
-
-        // 죽으면 이동도 안되게 해야 함 
-    }
-
-    // 길찾기에서 호출할 회전 메서드 
-    void TurnLeft() 
-    {
-        animator.SetTrigger("TurnLeft");
-
-        // 적이 앞만 바라보고 가는 구조라 회전을 여기서 확인할 수가 없음 
-        // 그냥 길찾기에서 회전이 필요할 때 이 메서드를 호출하게 하는 게 편할듯 
-    }
-
-    void TurnRight()
-    {
-        animator.SetTrigger("TurnRight");
-    }
-    void Spawn()
-    {
-        animator.SetTrigger("Spawn");
+        TargetAnchor = target.position;
     }
 }

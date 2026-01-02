@@ -1,71 +1,338 @@
-﻿using Unity.IO.LowLevel.Unsafe;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Tilemaps;
+using UnityEngine.EventSystems;
 
-public class Tower : MonoBehaviour
+[Serializable]
+public class Stat
 {
-    public TowerTargetDetector targetDetector;
-    public TowerShooter shooter;
-    public Transform baseCamp;
-    public Tilemap tilemap;
+    public float baseStat;
+    public float additiveStat;
+    public float multiStat;
+
+    public float finalStat => (baseStat + additiveStat) * multiStat;
+}
+
+[Serializable]
+public enum statetest
+{
+    idle, search, attack, attackstop
+}
+
+public abstract class Tower : MonoBehaviour, IPointerClickHandler
+{
     public Animator animator;
 
-    // 타워 타일 좌표
-    [HideInInspector] public Vector3Int towerTile;
+    public TileInteractor MyTile { get; private set; }
 
-    // 현재 타겟
-    [HideInInspector] public Enemy currentTarget;
+    [SerializeField] private TowerBaseData data;
+    public TowerBaseData Data { get => data; private set => data = value; }
+    public Vector2Int Coord { get; set; }
+    public float PlacedTime { get; set; }
 
-    // 탐지
-    public float detectionInterval = 0.1f;
-    [HideInInspector] public float detectionTimer = 0f;
+    public bool IsRotate { get; protected set; }
+    public Transform Soldier;
 
-    // 공격
-    public float attackSpeed = 1f;
-    public int attackRange = 1;
-    public int attackHitCount = 1;
+    public LayerMask monsterLayer;
+
+    public Monster currentTarget;
     [HideInInspector] public float attackCooldown = 0f;
 
-    // 상태 패턴 FSM
-    private ITowerState currentState;
+    public Stat atkPower = new Stat();
 
-    void Start()
+    public ObjectCenterLayout stars;
+    public void UpdateGradeVisual()
     {
-        towerTile = tilemap.WorldToCell(transform.position);
-        Debug.Log($"[타워] 타워 타일 좌표: ({towerTile.x},{towerTile.y})");
+        if (stars == null)
+        {
+            stars = GetComponentInChildren<ObjectCenterLayout>();
+        }
 
-        ChangeState(new IdleState(this));
+        //자식이 없으면
+        if (stars.transform.childCount == 0) return;
+
+        //데이터의 Grade에 따라 자식 별들을 활성화/비활성화
+        for (int i = 0; i < stars.transform.childCount; i++)
+        {
+            GameObject starObj = stars.transform.GetChild(i).gameObject;
+            if (starObj != null)
+            {
+                starObj.SetActive(i < Data.Grade);
+            }
+        }
+        stars.RefreshLayout();
     }
 
-    void Update()
+    private ITowerState currentState;
+    public IdleState IdleState;
+    public AttackStopState AttackStopState;
+    public AttackingState AttackingState;
+    public SearchingState SearchingState;
+    public statetest state = statetest.idle;
+
+    protected void SetState(Tower tower)
     {
-        currentState?.Update();
+        IdleState = new IdleState(tower);
+        AttackStopState = new AttackStopState(tower);
+        AttackingState = new AttackingState(tower);
+        SearchingState = new SearchingState(tower);
+    }
+
+    public readonly int hashIsReady = Animator.StringToHash("IsReady");
+    public readonly int hashAttack = Animator.StringToHash("Attack");
+    public readonly int hashIsCooldown = Animator.StringToHash("IsCooldown");
+    public readonly int hashAttackInterval = Animator.StringToHash("AttackInterval");
+    public readonly int hashIsAttacking = Animator.StringToHash("IsAttacking");
+
+    Coroutine CoSearch;
+
+    protected List<IOnHitAugment> onHitAugs = new List<IOnHitAugment>();
+    protected List<IOnKillAugment> onKillAugs = new List<IOnKillAugment>();
+    protected List<IStatusCheckAugment> onStatusAugs = new List<IStatusCheckAugment>();
+
+    public float AttackClipLength { get; private set; } = 1.0f;
+
+    public void Setup(int towerId, TileInteractor tile)
+    {
+        MyTile = tile;
+        Data = DataManager.Instance.TowerBaseData[towerId];
+
+        SetAttackClipLength();
+        ResetCooldown(data.AttackInterval);
+        ResetStatus();
+
+        // [추가] 초기 생성 시 별 표시
+        UpdateGradeVisual();
+
+        SetState(this);
+        ChangeState(IdleState);
+    }
+
+    public void SetMyTile(TileInteractor tile) => MyTile = tile;
+    public void SetCoord(int x, int y) => Coord = new Vector2Int(x, y);
+
+    protected virtual void Start()
+    {
+        if (Soldier != null)
+        {
+            IsRotate = true;
+            animator.applyRootMotion = true;
+        }
+
+        if (currentState == null && MyTile != null)
+        {
+            SetState(this);
+            ChangeState(IdleState);
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (MyTile == null || MyTile.Type == TileInfo.TYPE.Wait) return;
 
         if (attackCooldown > 0f)
-            attackCooldown -= Time.deltaTime;
+        {
+            attackCooldown -= Time.fixedDeltaTime;
+        }
+
+        statusTimer += Time.fixedDeltaTime;
+        if (statusTimer >= 0.5f)
+        {
+            statusTimer = 0;
+            UpdateConditionAugment();
+        }
+    }
+
+    private float statusTimer = 0f;
+
+    protected virtual void Update()
+    {
+        if (MyTile == null || MyTile.Type == TileInfo.TYPE.Wait) return;
+        currentState?.Update();
     }
 
     public void ChangeState(ITowerState newState)
     {
+        if (newState == null) return;
         currentState?.Exit();
         currentState = newState;
         currentState.Enter();
     }
 
-
-    public void OnAttackStopEnd()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (currentTarget != null)
+        UIManager.Instance.OpenTowerInfoPanel(this);
+    }
+
+    public void Upgrade()
+    {
+        Data = DataManager.Instance.TowerBaseData[Data.TowerID + 1];
+
+        // [추가] 승급 시 별 표시 갱신
+        UpdateGradeVisual();
+
+        ResetStatus();
+    }
+
+    public void OnSold()
+    {
+        GameManager.Instance.Gold += Data.price;
+        Destroy(gameObject);
+    }
+
+    public bool IsTargetInRange()
+    {
+        if (currentTarget == null) return false;
+
+        int enemyX = Mathf.RoundToInt(currentTarget.transform.position.x);
+        int enemyY = Mathf.RoundToInt(currentTarget.transform.position.z);
+
+        int dx = Mathf.Abs(enemyX - Coord.x);
+        int dy = Mathf.Abs(enemyY - Coord.y);
+
+        return Mathf.Max(dx, dy) <= Data.Range;
+    }
+
+    public void SearchingCoroutine(IEnumerator enumerator)
+    {
+        if (CoSearch != null) return;
+        CoSearch = StartCoroutine(enumerator);
+    }
+
+    public void SearchingStopCoroutine()
+    {
+        if (CoSearch != null)
         {
-            ChangeState(new SearchingState(this)); // AttackReady 역할
-        }
-        else
-        {
-            ChangeState(new IdleState(this));
+            StopCoroutine(CoSearch);
+            CoSearch = null;
         }
     }
 
+    public bool CanAttack() => attackCooldown <= 0f;
+    public void ResetCooldown(float interval) => attackCooldown = interval;
 
+    public void AddConditionAugment(AugmentData augment)
+    {
+        object instance = AugmentFactory.CreateInstance(augment);
+        if (instance == null) return;
+
+        if (instance is IOnHitAugment hit) onHitAugs.Add(hit);
+        if (instance is IOnKillAugment kill) onKillAugs.Add(kill);
+        if (instance is IStatusCheckAugment status) onStatusAugs.Add(status);
+    }
+
+    protected HashSet<int> appliedConditionAugments = new HashSet<int>();
+
+    public virtual void ApplyAugment(AugmentData augment)
+    {
+        if (augment.Tag != 0) return;
+
+        if (augment.Category == 3)
+        {
+            if (!appliedConditionAugments.Contains(augment.Index))
+            {
+                AddConditionAugment(augment);
+                appliedConditionAugments.Add(augment.Index);
+                UpdateConditionAugment();
+            }
+        }
+        else
+        {
+            if (augment.Category == 1)
+            {
+                UpdateStatus(augment);
+            }
+        }
+    }
+
+    public void UpdateConditionAugment()
+    {
+        if (MyTile.Type == TileInfo.TYPE.Wait) return;
+
+        foreach (var aug in onStatusAugs)
+        {
+            aug.UpdateStatus(this);
+        }
+    }
+
+    public void ResetAllStatus()
+    {
+        atkPower.baseStat = CalcAttackOfficial();
+        atkPower.additiveStat = 0;
+        atkPower.multiStat = 1;
+
+        onHitAugs.Clear();
+        onKillAugs.Clear();
+        onStatusAugs.Clear();
+        appliedConditionAugments.Clear();
+    }
+
+    public void UpdateStatus(AugmentData augment)
+    {
+        //Debug.Log(1);
+
+        switch (augment.Plus_Factor)
+        {
+            case 1:
+                atkPower.additiveStat += CalcStageStat(augment);
+                break;
+            case 3:
+                if (augment.Tag == 1) GameManager.Instance.MeleeBonusGold = augment.Value_N;
+                else if (augment.Tag == 2) GameManager.Instance.RangeBonusGold = augment.Value_N;
+                break;
+        }
+    }
+
+    void ResetStatus()
+    {
+        atkPower.baseStat = CalcAttackOfficial();
+        atkPower.additiveStat = 0;
+        atkPower.multiStat = 1;
+
+        AugmentManager.Instance.ApplyAllActiveAugmentsToTower(this);
+    }
+
+    public virtual void Attack()
+    {
+        animator.SetTrigger(hashAttack);
+    }
+
+    public virtual void ExecuteDamage()
+    {
+        if (currentTarget == null) return;
+
+        if (onHitAugs.Count > 0)
+        {
+            foreach (var aug in onHitAugs) aug.OnHit(this, currentTarget);
+        }
+        else
+        {
+            currentTarget.TakeDamage(atkPower.finalStat, this);
+        }
+    }
+
+    public virtual int CalcAttackOfficial() => 1;
+
+    public int CalcStageStat(AugmentData augment)
+    {
+        int stage = GameManager.Instance.StageInfo.Index - 10000;
+        Debug.Log($"{augment.Value_N} : {augment.Grow_Value} : {augment.CalcGrowValue(stage)} : tag{augment.Tag}, category{augment.Category}");
+        return Mathf.FloorToInt((augment.Value_N * augment.CalcGrowValue(stage)));
+    }
+
+    protected void SetAttackClipLength()
+    {
+        if (animator != null && animator.runtimeAnimatorController != null)
+        {
+            foreach (var clip in animator.runtimeAnimatorController.animationClips)
+            {
+                if (clip.name.ToLower().Contains("attack"))
+                {
+                    AttackClipLength = clip.length;
+                    return;
+                }
+            }
+        }
+    }
 }
-
-

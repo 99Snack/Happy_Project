@@ -1,0 +1,88 @@
+스트링키,한국어,영어
+index,ko,en
+string,string,string
+stage_name_10001,스테이지 1,stage 1
+stage_name_10002,스테이지 2,stage 2
+wave_name_100101,웨이브 1,wave 1
+wave_name_100102,웨이브 2,wave 2
+wave_name_100103,웨이브 3,wave 3
+wave_name_100104,웨이브 4,wave 4
+wave_name_100105,웨이브 5,wave 5
+wave_name_100106,웨이브 6,wave 6
+wave_name_100107,웨이브 7,wave 7
+wave_name_100108,웨이브 8,wave 8
+wave_name_100109,웨이브 9,wave 9
+wave_name_100110,웨이브 10,wave 10
+wave_name_100111,웨이브 11,wave 11
+wave_name_100112,웨이브 12,wave 12
+wave_name_100113,웨이브 13,wave 13
+wave_name_100114,웨이브 14,wave 14
+wave_name_100115,웨이브 15,wave 15
+monster_name_101001,마녀의 거미,-
+monster_name_101002,마녀의 거미 중대장,-
+monster_name_101003,마녀의 거미 보스,-
+monster_name_101004,닭,-
+monster_name_101005,닭 중대장,-
+monster_name_101006,유령,-
+monster_name_101007,유령 중대장,-
+monster_name_101008,유령 보스,-
+reward_name_1101,골드,-
+reward_desc_1101,골드,-
+Tower_name_101001,창병,Spearman
+Tower_name_102001,기사,Knight
+Tower_name_103001,혈기사,Blood Knight
+Tower_name_201001,박격포,Cannon
+Tower_name_202001,마법사,Mage
+Tower_name_203001,얼음 수정탑,Ice Crystal Tower
+Tower_Desc_101001,근거리에서 단일 적에게 강한 타워,a tower strong against a single enemy at close range
+Tower_Desc_102001,근거리에서 범위내에 강한 피해를 주는 타워,a tower that causes strong damage in a narrow range
+Tower_Desc_103001,근거리에서 방어력을 감소시키는 타워,Towers that reduce defense
+Tower_Desc_201001,원거리에서 단일 적에게 피해를 주는 타워,a tower that damages a single enemy at a distance
+Tower_Desc_202001,원거리에서 대상과 주변에 피해를 주는 타워,Towers that cause damage to the object and its surroundings at a distance
+Tower_Desc_203001,원거리에서 대상과 주변에 이동 속도를 감소시키는 타워,Towers that reduce travel speed to and from long distances
+Augment_name_100001,음식 섭취 1,-
+Augment_name_100002,베이스 캠프 요새화 1,-
+Augment_name_100003,자본 확보 1,-
+Augment_name_200001,음식 섭취 2,-
+Augment_name_200002,베이스 캠프 요새화 2,-
+Augment_name_200003,자본 확보 2,-
+Augment_name_200004,근접 전문가,-
+Augment_name_200005,근접 섬멸 보너스,-
+Augment_name_200006,투사체 보강,-
+Augment_name_200007,저격 수당,-
+Augment_name_200008,네임드 사냥꾼,-
+Augment_name_200009,연쇄 벼락,-
+Augment_name_200010,무력화 강화,-
+Augment_name_200011,흡수,-
+Augment_name_300001,음식 섭취 3,-
+Augment_name_300002,베이스 캠프 요새화 3,-
+Augment_name_300003,자본 확보 3,-
+Augment_name_300004,결벽증,-
+Augment_name_300005,하나된 마음,-
+Augment_name_300006,자본의 힘,-
+Augment_name_300007,수확,-
+Augment_desc_100001,모든 타워의 공격력이 +{0}만큼 증가합니다.,-
+Augment_desc_100002,아군 베이스 캠프의 최대 체력이 +{0}만큼 증가합니다.,-
+Augment_desc_100003,골드를 +{0}만큼 얻습니다.,-
+Augment_desc_200001,모든 타워의 공격력이 +{0}만큼 증가합니다.,-
+Augment_desc_200002,아군 베이스 캠프의 최대 체력이 +{0}만큼 증가합니다.,-
+Augment_desc_200003,골드를 +{0}만큼 얻습니다.,-
+Augment_desc_200004,근접 타워의 공격력이 +{0}만큼 증가합니다.,-
+Augment_desc_200005,근접 타워가 적을 처치할 때 마다 {0}골드를 추가로 획득합니다.,-
+Augment_desc_200006,원거리 타워의 공격력이 +{0}만큼 증가합니다.,-
+Augment_desc_200007,원거리 타워가 적을 처치할 때 마다 {0}골드를 추가로 획득합니다.,-
+Augment_desc_200008,보스 및 정예 몬스터에게 주는 피해량이 {0}% 증가합니다.,-
+Augment_desc_200009,광역공격형 타워가 적 처치 시 주변에 공격력의 {0}% 만큼 추가 피해를 입힙니다.,-
+Augment_desc_200010,광역 디버프형 타워가 부여하는 디버프 수치를 {0}% 만큼 추가합니다.,-
+Augment_desc_200011,광역 디버프형 타워가 디버프를 적용할 때 마다 공격력이 +{0}만큼 증가합니다. (웨이브마다 초기화),-
+Augment_desc_300001,모든 타워의 공격력이 +{0}만큼 증가합니다.,-
+Augment_desc_300002,아군 베이스 캠프의 최대 체력이 +{0}만큼 증가합니다.,-
+Augment_desc_300003,골드를 +{0}만큼 얻습니다.,-
+Augment_desc_300004,1칸 내 아군 타워가 없는 타워의 공격력이 +{0} 증가합니다.,-
+Augment_desc_300005,타워가 1칸내 타워 하나당 공격력이 +{0}씩 증가합니다.,-
+Augment_desc_300006,현재 보유한 {1} 골드 당 모든 타워의 공격력이 +{0}씩 증가합니다.,-
+Augment_desc_300007,단일 공격형 타워가 현재 체력이 {0}% 이하인 일반 몬스터를 공격하면 즉시 처치합니다.,-
+tile_name_1001,길 타일,-
+tile_name_1002,벽 타일,-
+tile_desc_1001,몬스터 이동이 가능한 타일로 타워 설치가 불가능하다.,-
+tile_desc_1002,타워 설치가 가능한 타일로 몬스터 이동이 불가능하다.,-

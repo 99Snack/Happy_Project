@@ -1,3 +1,4 @@
+
 using UnityEngine;
 
 public class TileManager : MonoBehaviour
@@ -19,13 +20,15 @@ public class TileManager : MonoBehaviour
     }
 
     //모든 타일들 관리
-    public TileData[,] allTiles;
+    public TileInfo[,] allTiles;
 
     // 맵 사이즈
     public const int MAP_SIZE_X = 14;
     public const int MAP_SIZE_Y = 8;
 
     public const int CELL_SIZE = 1;
+
+    public static readonly int TRANSITION_PRICE = 200;
 
     //캠프 좌표 관리 y 1~6 랜덤 좌표
     const int enemyBaseCoordX = 0;
@@ -34,23 +37,26 @@ public class TileManager : MonoBehaviour
     public Vector2Int enemyBasePosition { get; private set; }
     public Vector2Int allyBasePosition { get; private set; }
 
-    public GameObject enemy;
+    public GeneratorMap map;
 
-    private void Start()
-    {
-        Initialize();
-    }
+    public System.Action OnTileComplete;
+    //private void Start()
+    //{
+    //    Initialize();
+    //}
 
-    void Initialize()
+    public void Initialize()
     {
+        map = FindAnyObjectByType<GeneratorMap>();
+
         // 맵 초기화
-        allTiles = new TileData[MAP_SIZE_Y, MAP_SIZE_X];
+        allTiles = new TileInfo[MAP_SIZE_Y, MAP_SIZE_X];
 
         for (int i = 0; i < MAP_SIZE_Y; i++)
         {
             for (int j = 0; j < MAP_SIZE_X; j++)
             {
-                allTiles[i, j] = new TileData(j, i, TileData.TYPE.None);
+                allTiles[i, j] = new TileInfo(j, i, TileInfo.TYPE.Wall);
             }
         }
 
@@ -59,16 +65,14 @@ public class TileManager : MonoBehaviour
 
         //단일 경로 생성
         SinglePathGenerator.Instance.GeneratePath();
+        PathNodeManager.Instance.GeneratePath();
 
         //타일 맵 생성
-        GeneratorMap map = FindAnyObjectByType<GeneratorMap>();
         if (map != null)
         {
             map.Generator();
         }
-
-        Vector3 enemyStartPos = GetWorldPosition(enemyBasePosition);
-        Instantiate(enemy,enemyStartPos,Quaternion.identity);
+        OnTileComplete?.Invoke();
     }
 
     void RandomBaseCamp()
@@ -89,26 +93,38 @@ public class TileManager : MonoBehaviour
         //정해진 좌표에 베이스 설정
         foreach (var y in enemyBaseYCoords)
         {
-            allTiles[y, enemyBaseCoordX].Type = TileData.TYPE.EnemyBase;
+            allTiles[y, enemyBaseCoordX].Type = TileInfo.TYPE.EnemyBase;
+            allTiles[y, enemyBaseCoordX].IsTransition = false;
         }
 
         foreach (var y in allyBaseYCoords)
         {
-            allTiles[y, allyBaseCoordX].Type = TileData.TYPE.AllyBase;
+            allTiles[y, allyBaseCoordX].Type = TileInfo.TYPE.AllyBase;
+            allTiles[y, allyBaseCoordX].IsTransition = false;
         }
+
+        BaseCamp.Instance.EstablishBaseObj();
     }
 
-    public void SetTileData(int x, int y, TileData.TYPE type)
+    public void SetTileInfo(int x, int y, TileInfo.TYPE type)
     {
-        if (type != TileData.TYPE.Wall && type != TileData.TYPE.Road) return;
+        if (type != TileInfo.TYPE.Wall && type != TileInfo.TYPE.Road) return;
 
         if (IsValidCoordinate(x, y))
         {
-            allTiles[y, x] = new TileData(x, y, type);
+            allTiles[y, x] = new TileInfo(x, y, type);
         }
     }
 
-    public TileData.TYPE GetTileType(int x, int y)
+    public void ChangeType(int x,int y, TileInfo.TYPE type){
+        if (IsValidCoordinate(x, y))
+        {
+            allTiles[y, x].Type = type;
+        }
+    }
+
+
+    public TileInfo.TYPE GetTileType(int x, int y)
     {
 
         if (IsValidCoordinate(x, y))
@@ -117,9 +133,9 @@ public class TileManager : MonoBehaviour
         }
 
 
-        return TileData.TYPE.None;
+        return TileInfo.TYPE.None;
     }
-    public TileData GetTileData(int x, int y)
+    public TileInfo GetTileInfo(int x, int y)
     {
 
         if (IsValidCoordinate(x, y))
@@ -132,16 +148,16 @@ public class TileManager : MonoBehaviour
     }
 
     //좌표가 유효한지
-    bool IsValidCoordinate(int x, int y)
+    public bool IsValidCoordinate(int x, int y)
     {
         if (x >= 0 && x < MAP_SIZE_X && y >= 0 && y < MAP_SIZE_Y)
         {
             return true;
         }
-        else
-        {
-            Debug.LogError($"유효하지 않은 좌표입니다({x},{y})");
-        }
+        //else
+        //{
+        //    Debug.LogError($"유효하지 않은 좌표입니다({x},{y})");
+        //}
 
         return false;
     }

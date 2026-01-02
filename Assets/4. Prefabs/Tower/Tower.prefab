@@ -11,8 +11,10 @@ GameObject:
   - component: {fileID: 6882311094252984848}
   - component: {fileID: 7955353836202669403}
   - component: {fileID: 7288812833210510153}
-  - component: {fileID: 4297217522303139539}
   - component: {fileID: 9082036631111533785}
+  - component: {fileID: -4211088169548970564}
+  - component: {fileID: 1716115057818804}
+  - component: {fileID: -3817679539009921700}
   m_Layer: 0
   m_Name: Tower
   m_TagString: Untagged
@@ -30,8 +32,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17, y: 2, z: -17}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1053752300569245924}
   m_Father: {fileID: 0}
@@ -92,31 +94,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4297217522303139539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2658677335914711759}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7183368eab5e9f747b39e88e41c4910f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Tower
-  targetDetector: {fileID: 0}
-  shooter: {fileID: 9082036631111533785}
-  baseCamp: {fileID: 0}
-  tilemap: {fileID: 0}
-  animator: {fileID: 8064219548360085636}
-  towerTile: {x: 0, y: 0, z: 0}
-  currentTarget: {fileID: 0}
-  detectionInterval: 0.1
-  detectionTimer: 0
-  attackSpeed: 1
-  attackRange: 2
-  attackHitCount: 1
-  attackCooldown: 0
 --- !u!114 &9082036631111533785
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,6 +108,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TowerShooter
   projectilePrefab: {fileID: 473761274130204630, guid: 7d7807d9dfc94744985b636e84058421, type: 3}
   firePoint: {fileID: 1053752300569245924}
+--- !u!114 &-4211088169548970564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2658677335914711759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 360aa4bf6af34b04da6fb30be06009e3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TowerHandler
+  tileLayer:
+    serializedVersion: 2
+    m_Bits: 64
+--- !u!65 &1716115057818804
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2658677335914711759}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.467821, y: 7.479527, z: 8.467822}
+  m_Center: {x: -0.00000029802322, y: 3.7397635, z: 0}
+--- !u!114 &-3817679539009921700
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2658677335914711759}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 500adbb8efb1f664d977feff362041f3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MineThrowerTower
+  shooter: {fileID: 9082036631111533785}
+  animator: {fileID: 8064219548360085636}
+  currentTarget: {fileID: 0}
+  attackCooldown: 0
 --- !u!1 &3402102587605307796
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +260,7 @@ Animator:
   m_GameObject: {fileID: 3402102587605307796}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 0df86cd5f1336b647a996a1b677a1ff9, type: 2}
+  m_Controller: {fileID: 9100000, guid: 40e0f003b4f950645896acc29751c061, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0

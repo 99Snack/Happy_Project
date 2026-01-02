@@ -1,10 +1,10 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
     private Transform target;        // 발사 대상
     public float speed = 10f;    // 이동 속도
-
+    public int damage = 10;      // 데미지 
     // 타겟 설정
     public void SetTarget(Transform target)
     {

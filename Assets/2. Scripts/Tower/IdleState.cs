@@ -1,5 +1,6 @@
-﻿using UnityEngine;
-using UnityEngine.Tilemaps;
+
+using UnityEngine;
+
 
 public class IdleState : ITowerState
 {
@@ -12,28 +13,24 @@ public class IdleState : ITowerState
 
     public void Enter()
     {
-        Debug.Log("[타워] Idle 상태 진입");
-
-        tower.animator.SetBool("isAttacking", false);
-        tower.animator.SetBool("isAttackReady", false);
+        tower.state = statetest.idle;
         tower.currentTarget = null;
+
+        tower.animator.SetBool(tower.hashIsReady, false);
+        tower.animator.SetBool(tower.hashIsAttacking, false);
+        tower.animator.SetBool(tower.hashIsCooldown, false);
     }
 
     public void Update()
     {
-        Vector3Int baseCampTile = tower.tilemap.WorldToCell(tower.baseCamp.position);
-        Enemy nearest = tower.targetDetector.FindNearestEnemyInRange(
-            tower.towerTile,
-            tower.attackRange, // 사거리 그대로
-            baseCampTile
-        );
-
-        if (nearest != null)
+        if (tower.MyTile.Type == TileInfo.TYPE.Wall)
         {
-            tower.currentTarget = nearest;
-            tower.ChangeState(new SearchingState(tower));
+            tower.ChangeState(tower.SearchingState);
         }
     }
 
-    public void Exit() { }
+    public void Exit()
+    {
+        // Idle 상태 종료 시 특별한 처리 없음
+    }
 }
